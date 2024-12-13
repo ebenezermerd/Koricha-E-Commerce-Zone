@@ -30,12 +30,18 @@ import ScrollToTop from 'src/components/scroll-to-top';
 import { ThemeSettings, SettingsProvider } from 'src/components/settings';
 import MotionLazyContainer from 'src/components/animate/MotionLazyContainer';
 import './index.css';
+
+// Auth Context
+import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
 // ----------------------------------------------------------------------
+const AuthProvider = JwtAuthProvider;
+
 
 export default function App() {
   return (
     <HelmetProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <AuthProvider>
         <SettingsProvider>
           <BrowserRouter>
             <ScrollToTop />
@@ -47,7 +53,8 @@ export default function App() {
               </ThemeSettings>
             </ThemeProvider>
           </BrowserRouter>
-        </SettingsProvider>
+          </SettingsProvider>
+        </AuthProvider>
       </LocalizationProvider>
     </HelmetProvider>
   );

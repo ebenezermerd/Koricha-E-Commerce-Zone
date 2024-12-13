@@ -4,6 +4,7 @@ import MainLayout from '../layouts/main';
 import SimpleLayout from '../layouts/simple';
 import CompactLayout from '../layouts/compact';
 //
+import { GuestGuard } from 'src/auth/guard';
 import {
   // E-Commerce
   HomePage,
@@ -20,11 +21,16 @@ import {
   EcommerceAccountVouchersPage,
   EcommerceAccountWishlistPage,
   // Auth
+  SignInPage,
+  SignUpPage,
+  VerifyPage,
   LoginCoverPage,
   VerifyCodePage,
   RegisterCoverPage,
   ResetPasswordPage,
+  UpdatePasswordPage,
   LoginBackgroundPage,
+  JwtResetPasswordPage,
   LoginIllustrationPage,
   RegisterBackgroundPage,
   RegisterIllustrationPage,
@@ -46,9 +52,34 @@ export default function Router() {
     // Non layout
     {
       path: 'auth',
+      
       children: [
-        { path: 'login-cover', element: <VerifyCodePage /> },
-        { path: 'register-cover', element: <RegisterCoverPage /> },
+      { path: 'login-cover', element: <SignInPage /> },
+      { path: 'register-cover', element: <RegisterCoverPage /> },
+      {
+        path: 'jwt',
+        children: [
+        {
+          path: 'sign-in',
+          element: (
+          <GuestGuard>
+            <SignInPage />
+          </GuestGuard>
+          ),
+        },
+        {
+          path: 'sign-up',
+          element: (
+          <GuestGuard>
+            <SignUpPage />
+          </GuestGuard>
+          ),
+        },
+        { path: 'verify', element: <VerifyPage /> },
+        { path: 'update-password', element: <UpdatePasswordPage /> },
+        { path: 'reset-password', element: <JwtResetPasswordPage /> },
+        ],
+      },
       ],
     },
     // Main layout
