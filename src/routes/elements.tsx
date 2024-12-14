@@ -13,6 +13,8 @@ const Loadable = (Component: ElementType) => (props: any) =>
 
 // ----------------------------------------------------------------------
 
+
+
 // E-COMMERCE
 export const EcommerceCartPage = Loadable(
   lazy(() => import("../pages/e-commerce/EcommerceCartPage"))
@@ -52,6 +54,9 @@ export const EcommerceAccountWishlistPage = Loadable(
   lazy(() => import("../pages/e-commerce/account/EcommerceAccountWishlistPage"))
 );
 
+
+
+
 // AUTH
 export const LoginBackgroundPage = Loadable(
   lazy(() => import("../pages/auth/LoginBackgroundPage"))
@@ -77,6 +82,22 @@ export const ResetPasswordPage = Loadable(
 export const VerifyCodePage = Loadable(
   lazy(() => import("../pages/auth/VerifyCodePage"))
 );
+export const SignInPage = Loadable(
+  lazy(() => import('src/pages/auth/jwt/sign-in'))
+);
+export const SignUpPage = Loadable(
+  lazy(() => import('src/pages/auth/jwt/sign-up'))
+);
+export const VerifyPage = Loadable(
+  lazy(() => import('src/pages/auth/jwt/verify'))
+);
+export const UpdatePasswordPage = Loadable(
+  lazy(() => import('src/pages/auth/jwt/update-password'))
+);
+export const JwtResetPasswordPage = Loadable(
+  lazy(() => import('src/pages/auth/jwt/reset-password'))
+);
+
 
 // COMMON
 export const ComingSoonPage = Loadable(

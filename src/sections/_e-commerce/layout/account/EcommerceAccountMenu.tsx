@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
 import {
@@ -23,6 +23,7 @@ import _mock from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
+import { signOut } from 'src/auth/context/jwt/action';
 
 // ----------------------------------------------------------------------
 
@@ -63,6 +64,16 @@ type Props = {
 
 export default function EcommerceAccountMenu({ open, onClose }: Props) {
   const isMdUp = useResponsive('up', 'md');
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate(paths.auth.jwt.signIn);
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   const renderContent = (
     <Stack
@@ -116,6 +127,7 @@ export default function EcommerceAccountMenu({ open, onClose }: Props) {
             height: 44,
             borderRadius: 1,
           }}
+          onClick={handleLogout}
         >
           <ListItemIcon>
             <Iconify icon="carbon:logout" />
