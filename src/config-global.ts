@@ -64,7 +64,7 @@ export const CONFIG: ConfigValue = {
   auth: {
     method: 'jwt',
     skip: false,
-    redirectPath: paths.eCommerce.account.root,
+    redirectPath: paths.eCommerce.account.personal,
   },
   /**
    * Mapbox

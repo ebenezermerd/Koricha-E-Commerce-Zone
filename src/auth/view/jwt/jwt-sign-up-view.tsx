@@ -11,7 +11,7 @@ import  Iconify from 'src/components/iconify';
 import { FormHead } from '../../components/form-head';
 import { useAuthContext } from '../../hooks';
 import { signUp } from '../../context/jwt';
-import { RegistrationView } from '../registration-view'; // Import RegistrationView
+import { CustomerSignUpView } from '../registration-view'; // Import CustomerSignUpView
 
 export const SignUpSchema = zod.object({
   role: zod.string().min(1, { message: 'User type is required!' }),
@@ -40,8 +40,8 @@ export function JwtSignUpView () {
         description="please carefully fill all fields of the form."
         sx={{ textAlign: { xs: 'center', md: 'left',} }}
       />
-      {/* Render RegistrationView instead of the existing form */}
-      <RegistrationView />
+      {/* Render CustomerSignUpView instead of the existing form */}
+      <CustomerSignUpView />
     </>
   );
 }
