@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useState } from "react";
 // @mui
-import { Stack, Drawer, Button, Collapse, Typography, StackProps } from '@mui/material';
+import {
+  Stack,
+  Drawer,
+  Button,
+  Collapse,
+  Typography,
+  StackProps,
+} from "@mui/material";
 // hooks
-import useResponsive from 'src/hooks/useResponsive';
+import useResponsive from "src/hooks/useResponsive";
 // config
-import { NAV } from 'src/config-global';
+import { NAV } from "src/config-global";
 // types
-import { IProductFiltersProps } from 'src/types/product';
+import { IProductFiltersProps } from "src/types/product";
 // components
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 //
 import {
   EcommerceFilterTag,
@@ -18,29 +25,49 @@ import {
   EcommerceFilterRating,
   EcommerceFilterCategory,
   EcommerceFilterShipping,
-} from './components';
+  EcommerceFilterGender,
+  EcommerceFilterColor,
+} from "./components";
+import { ColorPicker } from 'src/components/color-utils';
+
 
 // ----------------------------------------------------------------------
 
-const BRAND_OPTIONS = ['Apple', 'Samsung', 'Xiaomi', 'Honor'];
+const BRAND_OPTIONS = ["Apple", "Samsung", "Xiaomi", "Honor"];
 
 const CATEGORY_OPTIONS = [
-  'Apple iPhone',
-  'Samsung Galaxy',
-  'Nike Air Max',
-  'Adidas Ultraboost',
-  'Sony PlayStation',
+  "Apple iPhone",
+  "Samsung Galaxy",
+  "Nike Air Max",
+  "Adidas Ultraboost",
+  "Sony PlayStation",
 ];
 
-const SHIPPING_OPTIONS = ['Fast', 'Saving', 'Free'];
+const SHIPPING_OPTIONS = ["Fast", "Saving", "Free"];
 
-const TAG_OPTIONS = ['Books and Media', 'Pet', 'Electronics', 'Food', 'Automotive and Industrial'];
+const TAG_OPTIONS = [
+  "Books and Media",
+  "Pet",
+  "Electronics",
+  "Food",
+  "Automotive and Industrial",
+];
 
+const GENDER_OPTIONS = ["Men", "Women", "Kids"];
+
+const COLOR_OPTIONS = [
+  { name: 'White', code: '#FFFFFF' },
+  { name: 'Black', code: '#000000' },
+  { name: 'Red', code: '#FF4842' },
+  { name: 'Green', code: '#54D62C' },
+  { name: 'Blue', code: '#1890FF' },
+  { name: 'Purple', code: '#7A1BF7' },
+];
 // ----------------------------------------------------------------------
 
 const defaultValues = {
   filterBrand: [BRAND_OPTIONS[1]],
-  filterCategories: '',
+  filterCategories: "",
   filterRating: null,
   filterStock: false,
   filterShipping: [],
@@ -49,6 +76,8 @@ const defaultValues = {
     start: 0,
     end: 0,
   },
+  filterGender: "",
+  filterColor: [],
 };
 
 type Props = {
@@ -57,7 +86,7 @@ type Props = {
 };
 
 export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
-  const isMdUp = useResponsive('up', 'md');
+  const isMdUp = useResponsive("up", "md");
 
   const [filters, setFilters] = useState<IProductFiltersProps>(defaultValues);
 
@@ -101,7 +130,9 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
     });
   };
 
-  const handleChangeStartPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeStartPrice = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFilters({
       ...filters,
       filterPrice: {
@@ -125,6 +156,20 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
     setFilters({
       ...filters,
       filterStock: event.target.checked,
+    });
+  };
+
+  const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      filterGender: event.target.value,
+    });
+  };
+
+  const handleChangeColor = (name: string) => {
+    setFilters({
+      ...filters,
+      filterColor: getSelected(filters.filterColor, name),
     });
   };
 
@@ -159,6 +204,24 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
         />
       </Block>
 
+      <Block title="Colors">
+        <EcommerceFilterColor
+          options={COLOR_OPTIONS}
+          filterColor={filters.filterColor}
+          onChangeColor={handleChangeColor}
+          sx={{ mt: 2 }}
+        />
+      </Block>
+
+      <Block title="Gender">
+        <EcommerceFilterGender
+          options={GENDER_OPTIONS}
+          filterGender={filters.filterGender}
+          onChangeGender={handleChangeGender}
+          sx={{ mt: 2 }}
+        />
+      </Block>
+
       <Block title="Price">
         <EcommerceFilterPrice
           filterPrice={filters.filterPrice}
@@ -185,7 +248,10 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
         />
       </Block>
 
-      <EcommerceFilterStock filterStock={filters.filterStock} onChangeStock={handleChangeStock} />
+      <EcommerceFilterStock
+        filterStock={filters.filterStock}
+        onChangeStock={handleChangeStock}
+      />
 
       <Block title="Tags">
         <EcommerceFilterTag
@@ -255,13 +321,13 @@ function Block({ title, children, ...other }: BlockProps) {
         alignItems="center"
         justifyContent="space-between"
         onClick={handleOpen}
-        sx={{ width: 1, cursor: 'pointer' }}
+        sx={{ width: 1, cursor: "pointer" }}
       >
         <Typography variant="h6">{title}</Typography>
 
         <Iconify
-          icon={checked ? 'carbon:subtract' : 'carbon:add'}
-          sx={{ color: 'text.secondary' }}
+          icon={checked ? "carbon:subtract" : "carbon:add"}
+          sx={{ color: "text.secondary" }}
         />
       </Stack>
 

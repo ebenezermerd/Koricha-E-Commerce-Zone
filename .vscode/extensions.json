@@ -1,0 +1,22 @@
+{
+"recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    "formulahendry.auto-rename-tag",
+    "GitHub.copilot",
+    "naumovs.color-highlight"
+],
+"unwantedRecommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-azuretools.vscode-docker",
+    "bmewburn.vscode-intelephense-client",
+    "GitHub.copilot-chat",
+    "visualstudioexptteam.vscodeintellicode",
+    "visualstudioexptteam.intellicode-api-usage-examples",
+    "rvest.vs-code-prettier-eslint"
+]
+}
+

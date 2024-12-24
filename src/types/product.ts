@@ -40,6 +40,8 @@ export type IProductFiltersProps = {
   filterShipping: string[];
   filterCategories: string;
   filterRating: string | null;
+  filterGender: string;
+  filterColor: string[];
   filterPrice: {
     start: number;
     end: number;

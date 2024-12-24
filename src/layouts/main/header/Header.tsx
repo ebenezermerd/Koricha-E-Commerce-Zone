@@ -70,7 +70,7 @@ export default function Header() {
       sx={{
         boxShadow: "none",
         bgcolor: theme.palette.background.neutral,
-        borderRadius: "5px",
+        borderRadius: "5px"
       }}
     >
       <Toolbar

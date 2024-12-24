@@ -135,10 +135,11 @@ export default function EcommerceProductDetailsCarousel({ images }: Props) {
                 alt="thumbnail"
                 src={slide.src}
                 sx={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 1.5,
+                  
+                  width: '100%',
+                  height: '100%',
                   cursor: 'pointer',
+                  
                 }}
                 onClick={() => setSelectedImageIndex(index)}
               />

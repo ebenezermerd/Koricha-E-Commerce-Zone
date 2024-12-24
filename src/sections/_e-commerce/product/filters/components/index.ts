@@ -5,3 +5,7 @@ export { default as EcommerceFilterStock } from './EcommerceFilterStock';
 export { default as EcommerceFilterRating } from './EcommerceFilterRating';
 export { default as EcommerceFilterCategory } from './EcommerceFilterCategory';
 export { default as EcommerceFilterShipping } from './EcommerceFilterShipping';
+export { default as EcommerceFilterGender } from './EcommerceFilterGender';
+export { default as EcommerceFilterColor } from './EcommerceFilterColor';
+
+
