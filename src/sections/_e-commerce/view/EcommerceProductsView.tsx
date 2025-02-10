@@ -14,6 +14,8 @@ import {
   SelectChangeEvent,
   ToggleButtonGroup,
 } from '@mui/material';
+import SplashScreen from 'src/components/loading-screen';
+
 // config
 import { NAV } from 'src/config-global';
 // _mock
@@ -23,7 +25,7 @@ import Iconify from 'src/components/iconify';
 //
 import { EcommerceHeader } from '../layout';
 import EcommerceFilters from '../product/filters';
-import { useProducts } from 'src/services/useProducts';
+import { useGetProducts } from 'src/services/useProducts';
 import { EcommerceProductList, EcommerceProductListBestSellers } from '../product/list';
 
 // ----------------------------------------------------------------------
@@ -44,9 +46,7 @@ const SORT_OPTIONS = [
 export default function EcommerceProductsView() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { products, productsLoading } = useProducts();
-
-  console.log('products', products);
+  const { products, productsLoading, productsEmpty } = useGetProducts();
 
   const [sort, setSort] = useState('latest');
 
@@ -82,6 +82,14 @@ export default function EcommerceProductsView() {
   const handleMobileClose = () => {
     setMobileOpen(false);
   };
+
+  if (productsLoading) {
+    return <SplashScreen />;
+  }
+
+  if (productsEmpty) {
+    return <Typography variant="h3">No products found</Typography>;
+  }
 
   return (
     <>
@@ -120,7 +128,7 @@ export default function EcommerceProductsView() {
         >
           <Stack spacing={5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
             <EcommerceFilters mobileOpen={mobileOpen} onMobileClose={handleMobileClose} />
-            <EcommerceProductListBestSellers products={_products.slice(0, 3)} />
+            <EcommerceProductListBestSellers products={products.slice(0, 3)} />
           </Stack>
 
           <Box
@@ -170,9 +178,9 @@ export default function EcommerceProductsView() {
             </Stack>
 
             <EcommerceProductList
-              loading={loading}
+              loading={productsLoading}
               viewMode={viewMode}
-              products={_products.slice(0, 16)}
+              products={products.slice(0, 16)}
             />
           </Box>
         </Stack>

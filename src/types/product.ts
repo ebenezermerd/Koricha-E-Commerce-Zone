@@ -1,11 +1,14 @@
 // ----------------------------------------------------------------------
 
 export type IProductItemHeroProps = {
+  id: string;
   title: string;
   caption: string;
   coverImg: string;
   label: string;
 };
+
+export type IDateValue = string | number | null;
 
 export type IProductItemCompareProps = {
   id: string;
@@ -14,6 +17,18 @@ export type IProductItemCompareProps = {
   coverImg: string;
   rating: number;
   details: string[];
+};
+
+export type IProductReview = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  helpful: number;
+  avatarUrl: string;
+  postedAt: IDateValue;
+  isPurchased?: boolean;
+  attachments?: string[];
 };
 
 export type IProductItemProps = {
@@ -31,6 +46,43 @@ export type IProductItemProps = {
   inStock: number;
   review: number;
   images: string[];
+  sku: string;
+  code: string;
+  taxes: number;
+  tags: string[];
+  sizes: string[];
+  gender: string[];
+  colors: string[];
+  publish: 'published' | 'draft';
+  quantity: number;
+  available: number;
+  totalSold: number;
+  totalRatings: number;
+  totalReviews: number;
+  createdAt: IDateValue;
+  inventoryType: string;
+  subDescription: string;
+  isPublished: boolean;
+  reviews: IProductReview[];
+  vendor?: {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+  };
+  ratings: {
+    name: string;
+    starCount: number;
+    reviewCount: number;
+  }[];
+  saleLabel: {
+    enabled: boolean;
+    content: string;
+  };
+  newLabel: {
+    enabled: boolean;
+    content: string;
+  };
 };
 
 export type IProductFiltersProps = {

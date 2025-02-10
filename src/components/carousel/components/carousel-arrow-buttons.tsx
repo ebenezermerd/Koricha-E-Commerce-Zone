@@ -27,35 +27,46 @@ export function CarouselArrowBasicButtons({
 }: BoxProps & CarouselArrowButtonsProps) {
   return (
     <Box
-      gap={0.5}
-      alignItems="center"
-      display="inline-flex"
       className={carouselClasses.arrows.concat(className ? ` ${className}` : '')}
       sx={{
+        display: 'flex',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        left: 0,
+        right: 0,
         zIndex: 9,
-        color: 'action.active',
+        justifyContent: 'space-between',
         ...sx,
       }}
       {...other}
     >
       <ArrowButton
+        className="arrow-btn"
         variant="prev"
         options={options}
         disabled={disablePrev}
         onClick={onClickPrev}
         svgIcon={slotProps?.prevBtn?.svgIcon}
         svgSize={slotProps?.prevBtn?.svgSize}
-        sx={slotProps?.prevBtn?.sx}
+        sx={{
+          left: 8,
+          ...slotProps?.prevBtn?.sx,
+        }}
       />
 
       <ArrowButton
+        className="arrow-btn"
         variant="next"
         options={options}
         disabled={disableNext}
         onClick={onClickNext}
         svgIcon={slotProps?.nextBtn?.svgIcon}
-        svgSize={slotProps?.prevBtn?.svgSize}
-        sx={slotProps?.prevBtn?.sx}
+        svgSize={slotProps?.nextBtn?.svgSize}
+        sx={{
+          right: 8,
+          ...slotProps?.nextBtn?.sx,
+        }}
       />
     </Box>
   );
@@ -175,70 +186,68 @@ export function CarouselArrowFloatButtons({
 // ----------------------------------------------------------------------
 
 export function ArrowButton({
+  sx,
+  disabled,
+  onClick,
   svgIcon,
   svgSize,
-  options,
   variant,
-  sx,
+  options,
   className,
   ...other
 }: ButtonBaseProps & CarouselArrowButtonProps) {
   const arrowPrev = variant === 'prev';
-  const arrowNext = variant === 'next';
 
   const prevSvg = svgIcon || (
     <path
       fill="currentColor"
-      fillRule="evenodd"
-      d="M15.488 4.43a.75.75 0 0 1 .081 1.058L9.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081"
-      clipRule="evenodd"
+      d="M15.488 4.43a.75.75 0 0 0-1.057.082l-6 7a.75.75 0 0 0 0 .976l6 7a.75.75 0 0 0 1.138-.976L9.988 12l5.581-6.512a.75.75 0 0 0-.081-1.057"
     />
   );
 
   const nextSvg = svgIcon || (
     <path
       fill="currentColor"
-      fillRule="evenodd"
-      d="M8.512 4.43a.75.75 0 0 1 1.057.082l6 7a.75.75 0 0 1 0 .976l-6 7a.75.75 0 0 1-1.138-.976L14.012 12L8.431 5.488a.75.75 0 0 1 .08-1.057"
-      clipRule="evenodd"
+      d="M8.512 4.43a.75.75 0 0 1 1.057.082l6 7a.75.75 0 0 1 0 .976l-6 7a.75.75 0 0 1-1.138-.976L14.012 12 8.431 5.488a.75.75 0 0 1 .08-1.057"
     />
   );
 
   return (
     <ButtonBase
+      disabled={disabled}
+      onClick={onClick}
       className={
         arrowPrev
           ? carouselClasses.arrowPrev.concat(className ? ` ${className}` : '')
           : carouselClasses.arrowNext.concat(className ? ` ${className}` : '')
       }
-      aria-label={arrowPrev ? 'Prev button' : 'Next button'}
       sx={{
-        p: 1,
+        width: 40,
+        height: 40,
         borderRadius: '50%',
-        boxSizing: 'content-box',
+        position: 'absolute',
+        zIndex: 9,
+        opacity: 0.48,
         transition: (theme) =>
-          theme.transitions.create(['all'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.short,
+          theme.transitions.create(['opacity', 'background-color'], {
+            duration: theme.transitions.duration.shorter,
           }),
+        '&:hover': {
+          opacity: 1,
+        },
         [`&.${buttonBaseClasses.disabled}`]: {
-          opacity: 0.4,
+          opacity: 0.32,
         },
         ...sx,
-        ...(options?.direction === 'rtl' && {
-          ...(arrowPrev && { right: -16, left: 'auto' }),
-          ...(arrowNext && { left: -16, right: 'auto' }),
-        }),
       }}
       {...other}
     >
       <SvgIcon
         className={carouselClasses.arrowSvg}
         sx={{
-          width: svgSize ?? 20,
-          height: svgSize ?? 20,
-          ...(options?.axis === 'y' && { transform: ' rotate(90deg)' }),
-          ...(options?.direction === 'rtl' && { transform: ' scaleX(-1)' }),
+          width: svgSize ?? 24,
+          height: svgSize ?? 24,
+          transform: options?.axis === 'y' ? 'rotate(90deg)' : 'none',
         }}
       >
         {arrowPrev ? prevSvg : nextSvg}

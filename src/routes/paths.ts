@@ -10,7 +10,7 @@ export const paths = {
   eCommerce: {
     landing: "/e-commerce/landing",
     products: "/e-commerce/products",
-    product: `/e-commerce/product`,
+    product: '/e-commerce/product/:id',
     cart: "/e-commerce/cart",
     checkout: `/e-commerce/checkout`,
     orderCompleted: "/e-commerce/order-completed",

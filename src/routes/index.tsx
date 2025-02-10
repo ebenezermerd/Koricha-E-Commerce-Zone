@@ -120,7 +120,7 @@ export default function Router() {
           children: [
             { path: "landing", element: <HomePage /> },
             { path: "products", element: <EcommerceProductsPage /> },
-            { path: "product", element: <EcommerceProductPage /> },
+            { path: "product/:id", element: <EcommerceProductPage /> },
             { path: "cart", element: <EcommerceCartPage /> },
             { path: "checkout", element: <EcommerceCheckoutPage /> },
             {

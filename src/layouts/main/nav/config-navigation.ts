@@ -12,7 +12,6 @@ export const pageLinks = [
     items: [
       { title: 'Landing', path: paths.eCommerce.landing },
       { title: 'Products', path: paths.eCommerce.products },
-      { title: 'Product', path: paths.eCommerce.product },
       { title: 'Cart', path: paths.eCommerce.cart },
       { title: 'Checkout', path: paths.eCommerce.checkout },
       { title: 'Order Completed', path: paths.eCommerce.orderCompleted },

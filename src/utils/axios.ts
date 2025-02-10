@@ -56,7 +56,7 @@ export const endpoints = {
     search: '/api/post/search',
   },
   product: {
-    list: '/api/product/list',
+    list: '/api/products/list',
     details: '/api/product/details',
     search: '/api/product/search',
   },

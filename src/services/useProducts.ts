@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import axios from 'src/utils/axios';
 import { endpoints } from 'src/utils/axios';
 import { IProductItemProps } from 'src/types/product';
-import { adaptMinimalToZoneProduct } from 'src/types/product-adapter';
+import { adaptMinimalToZoneProduct } from 'src/types/product-adaptor';
 import { IProductItem as MinimalProduct } from 'src/types/product-minimal';
 
 // ----------------------------------------------------------------------
@@ -49,14 +49,14 @@ export function useGetProducts() {
     }),
     [data?.products, error, isLoading, isValidating]
   );
-
+ 
   return memoizedValue;
 }
 
 export function useGetProduct(id: string) {
   const { data, isLoading, error, isValidating } = useSWR<MinimalProductResponse>(
-    id ? `${endpoints.product.details}/${id}` : null,
-    fetcher,
+    id ? endpoints.product.details : null,
+    id ? () => axios.get(endpoints.product.details, { params: { productId: id } }).then(res => res.data) : null,
     swrOptions
   );
 

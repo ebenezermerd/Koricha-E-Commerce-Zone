@@ -20,6 +20,7 @@ interface Props extends StackProps {
 }
 
 export default function EcommerceProductViewGridItem({ product, sx, ...other }: Props) {
+  const productPath = paths.eCommerce.product.replace(':id', product.id);
   return (
     <Stack
       sx={{
@@ -46,7 +47,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
       <Box sx={{ position: 'relative', mb: 2 }}>
         <Fab
           component={RouterLink}
-          to={paths.eCommerce.product}
+          to={productPath}
           className="add-to-cart"
           color="primary"
           size="medium"
@@ -72,7 +73,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
             flexShrink: 0,
             borderRadius: 1.5,
             bgcolor: 'background.neutral',
-          }}
+          }}  
         />
       </Box>
 
@@ -81,7 +82,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
           {product.category}
         </TextMaxLine>
 
-        <Link component={RouterLink} to={paths.eCommerce.product} color="inherit">
+        <Link component={RouterLink} to={productPath} color="inherit">
           <TextMaxLine variant="body2" line={1} sx={{ fontWeight: 'fontWeightMedium' }}>
             {product.name}
           </TextMaxLine>

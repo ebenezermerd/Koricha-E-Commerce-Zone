@@ -21,6 +21,7 @@ type Props = {
 };
 
 export default function EcommerceProductItemHero({ product }: Props) {
+  const productPath = paths.eCommerce.product.replace(':id', product.id);
   const theme = useTheme();
 
   const { label, title, caption, coverImg } = product;
@@ -58,7 +59,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
 
           <Button
             component={RouterLink}
-            to={paths.eCommerce.product}
+            to={productPath}
             size="large"
             color="inherit"
             variant="contained"
