@@ -85,7 +85,7 @@ export function CustomerSignUpView() {
   const handleSubmitForm = async () => {
     try {
       const data = methods.getValues();
-      if (data.password !== data.confirmPassword) {
+      if (data.password !== data.password_confirmation) {
         setErrorMsg('Passwords do not match');
         return;
       }
@@ -98,7 +98,7 @@ export function CustomerSignUpView() {
         sex: data.sex,
         address: data.address,
         password: data.password,
-        password_confirmation: data.confirmPassword,
+        password_confirmation: data.password_confirmation,
       };
       await signUp(signUpData);
       await checkUserSession?.();

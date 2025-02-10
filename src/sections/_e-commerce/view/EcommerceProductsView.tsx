@@ -23,6 +23,7 @@ import Iconify from 'src/components/iconify';
 //
 import { EcommerceHeader } from '../layout';
 import EcommerceFilters from '../product/filters';
+import { useProducts } from 'src/services/useProducts';
 import { EcommerceProductList, EcommerceProductListBestSellers } from '../product/list';
 
 // ----------------------------------------------------------------------
@@ -42,6 +43,10 @@ const SORT_OPTIONS = [
 
 export default function EcommerceProductsView() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { products, productsLoading } = useProducts();
+
+  console.log('products', products);
 
   const [sort, setSort] = useState('latest');
 
