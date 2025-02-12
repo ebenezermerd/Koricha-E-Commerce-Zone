@@ -7,7 +7,7 @@ import { CONFIG } from 'src/config-global';
 
 import  LoadingScreen  from 'src/components/loading-screen';
 
-import { useAuthContext } from '../hooks';
+import { useGetUser } from 'src/services/useUser';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ export function AuthGuard({ children }: Props) {
 
   const searchParams = useSearchParams();
 
-  const { authenticated, loading } = useAuthContext();
+  const { authenticated, userLoading } = useGetUser();
 
   const [isChecking, setIsChecking] = useState<boolean>(true);
 
@@ -36,8 +36,8 @@ export function AuthGuard({ children }: Props) {
     [searchParams]
   );
 
-  const checkPermissions = async (): Promise<void> => {
-    if (loading) {
+  const checkPermissions = useCallback(async (): Promise<void> => {
+    if (userLoading) {
       return;
     }
 
@@ -55,14 +55,13 @@ export function AuthGuard({ children }: Props) {
     }
 
     setIsChecking(false);
-  };
+  }, [authenticated, userLoading, pathname, router, createQueryString]);
 
   useEffect(() => {
     checkPermissions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authenticated, loading]);
+  }, [checkPermissions]);
 
-  if (isChecking) {
+  if (isChecking || userLoading) {
     return <LoadingScreen />;
   }
 

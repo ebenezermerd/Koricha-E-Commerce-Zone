@@ -17,10 +17,9 @@ import {
   EcommerceProductsPage,
   EcommerceWishlistPage,
   EcommerceAccountOrdersPage,
+  EcommerceAccountAddressPage,
   EcommerceOrderCompletedPage,
-  EcommerceAccountPaymentPage,
   EcommerceAccountPersonalPage,
-  EcommerceAccountVouchersPage,
   EcommerceAccountWishlistPage,
   // Auth
   SignInPage,
@@ -132,11 +131,22 @@ export default function Router() {
             {
               path: "account",
               children: [
-          { path: "personal", element: <AuthGuard><EcommerceAccountPersonalPage /></AuthGuard> },
-          { path: "wishlist", element: <AuthGuard><EcommerceAccountWishlistPage /></AuthGuard> },
-          { path: "vouchers", element: <AuthGuard><EcommerceAccountVouchersPage /></AuthGuard> },
-          { path: "orders", element: <AuthGuard><EcommerceAccountOrdersPage /></AuthGuard> },
-          { path: "payment", element: <AuthGuard><EcommerceAccountPaymentPage /></AuthGuard> },
+                { 
+                  path: "personal", 
+                  element: <AuthGuard><EcommerceAccountPersonalPage /></AuthGuard> 
+                },
+                { 
+                  path: "wishlist", 
+                  element: <AuthGuard><EcommerceAccountWishlistPage /></AuthGuard> 
+                },
+                { 
+                  path: "orders", 
+                  element: <AuthGuard><EcommerceAccountOrdersPage /></AuthGuard> 
+                },
+                { 
+                  path: "address", 
+                  element: <AuthGuard><EcommerceAccountAddressPage /></AuthGuard> 
+                },
               ],
             },
           ],

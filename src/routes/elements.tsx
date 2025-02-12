@@ -41,8 +41,8 @@ export const EcommerceWishlistPage = Loadable(
 export const EcommerceAccountOrdersPage = Loadable(
   lazy(() => import("../pages/e-commerce/account/EcommerceAccountOrdersPage"))
 );
-export const EcommerceAccountPaymentPage = Loadable(
-  lazy(() => import("../pages/e-commerce/account/EcommerceAccountPaymentPage"))
+export const EcommerceAccountAddressPage = Loadable(
+  lazy(() => import("../pages/e-commerce/account/EcommerceAccountAddressPage"))
 );
 export const EcommerceAccountPersonalPage = Loadable(
   lazy(() => import("../pages/e-commerce/account/EcommerceAccountPersonalPage"))

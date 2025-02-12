@@ -2,6 +2,8 @@ import axios, { endpoints } from 'src/utils/axios';
 
 import { setSession } from './utils';
 import { STORAGE_KEY } from './constant';
+import { paths } from 'src/routes/paths';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -94,6 +96,7 @@ export const signUp = async (params: SignUpParams): Promise<void> => {
 export const signOut = async (): Promise<void> => {
   try {
     await setSession(null);
+    window.location.href = paths.auth.jwt.signIn;
   } catch (error) {
     console.error('Error during sign out:', error);
     throw error;

@@ -27,6 +27,7 @@ import { EcommerceHeader } from '../layout';
 import EcommerceFilters from '../product/filters';
 import { useGetProducts } from 'src/services/useProducts';
 import { EcommerceProductList, EcommerceProductListBestSellers } from '../product/list';
+import { EmptyContent } from 'src/components/empty-content';
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +89,7 @@ export default function EcommerceProductsView() {
   }
 
   if (productsEmpty) {
-    return <Typography variant="h3">No products found</Typography>;
+    return <EmptyContent title="No product found" sx={{ py: 30 }}  />;
   }
 
   return (

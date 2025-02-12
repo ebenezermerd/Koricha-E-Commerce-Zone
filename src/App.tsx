@@ -26,6 +26,7 @@ import Router from 'src/routes';
 // theme
 import ThemeProvider from 'src/theme';
 // components
+import { Snackbar } from 'src/components/snackbar';
 import ScrollToTop from 'src/components/scroll-to-top';
 import { ThemeSettings, SettingsProvider } from 'src/components/settings';
 import MotionLazyContainer from 'src/components/animate/MotionLazyContainer';
@@ -33,6 +34,7 @@ import './index.css';
 
 // Auth Context
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
+import { ProfileImageProvider } from 'src/hooks/use-profile-image';
 // ----------------------------------------------------------------------
 const AuthProvider = JwtAuthProvider;
 
@@ -41,18 +43,21 @@ export default function App() {
   return (
     <HelmetProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <AuthProvider>
-        <SettingsProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <ThemeProvider>
-              <ThemeSettings>
-                <MotionLazyContainer>
-                  <Router />
-                </MotionLazyContainer>
-              </ThemeSettings>
-            </ThemeProvider>
-          </BrowserRouter>
+        <AuthProvider>
+          <SettingsProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <ThemeProvider>
+                <ThemeSettings>
+                  <Snackbar />
+                  <ProfileImageProvider>
+                    <MotionLazyContainer>
+                      <Router />
+                    </MotionLazyContainer>
+                  </ProfileImageProvider>
+                </ThemeSettings>
+              </ThemeProvider>
+            </BrowserRouter>
           </SettingsProvider>
         </AuthProvider>
       </LocalizationProvider>

@@ -19,9 +19,8 @@ export const paths = {
     account: {
       personal: `/e-commerce/account/personal`,
       wishlist: `/e-commerce/account/wishlist`,
-      vouchers: `/e-commerce/account/vouchers`,
       orders: `/e-commerce/account/orders`,
-      payment: `/e-commerce/account/payment`,
+      address: `/e-commerce/account/address`,
     },
   },
   // Auth

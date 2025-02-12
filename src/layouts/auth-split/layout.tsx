@@ -99,7 +99,7 @@ export function AuthSplitLayout({ sx, section, children, header }: AuthSplitLayo
       cssVars={{ '--layout-auth-content-width': '620px' }}
       sx={sx}
     >
-      <Main layoutQuery={layoutQuery}>
+      <Main layoutQuery={layoutQuery} sx={{ mt: '100px' }}>
         <Section
           title={section?.title}
           layoutQuery={layoutQuery}
