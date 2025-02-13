@@ -14,6 +14,7 @@ import {
   StackProps,
   InputAdornment,
   Unstable_Grid2 as Grid,
+  Box,
 } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
@@ -23,7 +24,7 @@ import { _socials } from 'src/_mock';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 //
-import { pageLinks, navConfig } from '../nav/config-navigation';
+import {navConfig } from '../nav/config-navigation';
 import ListDesktop from './ListDesktop';
 import ListMobile from './ListMobile';
 
@@ -48,12 +49,6 @@ export default function Footer() {
 
   const { pathname } = useLocation();
 
-  const mobileList = navConfig.find((i) => i.title === 'Pages')?.children || [];
-
-  const desktopList = pageLinks.sort((listA, listB) => Number(listA.order) - Number(listB.order));
-
-  const renderLists = isMdUp ? desktopList : mobileList;
-
   const isHome = pathname === '/';
 
   const simpleFooter = (
@@ -61,7 +56,8 @@ export default function Footer() {
       <Logo single />
 
       <Typography variant="caption" component="div" sx={{ color: 'text.secondary' }}>
-        © 2023. All rights reserved
+      {/* dynamic year configuration */}
+      © {new Date().getFullYear()} All rights reserved
       </Typography>
     </Container>
   );
@@ -76,89 +72,85 @@ export default function Footer() {
           py: { xs: 8, md: 10 },
         }}
       >
-        <Grid container spacing={3} justifyContent={{ md: 'space-between' }}>
-          <Grid xs={12} md={4}>
-            <Stack spacing={{ xs: 3, md: 5 }}>
-              <Stack alignItems="flex-start" spacing={3}>
-                <Logo />
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  The starting point for your next project based on easy-to-customize Material-UI ©
-                  helps you build apps faster and better.
-                </Typography>
-              </Stack>
+        <Grid container spacing={3} justifyContent="center"> {/* Center overall content */}
 
-              <Stack spacing={1} alignItems="flex-start">
-                <Typography variant="h6">Community</Typography>
-                <Link variant="body2" sx={{ color: 'text.primary' }}>
-                  Documentation
-                </Link>
-                <Link variant="body2" sx={{ color: 'text.primary' }}>
-                  Changelog
-                </Link>
-                <Link variant="body2" sx={{ color: 'text.primary' }}>
-                  Contributing
-                </Link>
-              </Stack>
+{/* First Row: 3 Columns */}
+<Grid item xs={12} md={4}>
+  <Stack alignItems="flex-start" spacing={3}>
+    <Logo />
+    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      The Ethiopian new ecommerce web platform with high fidelity and user interactions. ©
+      buy and sell your products in our web platform.
+    </Typography>
+  </Stack>
+</Grid>
 
-              <Stack spacing={2}>
-                <Stack spacing={1}>
-                  <Typography variant="h6">Let’s stay in touch</Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    Ubscribe to our newsletter to receive latest articles to your inbox weekly.
-                  </Typography>
-                </Stack>
+<Grid item xs={12} md={4}>
+  <Stack spacing={1} alignItems="flex-start">
+    <Typography variant="h6">Community</Typography>
+    <Link variant="body2" sx={{ color: 'text.primary' }}>
+      Documentation
+    </Link>
+    <Link variant="body2" sx={{ color: 'text.primary' }}>
+      Changelog
+    </Link>
+    <Link variant="body2" sx={{ color: 'text.primary' }}>
+      Contributing
+    </Link>
+  </Stack>
+</Grid>
 
-                <TextField
-                  fullWidth
-                  hiddenLabel
-                  placeholder="Email address"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Button variant="contained" color="inherit" size="large">
-                          Subscribe
-                        </Button>
-                      </InputAdornment>
-                    ),
-                    sx: { pr: 0.5 },
-                  }}
-                />
-              </Stack>
+<Grid item xs={12} md={4}>
+  <Stack spacing={2}>
+    <Stack spacing={1}>
+      <Typography variant="h6">Let’s stay in touch</Typography>
+      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+        Subscribe to our newsletter to receive latest articles to your inbox weekly.
+      </Typography>
+    </Stack>
 
-              <Stack spacing={2}>
-                <Typography variant="h6">Social</Typography>
-                <Stack direction="row" alignItems="center">
-                  {_socials.map((social) => (
-                    <IconButton key={social.value} color="primary">
-                      <Iconify icon={social.icon} />
-                    </IconButton>
-                  ))}
-                </Stack>
-              </Stack>
+    <TextField
+      fullWidth
+      hiddenLabel
+      placeholder="Email address"
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Button variant="contained" color="inherit" size="large">
+              Subscribe
+            </Button>
+          </InputAdornment>
+        ),
+        sx: { pr: 0.5 },
+      }}
+    />
+  </Stack>
+</Grid>
 
-              <Stack spacing={2}>
-                <Typography variant="h6">Apps</Typography>
-                <AppStoreButton />
-              </Stack>
-            </Stack>
-          </Grid>
+{/* Second Row: 2 Columns, Centered */}
+<Grid item xs={12} md={6}>
+  <Stack spacing={2}>
+    <Typography variant="h6">Social</Typography>
+    <Stack direction="row" alignItems="center" justifyContent="center"> {/* Center content */}
+      {_socials.map((social) => (
+        <IconButton key={social.value} color="primary">
+          <Iconify icon={social.icon} />
+        </IconButton>
+      ))}
+    </Stack>
+  </Stack>
+</Grid>
 
-          <Grid xs={12} md={6}>
-            {isMdUp ? (
-              <Masonry columns={4} spacing={2} defaultColumns={4} defaultSpacing={2}>
-                {renderLists.map((list) => (
-                  <ListDesktop key={list.subheader} list={list} />
-                ))}
-              </Masonry>
-            ) : (
-              <Stack spacing={1.5}>
-                {renderLists.map((list) => (
-                  <ListMobile key={list.subheader} list={list} />
-                ))}
-              </Stack>
-            )}
-          </Grid>
-        </Grid>
+<Grid item xs={12} md={6}>
+  <Stack spacing={2}>
+    <Typography variant="h6">Apps</Typography>
+    <Box display="flex" justifyContent="center">  {/* Center the AppStoreButton */}
+      <AppStoreButton />
+    </Box>
+  </Stack>
+</Grid>
+
+</Grid>
       </Container>
       <Divider />
       <Container>

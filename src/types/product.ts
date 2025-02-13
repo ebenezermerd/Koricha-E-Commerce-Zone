@@ -83,6 +83,12 @@ export type IProductItemProps = {
     enabled: boolean;
     content: string;
   };
+  brand: {
+    id: string;
+    name: string;
+    description: string;
+    logo?: string;
+  };
 };
 
 export type IProductFiltersProps = {

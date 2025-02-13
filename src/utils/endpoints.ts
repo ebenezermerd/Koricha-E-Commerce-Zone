@@ -4,7 +4,7 @@ export const API_ENDPOINTS = {
     register: '/auth/register',
     logout: '/auth/logout',
   },
-  user: '/users',
+  user: '/api/user',
   products: '/products',
   categories: '/categories',
   cart: '/cart',

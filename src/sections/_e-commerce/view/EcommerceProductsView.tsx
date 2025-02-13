@@ -28,6 +28,8 @@ import EcommerceFilters from '../product/filters';
 import { useGetProducts } from 'src/services/useProducts';
 import { EcommerceProductList, EcommerceProductListBestSellers } from '../product/list';
 import { EmptyContent } from 'src/components/empty-content';
+// types
+import { IProductFiltersProps } from 'src/types/product';
 
 // ----------------------------------------------------------------------
 
@@ -46,14 +48,27 @@ const SORT_OPTIONS = [
 
 export default function EcommerceProductsView() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
+  const [filters, setFilters] = useState<IProductFiltersProps>({
+    filterBrand: [],
+    filterCategories: '',
+    filterColor: [],
+    filterPrice: {
+      start: 0,
+      end: 0,
+    },
+    filterStock: false,
+    filterShipping: [],
+    filterTag: [],
+    filterRating: null,
+    filterGender: "",
+  });
 
   const { products, productsLoading, productsEmpty } = useGetProducts();
 
   const [sort, setSort] = useState('latest');
 
   const [loading, setLoading] = useState(true);
-
-  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     const fakeLoading = async () => {
@@ -82,6 +97,12 @@ export default function EcommerceProductsView() {
 
   const handleMobileClose = () => {
     setMobileOpen(false);
+  };
+
+  const handleChangeView = (event: React.MouseEvent<HTMLElement>, newView: string | null) => {
+    if (newView !== null) {
+      setViewMode(newView);
+    }
   };
 
   if (productsLoading) {
@@ -128,7 +149,12 @@ export default function EcommerceProductsView() {
           sx={{ mb: { xs: 8, md: 10 } }}
         >
           <Stack spacing={5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-            <EcommerceFilters mobileOpen={mobileOpen} onMobileClose={handleMobileClose} />
+            <EcommerceFilters 
+              mobileOpen={mobileOpen} 
+              onMobileClose={handleMobileClose}
+              filters={filters}
+              onFiltersChange={setFilters}
+            />
             <EcommerceProductListBestSellers products={products.slice(0, 3)} />
           </Stack>
 
@@ -181,7 +207,8 @@ export default function EcommerceProductsView() {
             <EcommerceProductList
               loading={productsLoading}
               viewMode={viewMode}
-              products={products.slice(0, 16)}
+              products={products}
+              filters={filters}
             />
           </Box>
         </Stack>

@@ -1,7 +1,7 @@
-import type { IDateValue } from './common';
 
 // ----------------------------------------------------------------------
 
+export type IDateValue = string | number | null;
 export type IProductFilters = {
   rating: string;
   gender: string[];
@@ -20,6 +20,13 @@ export type IProductReviewNewForm = {
   review: string;
   name: string;
   email: string;
+};
+
+export type IProductBrand = {
+  id: string;
+  name: string;
+  description: string;
+  logo?: string;
 };
 
 export type IProductReview = {
@@ -80,4 +87,5 @@ export type IProductItem = {
     enabled: boolean;
     content: string;
   };
+  brand: IProductBrand;
 };

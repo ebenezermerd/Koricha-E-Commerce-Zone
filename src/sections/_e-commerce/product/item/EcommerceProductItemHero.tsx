@@ -25,7 +25,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
   const theme = useTheme();
 
   const { label, title, caption, coverImg } = product;
-
+console.log('product', product)
   return (
     <Grid
       container

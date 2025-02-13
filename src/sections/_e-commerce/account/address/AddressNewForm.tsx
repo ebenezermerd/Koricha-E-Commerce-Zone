@@ -32,8 +32,30 @@ type Props = {
 
 export const AddressSchema = zod.object({
   name: zod.string().min(1, 'Name is required'),
-  phoneNumber: zod.string().refine((val) => !val || isValidPhoneNumber(val), {
-    message: 'Invalid phone number',
+  phoneNumber: zod.string().refine((val) => {
+    if (!val) return true;
+    
+    // Remove any spaces or special characters
+    const cleaned = val.replace(/\s+/g, '');
+
+    // Check for international format (+251)
+    if (cleaned.startsWith('+251')) {
+      return cleaned.length === 13 && /^\+251[79]\d{8}$/.test(cleaned);
+    }
+    
+    // Check for 10 digit format (09/07)
+    if (cleaned.length === 10) {
+      return /^0[79]\d{8}$/.test(cleaned);
+    }
+    
+    // Check for 9 digit format (9/7)
+    if (cleaned.length === 9) {
+      return /^[79]\d{8}$/.test(cleaned);
+    }
+
+    return false;
+  }, {
+    message: 'Phone number must be either:\n- 10 digits starting with 09/07\n- 9 digits starting with 9/7\n- International format +251 followed by 9 digits',
   }),
   email: zod.string().email('Must be a valid email'),
   address: zod.string().min(1, 'Address is required'),

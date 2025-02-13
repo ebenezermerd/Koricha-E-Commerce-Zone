@@ -7,8 +7,19 @@ import axios from 'src/utils/axios';
 // types
 import { IAddressItem } from 'src/types/address';
 import { useAuthContext } from 'src/auth/hooks';
+import { STORAGE_KEY } from 'src/auth/context/jwt/constant';
 
 // ----------------------------------------------------------------------
+
+// Helper to get auth header
+const getAuthHeader = () => {
+  const token = sessionStorage.getItem(STORAGE_KEY);
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 
 export function useGetAddresses() {
   const { user } = useAuthContext();
@@ -19,10 +30,13 @@ export function useGetAddresses() {
     isLoading,
     error,
     mutate,
-  } = useSWR(user?.id ? `${API_ENDPOINTS.user}/${user.id}/addresses` : null, async (url) => {
-    const response = await axios.get(url);
-    return response.data;
-  });
+  } = useSWR(
+    user?.id ? `${API_ENDPOINTS.user}/${user.id}/addresses` : null,
+    async (url) => {
+      const response = await axios.get(url, getAuthHeader());
+      return response.data;
+    }
+  );
 
   const mutateAddresses = useCallback(
     async (data: IAddressItem[]) => {
@@ -54,8 +68,9 @@ export function useAddAddress() {
     async (address: Omit<IAddressItem, 'id'>) => {
       try {
         const response = await axios.post(
-          `${API_ENDPOINTS.user}/${user?.id}/addresses`,
-          address
+          `${API_ENDPOINTS.user}/${user?.id}/addresses/create`,
+          address,
+          getAuthHeader()
         );
         
         await mutate(
@@ -84,7 +99,8 @@ export function useUpdateAddress() {
       try {
         const response = await axios.put(
           `${API_ENDPOINTS.user}/${user?.id}/addresses/${addressId}`,
-          address
+          address,
+          getAuthHeader()
         );
 
         await mutate(
@@ -111,7 +127,10 @@ export function useDeleteAddress() {
   const deleteAddress = useCallback(
     async (addressId: string) => {
       try {
-        await axios.delete(`${API_ENDPOINTS.user}/${user?.id}/addresses/${addressId}`);
+        await axios.delete(
+          `${API_ENDPOINTS.user}/${user?.id}/addresses/${addressId}`,
+          getAuthHeader()
+        );
 
         await mutate(
           (key) => typeof key === 'string' && key.startsWith(`${API_ENDPOINTS.user}`),

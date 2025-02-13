@@ -24,45 +24,18 @@ import {
   EcommerceFilterStock,
   EcommerceFilterRating,
   EcommerceFilterCategory,
-  EcommerceFilterShipping,
   EcommerceFilterGender,
   EcommerceFilterColor,
 } from "./components";
 import { ColorPicker } from 'src/components/color-utils';
+import { productConfig } from 'src/config/product-options';
 
 
 // ----------------------------------------------------------------------
 
 const BRAND_OPTIONS = ["Apple", "Samsung", "Xiaomi", "Honor"];
 
-const CATEGORY_OPTIONS = [
-  "Apple iPhone",
-  "Samsung Galaxy",
-  "Nike Air Max",
-  "Adidas Ultraboost",
-  "Sony PlayStation",
-];
 
-const SHIPPING_OPTIONS = ["Fast", "Saving", "Free"];
-
-const TAG_OPTIONS = [
-  "Books and Media",
-  "Pet",
-  "Electronics",
-  "Food",
-  "Automotive and Industrial",
-];
-
-const GENDER_OPTIONS = ["Men", "Women", "Kids"];
-
-const COLOR_OPTIONS = [
-  { name: 'White', code: '#FFFFFF' },
-  { name: 'Black', code: '#000000' },
-  { name: 'Red', code: '#FF4842' },
-  { name: 'Green', code: '#54D62C' },
-  { name: 'Blue', code: '#1890FF' },
-  { name: 'Purple', code: '#7A1BF7' },
-];
 // ----------------------------------------------------------------------
 
 const defaultValues = {
@@ -83,48 +56,42 @@ const defaultValues = {
 type Props = {
   mobileOpen: boolean;
   onMobileClose: VoidFunction;
+  filters: IProductFiltersProps;
+  onFiltersChange: (newFilters: IProductFiltersProps) => void;
 };
 
-export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
+export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, onFiltersChange }: Props) {
   const isMdUp = useResponsive("up", "md");
-
-  const [filters, setFilters] = useState<IProductFiltersProps>(defaultValues);
 
   const getSelected = (selectedItems: string[], item: string) =>
     selectedItems.includes(item)
       ? selectedItems.filter((value) => value !== item)
       : [...selectedItems, item];
 
-  const handleChangeCategories = (name: string) => {
-    setFilters({
+  const handleChangeCategories = (category: string) => {
+    onFiltersChange({
       ...filters,
-      filterCategories: name,
+      filterCategories: category,
+      filterBrand: [],
     });
   };
 
   const handleChangeBrand = (name: string) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterBrand: getSelected(filters.filterBrand, name),
     });
   };
 
-  const handleChangeShipping = (name: string) => {
-    setFilters({
-      ...filters,
-      filterShipping: getSelected(filters.filterShipping, name),
-    });
-  };
-
   const handleChangeTag = (name: string) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterTag: getSelected(filters.filterTag, name),
     });
   };
 
   const handleChangeRating = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterRating: (event.target as HTMLInputElement).value,
     });
@@ -133,7 +100,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
   const handleChangeStartPrice = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterPrice: {
         ...filters.filterPrice,
@@ -143,7 +110,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
   };
 
   const handleChangeEndPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterPrice: {
         ...filters.filterPrice,
@@ -153,28 +120,28 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
   };
 
   const handleChangeStock = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterStock: event.target.checked,
     });
   };
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterGender: event.target.value,
     });
   };
 
   const handleChangeColor = (name: string) => {
-    setFilters({
+    onFiltersChange({
       ...filters,
       filterColor: getSelected(filters.filterColor, name),
     });
   };
 
   const handleClearAll = () => {
-    setFilters(defaultValues);
+    onFiltersChange(defaultValues);
   };
 
   const renderContent = (
@@ -188,37 +155,38 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
     >
       <Block title="Category">
         <EcommerceFilterCategory
+          options={productConfig.categories.flatMap(group => group.classify)}
           filterCategories={filters.filterCategories}
           onChangeCategories={handleChangeCategories}
-          options={CATEGORY_OPTIONS}
-          sx={{ mt: 2 }}
         />
       </Block>
 
       <Block title="Brand">
-        <EcommerceFilterBrand
-          filterBrand={filters.filterBrand}
-          onChangeBrand={handleChangeBrand}
-          options={BRAND_OPTIONS}
-          sx={{ mt: 1 }}
-        />
+        {filters.filterCategories && (
+          <EcommerceFilterBrand
+            options={productConfig.getBrandsByCategory(filters.filterCategories).map(brand => brand.name)}
+            filterBrand={filters.filterBrand}
+            onChangeBrand={handleChangeBrand}
+          />
+        )}
       </Block>
 
       <Block title="Colors">
         <EcommerceFilterColor
-          options={COLOR_OPTIONS}
+          options={productConfig.colors.map(color => ({
+            name: color.label,
+            code: color.value,
+          }))}
           filterColor={filters.filterColor}
           onChangeColor={handleChangeColor}
-          sx={{ mt: 2 }}
         />
       </Block>
 
       <Block title="Gender">
         <EcommerceFilterGender
-          options={GENDER_OPTIONS}
+          options={productConfig.genders.map(gender => gender.value)}
           filterGender={filters.filterGender}
           onChangeGender={handleChangeGender}
-          sx={{ mt: 2 }}
         />
       </Block>
 
@@ -231,15 +199,6 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
         />
       </Block>
 
-      <Block title="Shipping">
-        <EcommerceFilterShipping
-          filterShipping={filters.filterShipping}
-          onChangeShipping={handleChangeShipping}
-          options={SHIPPING_OPTIONS}
-          sx={{ mt: 1 }}
-        />
-      </Block>
-
       <Block title="Ratings">
         <EcommerceFilterRating
           filterRating={filters.filterRating}
@@ -248,19 +207,18 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose }: Props) {
         />
       </Block>
 
+      <Block title="Tags">
+        <EcommerceFilterTag
+          options={productConfig.tags}
+          filterTag={filters.filterTag}
+          onChangeTag={handleChangeTag}
+        />
+      </Block>
+
       <EcommerceFilterStock
         filterStock={filters.filterStock}
         onChangeStock={handleChangeStock}
       />
-
-      <Block title="Tags">
-        <EcommerceFilterTag
-          filterTag={filters.filterTag}
-          onChangeTag={handleChangeTag}
-          options={TAG_OPTIONS}
-          sx={{ mt: 2 }}
-        />
-      </Block>
 
       <Button
         fullWidth
