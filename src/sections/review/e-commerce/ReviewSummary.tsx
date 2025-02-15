@@ -29,13 +29,13 @@ export default function ReviewSummary({ reviewsNumber, ratingsNumber, onOpenForm
       sx={{
         overflow: 'hidden',
         bgcolor: 'background.neutral',
-        py: { xs: 8, md: 10 },
+        py: { xs: 8, md: 2 },
       }}
     >
       <Container>
         <Grid container spacing={{ xs: 5, md: 8 }}>
-          <Grid xs={12} md={4}>
-            <Typography variant="h3">Reviews</Typography>
+          <Grid xs={12} md={7}>
+            <Typography variant="h4">Reviews</Typography>
 
             <Stack spacing={2} direction="row" alignItems="center" sx={{ my: 3 }}>
               <Typography variant="h2"> {ratingsNumber}</Typography>

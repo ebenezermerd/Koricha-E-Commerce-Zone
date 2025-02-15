@@ -25,6 +25,8 @@ export function useGetAddresses() {
   const { user } = useAuthContext();
   const { mutate: globalMutate } = useSWRConfig();
 
+
+
   const {
     data: addresses = [],
     isLoading,

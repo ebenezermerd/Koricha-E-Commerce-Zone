@@ -35,6 +35,8 @@ import './index.css';
 // Auth Context
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
 import { ProfileImageProvider } from 'src/hooks/use-profile-image';
+import { CartProvider } from './contexts/cart-context';
+import { WishlistProvider } from './contexts/wishlist-context';
 // ----------------------------------------------------------------------
 const AuthProvider = JwtAuthProvider;
 
@@ -45,19 +47,23 @@ export default function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthProvider>
           <SettingsProvider>
-            <BrowserRouter>
-              <ScrollToTop />
-              <ThemeProvider>
-                <ThemeSettings>
-                  <Snackbar />
-                  <ProfileImageProvider>
-                    <MotionLazyContainer>
-                      <Router />
-                    </MotionLazyContainer>
-                  </ProfileImageProvider>
-                </ThemeSettings>
-              </ThemeProvider>
-            </BrowserRouter>
+            <CartProvider>
+              <WishlistProvider>
+                <BrowserRouter>
+                  <ScrollToTop />
+                  <ThemeProvider>
+                    <ThemeSettings>
+                      <Snackbar />
+                      <ProfileImageProvider>
+                        <MotionLazyContainer>
+                          <Router />
+                        </MotionLazyContainer>
+                      </ProfileImageProvider>
+                    </ThemeSettings>
+                  </ThemeProvider>
+                </BrowserRouter>
+              </WishlistProvider>
+            </CartProvider>
           </SettingsProvider>
         </AuthProvider>
       </LocalizationProvider>

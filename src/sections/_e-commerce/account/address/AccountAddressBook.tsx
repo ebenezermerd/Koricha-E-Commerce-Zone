@@ -14,6 +14,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import Iconify from 'src/components/iconify';
 import { CustomPopover, usePopover } from 'src/components/custom-popover';
+import { EmptyContent } from 'src/components/empty-content';
 import { AddressItem } from './AddressItem';
 import { AddressNewForm } from './AddressNewForm';
 
@@ -53,6 +54,43 @@ export function AccountAddressBook({
     onEditAddress(address);
     addressForm.onFalse();
   };
+
+  if (!addressBook?.length) {
+    return (
+      <>
+        <Card
+          sx={{
+            p: 3,
+            width: '100%',
+            boxShadow: (theme) => theme.customShadows.card,
+          }}
+        >
+          <EmptyContent
+            title="No Addresses Found"
+            description="You haven't added any addresses yet"
+            imgUrl="/assets/icons/empty/ic_address.svg"
+            sx={{ py: 5 }}
+          />
+          <Box sx={{ textAlign: 'center' }}>
+            <Button
+              onClick={addressForm.onTrue}
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              Add New Address
+            </Button>
+          </Box>
+        </Card>
+
+        <AddressNewForm
+          open={addressForm.value}
+          onClose={addressForm.onFalse}
+          onCreate={handleCreateAddress}
+          onEdit={handleEditAddress}
+          address={currentAddress}
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -125,4 +163,4 @@ export function AccountAddressBook({
       />
     </>
   );
-} 
+}

@@ -3,49 +3,72 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Typography, Button, Stack } from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
-// _mock
-import { _products } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
+import { EmptyContent } from 'src/components/empty-content';
 //
 import { EcommerceAccountLayout } from '../layout';
 import { EcommerceCartList } from '../cart';
+import { useWishlist } from 'src/contexts/wishlist-context';
+import { useCart } from 'src/contexts/cart-context';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceAccountWishlistView() {
+  const { state: wishlistState, dispatch: wishlistDispatch } = useWishlist();
+  const { dispatch: cartDispatch } = useCart();
+  const empty = !wishlistState.items.length;
+
+  const handleAddAllToCart = () => {
+    wishlistState.items.forEach((item) => {
+      cartDispatch({
+        type: 'ADD_TO_CART',
+        payload: {
+          product: item.product,
+          quantity: 1,
+          colors: [],
+          size: '',
+        },
+      });
+      wishlistDispatch({
+        type: 'MOVE_TO_CART',
+        payload: { productId: item.product.id },
+      });
+    });
+  };
+
   return (
     <EcommerceAccountLayout>
       <Typography variant="h5" sx={{ mb: 3 }}>
         Wishlist
       </Typography>
 
-      <EcommerceCartList wishlist products={_products.slice(0, 4)} />
+      {empty ? (
+        <EmptyContent
+          title="Wishlist is empty!"
+          description="Look like you have no items in your wishlist."
+          imgUrl="/assets/icons/empty/ic_wishlist.svg"
+          sx={{ py: 5 }}
+        />
+      ) : (
+        <>
+          <EcommerceCartList wishlist />
 
-      <Stack alignItems={{ sm: 'flex-end' }} sx={{ mt: 3 }}>
-        <Stack spacing={3} sx={{ minWidth: 240 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ typography: 'h6' }}
-          >
-            <Box component="span"> Subtotal</Box>
-            $58.07
+          <Stack alignItems={{ sm: 'flex-end' }} sx={{ mt: 3 }}>
+            <Stack spacing={3} sx={{ minWidth: 240 }}>
+              <Button
+                size="large"
+                color="inherit"
+                variant="contained"
+                startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+                onClick={handleAddAllToCart}
+              >
+                Add All to Cart
+              </Button>
+            </Stack>
           </Stack>
-
-          <Button
-            component={RouterLink}
-            to={paths.eCommerce.cart}
-            size="large"
-            color="inherit"
-            variant="contained"
-            startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-          >
-            Add to Cart
-          </Button>
-        </Stack>
-      </Stack>
+        </>
+      )}
     </EcommerceAccountLayout>
   );
 }

@@ -1,6 +1,7 @@
 import type { AxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
+import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
 
@@ -10,7 +11,13 @@ const axiosInstance = axios.create({ baseURL: CONFIG.serverUrl });
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong!')
+  (error) => {
+    if (error.response?.status === 401) {
+      // Handle unauthorized access
+      window.location.href = paths.auth.jwt.signIn;
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;
@@ -60,5 +67,16 @@ export const endpoints = {
     list: '/api/products/list',
     details: '/api/product/details',
     search: '/api/product/search',
+  },
+  checkout: {
+    orders: {
+      list: '/api/orders/my-orders',
+      create: '/api/checkout/orders',
+      details: (id: string) => `/api/orders/my-orders/${id}`,
+    },
+    payments: {
+      process: '/api/payments/process',
+      verify: (id: string) => `/api/payments/${id}/verify`,
+    },
   },
 };

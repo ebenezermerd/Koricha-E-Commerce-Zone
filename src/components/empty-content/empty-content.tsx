@@ -43,8 +43,8 @@ export function EmptyContent({
         height: 1,
         ...(filled && {
           borderRadius: 2,
-          bgcolor: (theme) => varAlpha(theme.palette.grey[500], 0.04),
-          border: (theme) => `dashed 1px ${varAlpha(theme.palette.grey[500], 0.08)}`,
+          bgcolor: (theme) => varAlpha("145 158 171", 0.04),
+          border: (theme) => `dashed 1px ${varAlpha("145 158 171", 0.08)}`,
         }),
         ...sx,
       }}
@@ -53,7 +53,7 @@ export function EmptyContent({
       <Box
         component="img"
         alt="empty content"
-        src={imgUrl ?? `${CONFIG.assetsDir}/assets/icons/empty/ic-content.svg`}
+        src={`${CONFIG.assetsDir}/assets/icons/empty/ic-content.svg`}
         sx={{ width: 1, maxWidth: 160, ...slotProps?.img }}
       />
 

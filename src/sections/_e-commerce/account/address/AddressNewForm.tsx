@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
-import { isValidPhoneNumber } from 'react-phone-number-input/input';
 // @mui
 import Stack from '@mui/material/Stack';
 import Dialog from '@mui/material/Dialog';
@@ -11,6 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Grid from '@mui/material/Unstable_Grid2';
 // types
 import { IAddressItem } from 'src/types/address';
 // components
@@ -29,6 +29,12 @@ type Props = {
 };
 
 // ----------------------------------------------------------------------
+
+const ADDRESS_TYPES = [
+  { value: 'Home', label: 'Home' },
+  { value: 'Office', label: 'Office' },
+  { value: 'Other', label: 'Other' }
+];
 
 export const AddressSchema = zod.object({
   name: zod.string().min(1, 'Name is required'),
@@ -157,40 +163,91 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
+    <Dialog 
+      fullWidth 
+      maxWidth="md" 
+      open={open} 
+      onClose={handleClose}
+      PaperProps={{
+        sx: { maxHeight: '90vh', width: '80%', maxWidth: '1000px' },
+      }}
+    >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{isEdit ? 'Edit Address' : 'Add New Address'}</DialogTitle>
 
         <DialogContent dividers>
-          <Stack spacing={3}>
-            <RHFTextField name="name" label="Full Name" />
-            <RHFTextField name="email" label="Email" />
-            <RHFTextField name="phoneNumber" label="Phone Number" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="city" label="City" />
-            <RHFTextField name="state" label="State/Region" />
-            
-            <RHFSelect native name="country" label="Country">
-              <option value="" />
-              {countries.map((country) => (
-                <option key={country.code} value={country.code}>
-                  {country.label}
-                </option>
-              ))}
-            </RHFSelect>
+          <Grid container spacing={2} sx={{ pt: 1 }}>
+            <Grid xs={12} sm={6}>
+              <RHFTextField name="name" label="Full Name" />
+            </Grid>
 
-            <RHFTextField name="zipCode" label="Zip/Code" />
-            
-            <RHFSelect native name="addressType" label="Address Type">
-              {['Home', 'Office', 'Other'].map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </RHFSelect>
+            <Grid xs={12} sm={6}>
+              <RHFTextField name="phoneNumber" label="Phone Number" />
+            </Grid>
 
-            <RHFCheckbox name="primary" label="Set as primary address" />
-          </Stack>
+            <Grid xs={12}>
+              <RHFTextField name="email" label="Email" />
+            </Grid>
+
+            <Grid xs={12}>
+              <RHFTextField name="address" label="Address" />
+            </Grid>
+
+            <Grid xs={12} sm={4}>
+              <RHFTextField name="city" label="City" />
+            </Grid>
+
+            <Grid xs={12} sm={4}>
+              <RHFTextField name="state" label="State/Region" />
+            </Grid>
+
+            <Grid xs={12} sm={4}>
+              <RHFTextField name="zipCode" label="Zip/Code" />
+            </Grid>
+
+            <Grid xs={12} sm={6}>
+              <RHFSelect 
+                name="country" 
+                label="Country"
+                native
+                sx={{
+                  '& .MuiSelect-select': {
+                    padding: '13px 24px',
+                  }
+                }}
+              >
+                <option value="" />
+                {countries.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.label}
+                  </option>
+                ))}
+              </RHFSelect>
+            </Grid>
+
+            <Grid xs={12} sm={6}>
+              <RHFSelect 
+                name="addressType" 
+                label="Address Type"
+                native
+                sx={{
+                  '& .MuiSelect-select': {
+                    padding: '13px 24px',
+                  }
+                }}
+              >
+                {ADDRESS_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </RHFSelect>
+            </Grid>
+
+            <Grid xs={12}>
+              <RHFCheckbox name="primary" label="Set as primary address" />
+            </Grid>
+          </Grid>
         </DialogContent>
 
         <DialogActions>
@@ -205,4 +262,4 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
       </FormProvider>
     </Dialog>
   );
-} 
+}

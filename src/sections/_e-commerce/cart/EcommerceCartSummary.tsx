@@ -43,9 +43,9 @@ export default function EcommerceCartSummary({ tax, total, subtotal, shipping, d
 
         <Row label="Shipping" value={fCurrency(shipping)} />
 
-        <Row label="Discount (15%)" value={`-${fCurrency(discount)}`} />
+        <Row label="Discount" value={`-${fCurrency(discount)}`} />
 
-        <Row label="Tax" value={fPercent(tax)} />
+        <Row label="Tax (15%)" value={fPercent(tax)} />
       </Stack>
 
       <TextField
@@ -71,15 +71,7 @@ export default function EcommerceCartSummary({ tax, total, subtotal, shipping, d
         }}
       />
 
-      <Button
-        component={RouterLink}
-        to={paths.eCommerce.checkout}
-        size="large"
-        variant="contained"
-        color="inherit"
-      >
-        Checkout
-      </Button>
+     
     </Stack>
   );
 }

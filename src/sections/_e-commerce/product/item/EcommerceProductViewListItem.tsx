@@ -20,6 +20,8 @@ interface Props extends StackProps {
 }
 
 export default function EcommerceProductViewListItem({ product, ...other }: Props) {
+  const productUrl = paths.eCommerce.product.replace(':id', product.id);
+
   return (
     <Stack
       direction="row"
@@ -45,7 +47,7 @@ export default function EcommerceProductViewListItem({ product, ...other }: Prop
 
       <Fab
         component={RouterLink}
-        to={paths.eCommerce.product}
+        to={productUrl}
         className="add-to-cart"
         color="primary"
         size="medium"
@@ -82,7 +84,7 @@ export default function EcommerceProductViewListItem({ product, ...other }: Prop
             {product.category}
           </TextMaxLine>
 
-          <Link component={RouterLink} to={paths.eCommerce.product} color="inherit">
+          <Link component={RouterLink} to={productUrl} color="inherit">
             <TextMaxLine variant="h6" line={1}>
               {product.name}
             </TextMaxLine>

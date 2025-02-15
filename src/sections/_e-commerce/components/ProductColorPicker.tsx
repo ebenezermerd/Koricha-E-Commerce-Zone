@@ -1,55 +1,64 @@
 // @mui
-import { Stack, Radio, StackProps, RadioGroup, FormControlLabel } from '@mui/material';
+import { Stack, Radio, StackProps, RadioGroup, FormControlLabel, Box } from '@mui/material';
 // components
 import Iconify from 'src/components/iconify';
+import { useTheme } from '@mui/material/styles';
+import { ColorSinglePicker } from 'src/components/color-utils';
+import { alpha } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
-interface Props extends StackProps {
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+type Props = {
   options: {
     label: string;
     value: string;
   }[];
-}
+  selected: string;
+  onSelectColor: (color: string) => void;
+  sx?: object;
+};
 
-export default function ProductColorPicker({ value, options, onChange, sx }: Props) {
+// Update color handling
+const varAlpha = (color: string, opacity = 1) => {
+  // Handle RGB channel format
+  if (color.match(/^\d+ \d+ \d+$/)) {
+    return `rgba(${color} / ${opacity})`;
+  }
+
+  // Handle hex and other formats
+  return alpha(color, opacity);
+};
+
+export default function ProductColorPicker({ options, selected, onSelectColor, sx, ...other }: Props) {
+  const theme = useTheme();
+
   return (
-    <RadioGroup row value={value} onChange={onChange}>
-      {options.map((option) => (
-        <Stack
-          key={option.value}
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            m: 1,
-            width: 32,
-            height: 32,
-            borderRadius: 1,
-            position: 'relative',
-            bgcolor: option.label,
-            color: 'common.white',
-            ...sx,
-          }}
-        >
-          {value === option.value && <Iconify icon="carbon:checkmark" />}
+    <RadioGroup row {...other}>
+      {options.map((option) => {
+        const whiteColor = option.value === '#FFFFFF' || option.value === 'white';
 
-          <FormControlLabel
-            value={option.value}
-            control={<Radio sx={{ display: 'none' }} />}
-            label=""
+        return (
+          <Box
+            key={option.value}
             sx={{
-              m: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              position: 'absolute',
+              ...sx,
+              ...(selected === option.value && {
+                border: (theme) => `solid 2px ${theme.palette.text.primary}`,
+                boxShadow: (theme) => `inset 0 0 0 2px ${varAlpha(option.value, 0.24)}`,
+              }),
+              ...(whiteColor && {
+                border: `solid 1px ${theme.palette.divider}`,
+              }),
             }}
-          />
-        </Stack>
-      ))}
+          >
+            <ColorSinglePicker
+              value={option.value}
+              selected={selected === option.value}
+              onSelectColor={() => onSelectColor(option.value)}
+            />
+          </Box>
+        );
+      })}
     </RadioGroup>
   );
 }

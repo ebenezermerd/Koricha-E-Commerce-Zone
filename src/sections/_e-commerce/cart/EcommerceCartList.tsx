@@ -1,42 +1,48 @@
 // @mui
 import { Stack } from '@mui/material';
-// types
-import { IProductItemProps } from 'src/types/product';
 // components
 import Scrollbar from 'src/components/scrollbar';
 //
+import { useCart } from 'src/contexts/cart-context';
+import { useWishlist } from 'src/contexts/wishlist-context';
 import EcommerceCartItem from './EcommerceCartItem';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  products: IProductItemProps[];
-  wishlist?: boolean;
-};
+export default function EcommerceCartList({ wishlist = false }) {
+  const { state: cartState } = useCart();
+  const { state: wishlistState } = useWishlist();
 
-export default function EcommerceCartList({ products, wishlist = false }: Props) {
+  const items = wishlist ? wishlistState.items : cartState.items;
+
   return (
     <Scrollbar>
       <Stack
         direction="row"
         alignItems="center"
         sx={{
+          px: 3,
           py: 2,
-          minWidth: 720,
           typography: 'subtitle2',
           borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
         }}
       >
         <Stack flexGrow={1}>Item</Stack>
-        <Stack sx={{ width: 120 }}>Qty</Stack>
-        <Stack sx={{ width: 120 }}>Subtotal</Stack>
+        {!wishlist && <Stack sx={{ width: 120 }}>Qty</Stack>}
+        {!wishlist && <Stack sx={{ width: 120 }}>Subtotal</Stack>}
         <Stack sx={{ width: 36 }} />
         {wishlist && <Stack sx={{ width: 36 }} />}
       </Stack>
 
-      {products.map((product) => (
-        <EcommerceCartItem key={product.id} product={product} wishlist={wishlist} />
-      ))}
+      <Stack sx={{ px: 3 }}>
+        {items.map((item) => (
+          <EcommerceCartItem 
+            key={item.product.id} 
+            item={item} 
+            wishlist={wishlist} 
+          />
+        ))}
+      </Stack>
     </Scrollbar>
   );
 }

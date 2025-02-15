@@ -42,6 +42,8 @@ import { data } from "./config-navigation";
 import { NavMobile, NavDesktop, navConfig } from "../nav";
 
 import { useAuthContext } from 'src/auth/hooks/use-auth-context';
+import { useCart } from 'src/contexts/cart-context';
+import { useWishlist } from 'src/contexts/wishlist-context';
 
 
 // ----------------------------------------------------------------------
@@ -58,11 +60,17 @@ const StyledRoot = styled("div")(({ theme }) => ({
 export default function Header() {
   const theme = useTheme();
   const { authenticated } = useAuthContext();
+  const { state: cartState } = useCart();
+  const { state: wishlistState } = useWishlist();
 
   const isMdUp = useResponsive("up", "md");
   const isOffset = useOffSetTop();
   const [openMenuMobile, setOpenMenuMobile] = useState(false);
 
+  // Calculate total items in cart
+  const cartItemCount = cartState.items.reduce((total, item) => total + item.quantity, 0);
+  // Calculate total items in wishlist
+  const wishlistItemCount = wishlistState.items.length;
 
   return (
     <AppBar
@@ -176,7 +184,7 @@ export default function Header() {
               <Searchbar />
               <SettingsDrawer />
             </Stack>
-            <Badge badgeContent={2} color="info">
+            <Badge badgeContent={wishlistItemCount} color="info">
               <IconButton
                 component={RouterLink}
                 to={paths.eCommerce.wishlist}
@@ -187,7 +195,7 @@ export default function Header() {
                 <Iconify icon="carbon:favorite" width={24} />
               </IconButton>
             </Badge>
-            <Badge badgeContent={4} color="error">
+            <Badge badgeContent={cartItemCount} color="error">
               <IconButton
                 component={RouterLink}
                 to={paths.eCommerce.cart}

@@ -53,10 +53,10 @@ export function useGetProducts() {
   return memoizedValue;
 }
 
-export function useGetProduct(id: string) {
+export function useGetProduct(productId: string) {
   const { data, isLoading, error, isValidating } = useSWR<MinimalProductResponse>(
-    id ? endpoints.product.details : null,
-    id ? () => axios.get(endpoints.product.details, { params: { productId: id } }).then(res => res.data) : null,
+    productId ? `${endpoints.product.details}?productId=${productId}` : null,
+    fetcher,
     swrOptions
   );
 

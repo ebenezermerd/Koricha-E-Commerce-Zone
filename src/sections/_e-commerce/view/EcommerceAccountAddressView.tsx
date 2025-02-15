@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
+import Card from '@mui/material/Card';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // types
@@ -8,6 +9,7 @@ import { IAddressItem } from 'src/types/address';
 import { useGetAddresses, useAddAddress, useUpdateAddress, useDeleteAddress } from 'src/services/useAddress';
 import LoadingScreen from 'src/components/loading-screen';
 import { toast } from 'src/components/snackbar';
+import { EmptyContent } from 'src/components/empty-content';
 // sections
 import { AccountAddressBook } from '../account/address/AccountAddressBook';
 import { EcommerceAccountLayout } from '../layout';
@@ -65,6 +67,7 @@ export function EcommerceAccountAddressView() {
   if (isLoading) {
     return <LoadingScreen />;
   }
+  
 
   return (
     <EcommerceAccountLayout>
