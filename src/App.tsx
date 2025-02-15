@@ -37,36 +37,60 @@ import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
 import { ProfileImageProvider } from 'src/hooks/use-profile-image';
 import { CartProvider } from './contexts/cart-context';
 import { WishlistProvider } from './contexts/wishlist-context';
+import { I18nextProvider } from 'react-i18next';
+import { LocalizationProvider as I18nLocalizationProvider } from 'src/locales';
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { i18nOptions, fallbackLng } from './locales/config-locales';
+import { useEffect } from 'react';
+import { localStorageGetItem } from 'src/utils/storage-available';
+
 // ----------------------------------------------------------------------
 const AuthProvider = JwtAuthProvider;
 
+// Initialize i18next before the App component
+i18next
+  .use(initReactI18next)
+  .init(i18nOptions(fallbackLng));
 
 export default function App() {
+  useEffect(() => {
+    const savedLang = localStorageGetItem('i18nextLng');
+    if (savedLang) {
+      document.documentElement.lang = savedLang;
+      document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+    }
+  }, []);
+
   return (
-    <HelmetProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <AuthProvider>
-          <SettingsProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <BrowserRouter>
-                  <ScrollToTop />
-                  <ThemeProvider>
-                    <ThemeSettings>
-                      <Snackbar />
-                      <ProfileImageProvider>
-                        <MotionLazyContainer>
-                          <Router />
-                        </MotionLazyContainer>
-                      </ProfileImageProvider>
-                    </ThemeSettings>
-                  </ThemeProvider>
-                </BrowserRouter>
-              </WishlistProvider>
-            </CartProvider>
-          </SettingsProvider>
-        </AuthProvider>
-      </LocalizationProvider>
-    </HelmetProvider>
+    <I18nextProvider i18n={i18next}>
+      <I18nLocalizationProvider>
+        <HelmetProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <AuthProvider>
+              <SettingsProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <BrowserRouter>
+                      <ScrollToTop />
+                      <ThemeProvider>
+                        <ThemeSettings>
+                          <Snackbar />
+                          <ProfileImageProvider>
+                            <MotionLazyContainer>
+                              <Router />
+                            </MotionLazyContainer>
+                          </ProfileImageProvider>
+                        </ThemeSettings>
+                      </ThemeProvider>
+                    </BrowserRouter>
+                  </WishlistProvider>
+                </CartProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </LocalizationProvider>
+        </HelmetProvider>
+      </I18nLocalizationProvider>
+    </I18nextProvider>
   );
 }

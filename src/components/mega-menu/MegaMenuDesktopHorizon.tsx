@@ -10,6 +10,7 @@ import Iconify from '../iconify';
 //
 import MenuHotProducts from './MenuHotProducts';
 import MenuCarousel from './MenuCarousel';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -142,6 +143,7 @@ function ParentItem({ title, path = '', icon, open, hasSub, ...other }: ParentIt
   const activeStyle = {
     color: 'primary.main',
   };
+  const { t } = useTranslate('common');
 
   return (
     <Link
@@ -163,9 +165,9 @@ function ParentItem({ title, path = '', icon, open, hasSub, ...other }: ParentIt
       }}
       {...other}
     >
-      {/* {icon && <Stack sx={{ width: 20, height: 20, mr: 1 }}>{icon}</Stack>} */}
+      {icon && <Stack sx={{ width: 20, height: 20, mr: 1 }}>{icon}</Stack>}
 
-      {title}
+      {t('categories')}
 
       {hasSub && <Iconify icon="carbon:chevron-down" width={16} sx={{ ml: 1 }} />}
     </Link>

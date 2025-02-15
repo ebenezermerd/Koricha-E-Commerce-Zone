@@ -1,0 +1,12 @@
+{
+  "home": "Home",
+  "products": "Products",
+  "support": "Support",
+  "categories": "Categories",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "demo": {
+    "lang": "English",
+    "description": "Welcome to Koricha, your one-stop shop for a variety of products. While we specialize in best distribution, our platform offers a seamless shopping experience for all your needs."
+  }
+}

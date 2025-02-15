@@ -35,7 +35,7 @@ export function CheckoutSummary({ total, subtotal, shipping, discount }: Props) 
           <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
             Discount
           </Box>
-          <Box component="span" sx={{ typography: 'subtitle2' }}>
+          <Box component="span" sx={{ typography: 'subtitle2', color: 'error.main' }}>
             {fCurrency(-discount)}
           </Box>
         </Stack>

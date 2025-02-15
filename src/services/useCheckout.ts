@@ -35,7 +35,7 @@ export type OrderData = {
   payment: {
     method: PaymentMethod;
     amount: number;
-    currency?: string;
+    currency: string;
     tx_ref?: string;
     status?: string;
     created_at?: string;
@@ -80,7 +80,14 @@ export function useCheckout() {
 
   const createNewOrder = async (orderData: OrderData) => {
     try {
-      const result = await createOrderTrigger(orderData);
+      const dataWithCurrency = {
+        ...orderData,
+        payment: {
+          ...orderData.payment,
+          currency: 'ETB',
+        },
+      };
+      const result = await createOrderTrigger(dataWithCurrency);
       await mutateOrders();
       return result;
     } catch (error) {

@@ -1,17 +1,26 @@
 import numeral from 'numeral';
+import { CURRENCY } from 'src/config/currency';
 
 // ----------------------------------------------------------------------
 
 type InputValue = string | number | null;
 
 export function fNumber(number: InputValue) {
-  return numeral(number).format();
+  return new Intl.NumberFormat('am-ET').format(Number(number));
 }
 
 export function fCurrency(number: InputValue) {
-  const format = number ? numeral(number).format('$0,0.00') : '';
+  const num = Number(number);
+  
+  const formatted = new Intl.NumberFormat('am-ET', {
+    style: 'currency',
+    currency: 'ETB',
+    minimumFractionDigits: CURRENCY.precision,
+    maximumFractionDigits: CURRENCY.precision,
+  }).format(num);
 
-  return result(format, '.00');
+  // Uses the symbol from currency config
+  return formatted.replace('ETB', 'Br');
 }
 
 export function fPercent(number: InputValue) {

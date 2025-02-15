@@ -44,7 +44,8 @@ import { NavMobile, NavDesktop, navConfig } from "../nav";
 import { useAuthContext } from 'src/auth/hooks/use-auth-context';
 import { useCart } from 'src/contexts/cart-context';
 import { useWishlist } from 'src/contexts/wishlist-context';
-
+import { LanguagePopover } from 'src/components/language-popover';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +60,7 @@ const StyledRoot = styled("div")(({ theme }) => ({
 
 export default function Header() {
   const theme = useTheme();
+  const { t } = useTranslate('common');
   const { authenticated } = useAuthContext();
   const { state: cartState } = useCart();
   const { state: wishlistState } = useWishlist();
@@ -142,21 +144,21 @@ export default function Header() {
               to={paths.eCommerce.landing}
               color="inherit"
             >
-              Home
+              {t('home')}
             </Button>
             <Button
               component={RouterLink}
               to={paths.eCommerce.products}
               color="inherit"
             >
-              Products
+              {t('products')}
             </Button>
             <Button
               component={RouterLink}
               to={paths.support}
               color="inherit"
             >
-              Support
+              {t('support')}
             </Button>
             <Box sx={{ px: "20px" }}>
               {isMdUp ? (
@@ -173,7 +175,7 @@ export default function Header() {
                         color="inherit"
                         onClick={() => setOpenMenuMobile(true)}
                       >
-                        Categories
+                        {t('categories')}
                       </Button>
                     }
                   />
@@ -182,6 +184,7 @@ export default function Header() {
             </Box>
             <Stack spacing={1} direction="row" alignItems="center">
               <Searchbar />
+              <LanguagePopover />
               <SettingsDrawer />
             </Stack>
             <Badge badgeContent={wishlistItemCount} color="info">
@@ -223,7 +226,7 @@ export default function Header() {
                 component={RouterLink}
                 to={paths.auth.jwt.signIn}
               >
-                Sign In
+                {t('signIn')}
               </Button>
             )}
           </Stack>

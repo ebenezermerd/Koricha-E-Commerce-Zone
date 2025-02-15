@@ -1,0 +1,18 @@
+{
+  "title": "የግዢ ጋሪ",
+  "empty": "የግዢ ጋሪዎ ባዶ ነው",
+  "continueShopping": "ግዢ ቀጥል",
+  "summary": {
+    "title": "ማጠቃለያ",
+    "subtotal": "ድምር",
+    "shipping": "የመላኪያ ክፍያ",
+    "tax": "ታክስ",
+    "total": "ጠቅላላ",
+    "checkout": "ክፍያ ፈጽም"
+  },
+  "item": {
+    "quantity": "ብዛት",
+    "remove": "አስወግድ",
+    "moveToWishlist": "ወደ ምኞት ዝርዝር አዛውር"
+  }
+} 

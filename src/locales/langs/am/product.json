@@ -1,0 +1,25 @@
+{
+  "list": {
+    "title": "ምርቶች",
+    "newProduct": "አዲስ ምርት",
+    "search": "ምርት ፈልግ...",
+    "filters": "ማጣሪያዎች",
+    "inStock": "በአከባቢ",
+    "outOfStock": "አልተገኘም",
+    "price": "ዋጋ",
+    "priceRange": "የዋጋ ክልል",
+    "category": "ምድብ",
+    "gender": "ፆታ",
+    "color": "ቀለም",
+    "size": "መጠን"
+  },
+  "details": {
+    "addToCart": "ወደ ጋሪ ጨምር",
+    "buyNow": "አሁን ግዛ",
+    "quantity": "ብዛት",
+    "available": "ያለ",
+    "description": "መግለጫ",
+    "reviews": "ግምገማዎች",
+    "relatedProducts": "ተዛማጅ ምርቶች"
+  }
+} 

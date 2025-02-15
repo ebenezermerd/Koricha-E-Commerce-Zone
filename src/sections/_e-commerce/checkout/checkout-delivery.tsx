@@ -7,8 +7,27 @@ import CardHeader from '@mui/material/CardHeader';
 import FormHelperText from '@mui/material/FormHelperText';
 // components
 import { varAlpha } from 'src/theme/styles';
+import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
+
+export const DELIVERY_OPTIONS = [
+  {
+    value: 0,
+    label: 'Free',
+    description: 'Standard delivery (5-7 business days)',
+  },
+  {
+    value: 100,
+    label: 'Br 100',
+    description: 'Express delivery (2-3 business days)',
+  },
+  {
+    value: 200,
+    label: 'Br 200',
+    description: 'Same day delivery',
+  },
+];
 
 type OptionProps = {
   label: string;
@@ -97,7 +116,7 @@ function OptionItem({ option, selected, onClick }: OptionItemProps) {
       </Stack>
 
       <Box component="span" sx={{ typography: 'h6' }}>
-        {!value ? 'Free' : `$${value}`}
+        {!value ? 'Free' : fCurrency(value)}
       </Box>
     </Stack>
   );
