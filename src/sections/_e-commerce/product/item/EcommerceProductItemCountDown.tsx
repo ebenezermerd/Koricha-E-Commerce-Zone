@@ -29,8 +29,23 @@ type Props = {
 export default function EcommerceProductItemCountDown({ product, color = 'primary', sx }: Props) {
   const theme = useTheme();
 
+  // Calculate expiry date based on sale status
+  const getExpiryDate = () => {
+    if (product.saleLabel.enabled) {
+      // If sale is active, set countdown for 24 hours from now
+      return add(new Date(), { days: 1 });
+    }
+    // Default fallback
+    return add(new Date(), { hours: 8 });
+  };
+
   return (
-    <Link component={RouterLink} to={paths.eCommerce.product} color="inherit" underline="none">
+    <Link 
+      component={RouterLink} 
+      to={`${paths.eCommerce.product}/${product.id}`} 
+      color="inherit" 
+      underline="none"
+    >
       <Stack
         spacing={3}
         sx={{
@@ -52,6 +67,7 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
         <Image
           src={product.coverImg}
           sx={{
+            height: 350,
             ...filterStyles(
               `drop-shadow(20px 20px 24px ${alpha(theme.palette.common.black, 0.16)})`
             ),
@@ -63,10 +79,23 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
             {product.name}
           </TextMaxLine>
 
-          <Typography variant="h5">{`From ${fCurrency(product.price)}`}</Typography>
+          <Stack direction="row" justifyContent="center" spacing={0.5}>
+            {product.priceSale > 0 && (
+              <Typography
+                component="span"
+                variant="h5"
+                sx={{ color: 'text.disabled', textDecoration: 'line-through' }}
+              >
+                {fCurrency(product.price)}
+              </Typography>
+            )}
+            <Typography variant="h5">
+              {product.priceSale > 0 ? fCurrency(product.priceSale) : fCurrency(product.price)}
+            </Typography>
+          </Stack>
         </Stack>
 
-        <ProductCountdownBlock expired={add(new Date(), { days: 1, hours: 8 })} />
+        <ProductCountdownBlock expired={getExpiryDate()} />
       </Stack>
     </Link>
   );

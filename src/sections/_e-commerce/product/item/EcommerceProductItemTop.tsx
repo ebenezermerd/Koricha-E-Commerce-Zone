@@ -28,6 +28,8 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
 
   const isLarge = isMdUp && variant === 'large';
 
+  if (!product) return null;
+
   const coverImg = <Image src={product.coverImg} />;
 
   const nameText = (

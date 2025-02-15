@@ -1,13 +1,45 @@
 // @mui
-import { Box, Typography, Container, Unstable_Grid2 as Grid } from '@mui/material';
-// _mock
-import { _products } from 'src/_mock';
+import { Box, Typography, Container, Unstable_Grid2 as Grid, Skeleton } from '@mui/material';
+// hooks
+import { useGetProducts } from 'src/services/useProducts';
 //
 import { EcommerceProductItemHot, EcommerceProductItemCountDown } from '../product/item';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingFeaturedProducts() {
+  const { products, productsLoading } = useGetProducts();
+
+  // Filter products for countdown section (products with active sales)
+  const countdownProducts = products
+    ?.filter((product) => 
+      product.priceSale > 0 && 
+      product.saleLabel.enabled && 
+      product.inStock > 0
+    )
+    .slice(0, 2);
+
+  // Filter products for hot deals section
+  const hotProducts = products
+    ?.filter((product) => 
+      product.rating >= 4 || 
+      product.totalSold > 1 || 
+      product.inStock > 0
+    )
+    .slice(0, 4);
+
+  if (productsLoading) {
+    return (
+      <Container sx={{ py: { xs: 5, md: 8 } }}>
+        <Skeleton variant="rectangular" height={600} />
+      </Container>
+    );
+  }
+
+  // if (!products?.length || !countdownProducts?.length || !hotProducts?.length) {
+  //   return null;
+  // }
+
   return (
     <Container
       sx={{
@@ -31,7 +63,7 @@ export default function EcommerceLandingFeaturedProducts() {
             display="grid"
             gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
           >
-            {_products.slice(1, 3).map((product, index) => (
+            {countdownProducts.map((product, index) => (
               <EcommerceProductItemCountDown
                 key={product.id}
                 product={product}
@@ -51,8 +83,12 @@ export default function EcommerceLandingFeaturedProducts() {
               lg: 'repeat(2, 1fr)',
             }}
           >
-            {_products.slice(4, 8).map((product) => (
-              <EcommerceProductItemHot key={product.id} product={product} />
+            {hotProducts.map((product) => (
+              <EcommerceProductItemHot 
+                key={product.id} 
+                product={product} 
+                hotProduct 
+              />
             ))}
           </Box>
         </Grid>

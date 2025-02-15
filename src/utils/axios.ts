@@ -79,4 +79,12 @@ export const endpoints = {
       verify: (id: string) => `/api/payments/${id}/verify`,
     },
   },
-};
+  testimonials: {
+    list: '/api/testimonials/list',
+    details: '/api/testimonials/details',
+    featured: '/api/testimonials/featured',
+    create: '/api/testimonials/create',
+    update: '/api/testimonials/update',
+  },
+};  
+

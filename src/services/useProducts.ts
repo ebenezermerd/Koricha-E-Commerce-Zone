@@ -2,9 +2,10 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import axios from 'src/utils/axios';
 import { endpoints } from 'src/utils/axios';
-import { IProductItemProps } from 'src/types/product';
+
 import { adaptMinimalToZoneProduct } from 'src/types/product-adaptor';
 import { IProductItem as MinimalProduct } from 'src/types/product-minimal';
+import { IProductItemProps } from 'types/product';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ export function useGetProducts() {
 
   const memoizedValue = useMemo(
     () => ({
-      products: data?.products ? data.products.map(adaptMinimalToZoneProduct) : [],
+      products: data?.products ? data.products.map(adaptMinimalToZoneProduct) : [] as IProductItemProps[],
       productsLoading: isLoading,
       productsError: error,
       productsValidating: isValidating,

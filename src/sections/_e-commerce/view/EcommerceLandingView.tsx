@@ -37,7 +37,7 @@ export default function EcommerceLandingView() {
 
       <EcommerceLandingTopProducts />
 
-      <TestimonialEcommerce testimonials={_testimonials} />
+      <TestimonialEcommerce />
     </>
   );
 }

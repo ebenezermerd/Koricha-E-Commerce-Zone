@@ -42,8 +42,10 @@ export default function EcommerceProductItemHot({ product, hotProduct = false, s
       >
         <Image
           src={product.coverImg}
+          
           sx={{
             mb: 2,
+            height: 150,
             borderRadius: 1.5,
             bgcolor: 'background.neutral',
           }}

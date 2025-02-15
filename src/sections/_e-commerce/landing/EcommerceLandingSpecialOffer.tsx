@@ -10,49 +10,72 @@ import {
   Container,
   Typography,
   StackProps,
+  Skeleton,
+  Rating,
+  useTheme,
 } from '@mui/material';
+// hooks
+import { useGetProducts } from 'src/services/useProducts';
 // components
 import Image from 'src/components/image';
+import { paths } from 'src/routes/paths';
+import { useNavigate } from 'react-router-dom';
 //
 import { ProductColorPicker, ProductOptionPicker, ProductCountdownBlock } from '../components';
-
-// ----------------------------------------------------------------------
-
-const COLOR_OPTIONS = [
-  { label: '#FA541C', value: 'red' },
-  { label: '#754FFE', value: 'violet' },
-  { label: '#00B8D9', value: 'cyan' },
-  { label: '#36B37E', value: 'green' },
-];
-
-const MEMORY_OPTIONS = [
-  { label: '128GB', value: '128gb' },
-  { label: '256GB', value: '256gb' },
-  { label: '512GB', value: '512gb' },
-  { label: '1TB', value: '1tb' },
-];
+import { fCurrency } from 'src/utils/formatNumber';
+import { IProductItemProps } from 'types/product';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingSpecialOffer() {
-  const [color, setColor] = useState('red');
+  const navigate = useNavigate();
+  const { products, productsLoading } = useGetProducts();
 
-  const [memory, setMemory] = useState('128gb');
+  // Get special offer product (e.g., product with highest discount)
+  const specialOfferProduct = products
+    ?.filter(product => 
+      product.priceSale > 0 && 
+      product.saleLabel.enabled && 
+      product.inStock > 0
+    )
+    .sort((a, b) => (b.price - b.priceSale) - (a.price - a.priceSale))
+    [0];
 
-  const handleChangeColor = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setColor((event.target as HTMLInputElement).value);
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
+
+  const handleChangeColor = (color: string) => {
+    setSelectedColor(color);
   };
 
-  const handleChangeMemory = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMemory((event.target as HTMLInputElement).value);
+  const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedSize(event.target.value);
   };
+
+  const handleBuyNow = () => {
+    navigate(`${paths.eCommerce.product}/${specialOfferProduct?.id}`);
+  };
+
+  if (productsLoading) {
+    return (
+      <Container sx={{ py: { xs: 5, md: 8 } }}>
+        <Skeleton variant="rectangular" height={500} />
+      </Container>
+    );
+  }
+
+  if (!specialOfferProduct) {
+    return null;
+  }
+
+  // Transform product colors to picker format
+  const colorOptions = specialOfferProduct.colors.map(color => ({
+    label: color,
+    value: color,
+  }));
 
   return (
-    <Container
-      sx={{
-        py: { xs: 5, md: 8 },
-      }}
-    >
+    <Container sx={{ py: { xs: 5, md: 8 } }}>
       <Typography
         variant="h3"
         sx={{
@@ -69,21 +92,22 @@ export default function EcommerceLandingSpecialOffer() {
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
       >
         <SpecialOfferCountdown
-          label="New 2022"
-          name="Apple iPhone 14"
-          price="From $999"
+          product={specialOfferProduct}
           expired={add(new Date(), { days: 1, hours: 8 })}
         />
 
         <Box sx={{ borderRadius: 1.5, bgcolor: 'background.neutral' }}>
-          <Image src="/assets/images/product/product_5.png" />
+          <Image src={specialOfferProduct.coverImg} />
         </Box>
 
         <SpecialOfferBuyNow
-          color={color}
-          memory={memory}
+          product={specialOfferProduct}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
+          colorOptions={colorOptions}
           onChangeColor={handleChangeColor}
-          onChangeMemory={handleChangeMemory}
+          onChangeSize={handleChangeSize}
+          onBuyNow={handleBuyNow}
         />
       </Box>
     </Container>
@@ -93,20 +117,11 @@ export default function EcommerceLandingSpecialOffer() {
 // ----------------------------------------------------------------------
 
 interface SpecialOfferCountdownProps extends StackProps {
+  product: IProductItemProps;
   expired: Date;
-  label: string;
-  name: string;
-  price: string;
 }
 
-function SpecialOfferCountdown({
-  expired,
-  label,
-  name,
-  price,
-  sx,
-  ...other
-}: SpecialOfferCountdownProps) {
+function SpecialOfferCountdown({ product, expired, sx, ...other }: SpecialOfferCountdownProps) {
   return (
     <Stack
       alignItems="center"
@@ -121,11 +136,11 @@ function SpecialOfferCountdown({
       {...other}
     >
       <Typography variant="overline" sx={{ color: 'primary.main' }}>
-        {label}
+        {product.saleLabel.content || 'Special Offer'}
       </Typography>
 
       <Typography variant="h5" sx={{ mt: 1, mb: 3 }}>
-        {name}
+        {product.name}
       </Typography>
 
       <Typography
@@ -137,7 +152,10 @@ function SpecialOfferCountdown({
           border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
         }}
       >
-        {price}
+        {product.priceSale > 0 
+          ? `From ${fCurrency(product.priceSale)}`
+          : `From ${fCurrency(product.price)}`
+        }
       </Typography>
 
       <Divider sx={{ borderStyle: 'dashed', my: 3, width: 1 }} />
@@ -165,42 +183,194 @@ function SpecialOfferCountdown({
 // ----------------------------------------------------------------------
 
 interface SpecialOfferBuyNowProps extends StackProps {
-  color: string;
-  memory: string;
-  onChangeColor: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeMemory: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  product: IProductItemProps;
+  selectedColor: string;
+  selectedSize: string;
+  colorOptions: { label: string; value: string; }[];
+  onChangeColor: (color: string) => void;
+  onChangeSize: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBuyNow: () => void;
 }
 
 function SpecialOfferBuyNow({
-  color,
-  memory,
+  product,
+  selectedColor,
+  selectedSize,
+  colorOptions,
   onChangeColor,
-  onChangeMemory,
+  onChangeSize,
+  onBuyNow,
   sx,
   ...other
 }: SpecialOfferBuyNowProps) {
+  const theme = useTheme();
+  
+  // Transform product sizes to picker format
+  const sizeOptions = product.sizes.map(size => ({
+    label: size,
+    value: size,
+  }));
+
   return (
     <Stack spacing={3} alignItems="flex-start" {...other}>
-      <Stack spacing={1}>
-        <Typography variant="h4">Apple iPhone 14</Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          While most people enjoy casino gambling, sports betting, lottery and bingo playing for the
-          fun.
+      {/* Product Title and Description Section */}
+      <Stack 
+        spacing={2}
+        sx={{
+          p: 3,
+          width: 1,
+          borderRadius: 2,
+          bgcolor: 'background.neutral',
+          boxShadow: theme.customShadows.z8,
+        }}
+      >
+        <Typography variant="h4" sx={{ color: 'text.primary' }}>
+          {product.name}
         </Typography>
+
+        
       </Stack>
 
-      <Stack spacing={2}>
-        <Typography variant="subtitle2">Color</Typography>
-        <ProductColorPicker value={color} onChange={onChangeColor} options={COLOR_OPTIONS} />
-      </Stack>
+      {/* Ratings and Sub-Description Card */}
+      <Box
+        sx={{
+          p: 3,
+          width: 1,
+          borderRadius: 2,
+          bgcolor: 'background.paper',
+          boxShadow: theme.customShadows.z16,
+          transition: 'transform 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+          },
+        }}
+      >
+        <Stack spacing={2}>
+          {/* Ratings Section */}
+          <Stack 
+            direction="row" 
+            alignItems="center" 
+            spacing={2}
+            sx={{
+              p: 1.5,
+              borderRadius: 1,
+              bgcolor: alpha(theme.palette.primary.main, 0.08),
+            }}
+          >
+            <Rating 
+              value={product.rating} 
+              precision={0.5} 
+              readOnly 
+              sx={{
+                '& .MuiRating-iconFilled': {
+                  color: 'primary.main',
+                },
+              }}
+            />
+            <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              ({product.totalRatings} ratings)
+            </Typography>
+          </Stack>
 
-      <Stack spacing={2}>
-        <Typography variant="subtitle2">Memory</Typography>
-        <ProductOptionPicker value={memory} onChange={onChangeMemory} options={MEMORY_OPTIONS} />
-      </Stack>
+          {/* Sub-Description */}
+          {product.subDescription && (
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.secondary',
+                fontStyle: 'italic',
+                borderLeft: `4px solid ${theme.palette.primary.main}`,
+                pl: 2,
+                py: 0.5,
+              }}
+            >
+              {product.subDescription}
+            </Typography>
+          )}
+        </Stack>
+      </Box>
 
-      <Button size="large" color="inherit" variant="contained">
+      {/* Color and Size Selection Section */}
+      <Box
+        sx={{
+          py: 3,
+          width: 1,
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(2, 1fr)',
+          },
+        }}
+      >
+        {/* Color Options */}
+        {colorOptions.length > 0 && (
+          <Stack 
+            spacing={1.5}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              bgcolor: 'background.neutral',
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              Color
+            </Typography>
+            <ProductColorPicker
+              selected={selectedColor}
+              onSelectColor={onChangeColor}
+              options={colorOptions}
+              sx={{
+                gap: 1,
+                justifyContent: 'flex-start',
+              }}
+            />
+          </Stack>
+        )}
+
+        {/* Size Options */}
+        {sizeOptions.length > 0 && (
+          <Stack 
+            spacing={1.5}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              bgcolor: 'background.neutral',
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              Size
+            </Typography>
+            <ProductOptionPicker
+              value={selectedSize}
+              onChange={onChangeSize}
+              options={sizeOptions}
+              sx={{
+                gap: 1,
+                justifyContent: 'flex-start',
+              }}
+            />
+          </Stack>
+        )}
+      </Box>
+
+      {/* Buy Now Button */}
+      <Button 
+        size="large" 
+        color="primary" 
+        variant="contained"
+        onClick={onBuyNow}
+        disabled={!selectedSize || !selectedColor}
+        sx={{
+          width: 1,
+          height: 48,
+          fontSize: 16,
+          boxShadow: theme.customShadows.z8,
+          '&:hover': {
+            bgcolor: 'primary.dark',
+          },
+        }}
+      >
         Buy Now
       </Button>
     </Stack>

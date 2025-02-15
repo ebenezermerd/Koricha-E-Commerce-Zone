@@ -4,7 +4,7 @@ import { Box, Container, Skeleton } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
 import { bgGradient } from 'src/utils/cssStyles';
-import { useCarousel, Carousel, CarouselDotButtons } from 'src/components/carousel';
+import { useCarousel, Carousel } from 'src/components/carousel';
 import { EcommerceProductItemHero } from '../product/item';
 import { CarouselArrowBasicButtons } from 'src/components/carousel/components/carousel-arrow-buttons';
 
@@ -33,11 +33,9 @@ export default function EcommerceLandingHero() {
 
   const carousel = useCarousel({
     slidesToShow: 1,
-    loop: heroProducts.length > 1,
+    loop: true,
     direction: 'ltr',
     axis: 'x',
-    slideSpacing: '0px',
-    containScroll: 'trimSnaps',
   });
 
   console.log('Products:', products);
@@ -76,30 +74,30 @@ export default function EcommerceLandingHero() {
           ))}
         </Carousel>
 
-        <CarouselDotButtons
-          onClickDot={carousel.dots.onClickDot}
-          scrollSnaps={carousel.dots.scrollSnaps}
-          selectedIndex={carousel.dots.selectedIndex}
-          variant="rounded"
-          sx={{
-            right: 20,
-            bottom: 20,
-            position: 'absolute',
-            color: 'primary.main',
-          }}
-        />
-
         <CarouselArrowBasicButtons
-          onClickPrev={carousel.arrows.onClickPrev}
-          onClickNext={carousel.arrows.onClickNext}
-          disablePrev={carousel.arrows.disablePrev}
-          disableNext={carousel.arrows.disableNext}
+          {...carousel.arrows}
           sx={{
-            right: { xs: 'auto', md: 40 },
-            left: { xs: 'auto', md: 'unset' },
-            bottom: 40,
-            gap: 2,
+            display: 'flex',
             position: 'absolute',
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            px: 2,
+            '& .arrow-button': {
+              p: 0.5,
+              width: 40,
+              height: 40,
+              opacity: 0.8,
+              color: 'common.white',
+              background: alpha(theme.palette.grey[900], 0.48),
+              borderRadius: '50%',
+              '&:hover': {
+                opacity: 1,
+                background: alpha(theme.palette.grey[900], 0.72),
+              },
+            },
           }}
         />
       </Box>
