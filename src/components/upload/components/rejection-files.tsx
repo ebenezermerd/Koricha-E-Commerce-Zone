@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-import { fData } from 'src/utils/format-number';
+import { fData } from 'src/utils/formatNumber';
 
 import { varAlpha } from 'src/theme/styles';
 
@@ -34,7 +34,7 @@ export function RejectionFiles({ files, sx, className, ...other }: RejectionFile
         textAlign: 'left',
         borderStyle: 'dashed',
         borderColor: 'error.main',
-        bgcolor: (theme) => varAlpha(theme.vars.palette.error.mainChannel, 0.08),
+        bgcolor: (theme) => varAlpha(theme.palette.error.main, 0.08),
         ...sx,
       }}
       {...other}

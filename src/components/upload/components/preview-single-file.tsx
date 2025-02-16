@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { varAlpha } from 'src/theme/styles';
 
-import { Iconify } from '../../iconify';
+import Iconify from '../../iconify';
 import { uploadClasses } from '../classes';
 
 import type { SingleFilePreviewProps } from '../types';
@@ -57,9 +57,9 @@ export function DeleteButton({ sx, ...other }: IconButtonProps) {
         right: 16,
         zIndex: 9,
         position: 'absolute',
-        color: (theme) => varAlpha(theme.vars.palette.common.whiteChannel, 0.8),
-        bgcolor: (theme) => varAlpha(theme.vars.palette.grey['900Channel'], 0.72),
-        '&:hover': { bgcolor: (theme) => varAlpha(theme.vars.palette.grey['900Channel'], 0.48) },
+        color: (theme) => varAlpha(theme.palette.common.white, 0.8),
+        bgcolor: (theme) => varAlpha(theme.palette.grey[900], 0.72),
+        '&:hover': { bgcolor: (theme) => varAlpha(theme.palette.grey[900], 0.48) },
         ...sx,
       }}
       {...other}

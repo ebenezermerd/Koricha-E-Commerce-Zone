@@ -13,7 +13,7 @@ import {
   IconButton,
   StackProps,
   InputAdornment,
-  Unstable_Grid2 as Grid,
+  Grid,
   Box,
 } from '@mui/material';
 // hooks

@@ -160,7 +160,7 @@ export default function Header() {
             >
               {t('support')}
             </Button>
-            <Box sx={{ px: "20px" }}>
+            {/* <Box sx={{ px: "20px" }}>
               {isMdUp ? (
                 <MegaMenuDesktopHorizon data={data} />
               ) : (
@@ -181,7 +181,7 @@ export default function Header() {
                   />
                 )
               )}
-            </Box>
+            </Box> */}
             <Stack spacing={1} direction="row" alignItems="center">
               <Searchbar />
               <LanguagePopover />

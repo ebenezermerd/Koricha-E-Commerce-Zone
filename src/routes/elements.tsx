@@ -110,12 +110,7 @@ export const MaintenancePage = Loadable(
 export const Page404 = Loadable(lazy(() => import("../pages/Page404")));
 export const Page500 = Loadable(lazy(() => import("../pages/Page500")));
 export const PaymentPage = Loadable(lazy(() => import("../pages/PaymentPage")));
-export const Pricing01Page = Loadable(
-  lazy(() => import("../pages/Pricing01Page"))
-);
-export const Pricing02Page = Loadable(
-  lazy(() => import("../pages/Pricing02Page"))
-);
+
 export const SupportPage = Loadable(lazy(() => import("../pages/SupportPage")));
 
 // ----------------------------------------------------------------------

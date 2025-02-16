@@ -1,6 +1,6 @@
 export * from './upload';
 
-export type * from './types';
+export * from './types';
 
 export * from './upload-box';
 

@@ -2,11 +2,11 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { fData } from 'src/utils/format-number';
+import { fData } from 'src/utils/formatNumber';
 
 import { varAlpha } from 'src/theme/styles';
 
-import { Iconify } from '../../iconify';
+import Iconify from '../../iconify';
 import { uploadClasses } from '../classes';
 import { fileData, FileThumbnail } from '../../file-thumbnail';
 
@@ -83,7 +83,7 @@ export function MultiFilePreview({
                   width: 80,
                   height: 80,
                   border: (theme) =>
-                    `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+                    `solid 1px ${varAlpha(theme.palette.grey[500], 0.16)}`,
                 }}
                 slotProps={{ icon: { width: 36, height: 36 } }}
                 {...slotProps?.thumbnail}
@@ -105,14 +105,14 @@ export function MultiFilePreview({
               borderRadius: 1,
               alignItems: 'center',
               border: (theme) =>
-                `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+                `solid 1px ${varAlpha(theme.palette.grey[500], 0.16)}`,
             }}
           >
             <FileThumbnail file={file} {...slotProps?.thumbnail} />
 
             <ListItemText
               primary={name}
-              secondary={fData(size)}
+              secondary={fData(size ?? 0)}
               secondaryTypographyProps={{ component: 'span', typography: 'caption' }}
             />
 

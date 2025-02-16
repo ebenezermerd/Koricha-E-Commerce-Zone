@@ -40,8 +40,6 @@ import {
   Page500,
   PaymentPage,
   SupportPage,
-  Pricing01Page,
-  Pricing02Page,
   ComingSoonPage,
   MaintenancePage,
 } from "./elements";
@@ -158,8 +156,6 @@ export default function Router() {
       element: <SimpleLayout />,
       children: [
         { path: "payment", element: <PaymentPage /> },
-        { path: "pricing-01", element: <Pricing01Page /> },
-        { path: "pricing-02", element: <Pricing02Page /> },
         {
           path: "auth",
           children: [

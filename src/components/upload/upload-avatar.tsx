@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -136,7 +136,7 @@ export function UploadAvatar({
 
       {helperText && helperText}
 
-      <RejectionFiles files={fileRejections} />
+      <RejectionFiles files={fileRejections as FileRejection[]} />
     </>
   );
 }

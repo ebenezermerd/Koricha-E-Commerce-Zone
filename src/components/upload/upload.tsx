@@ -1,4 +1,4 @@
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -116,7 +116,7 @@ export function Upload({
         </FormHelperText>
       )}
 
-      <RejectionFiles files={fileRejections} />
+      <RejectionFiles files={fileRejections as FileRejection[]} />
 
       {/* Multi files */}
       {renderMultiPreview}

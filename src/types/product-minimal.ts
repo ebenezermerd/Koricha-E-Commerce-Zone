@@ -1,6 +1,8 @@
 
 // ----------------------------------------------------------------------
 
+import { IProductReviewProps } from "./review";
+
 export type IDateValue = string | number | null;
 export type IProductFilters = {
   rating: string;
@@ -67,7 +69,7 @@ export type IProductItem = {
   subDescription: string;
   isPublished: boolean;
   priceSale: number | null;
-  reviews: IProductReview[];
+  reviews: IProductReviewProps[];
   vendor?: {
     id: string;
     name: string;
