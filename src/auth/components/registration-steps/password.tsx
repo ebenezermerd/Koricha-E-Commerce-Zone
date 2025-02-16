@@ -7,7 +7,7 @@ import Iconify  from 'src/components/iconify'
 
 export function PasswordStep() {
   const password = useBoolean()
-  const passwordConfirmation = useBoolean()
+  const confirmPassword = useBoolean()
 
   return (
     <Box gap={3} display="flex" flexDirection="column">
@@ -29,16 +29,16 @@ export function PasswordStep() {
       />
 
       <RHFTextField
-        name="passwordConfirmation"
+        name="confirmPassword"
         label="Confirm Password"
         placeholder="6+ characters"
-        type={passwordConfirmation.value ? 'text' : 'password'}
+        type={confirmPassword.value ? 'text' : 'password'}
         InputLabelProps={{ shrink: true }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={passwordConfirmation.onToggle} edge="end">
-                <Iconify icon={passwordConfirmation.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              <IconButton onClick={confirmPassword.onToggle} edge="end">
+                <Iconify icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
               </IconButton>
             </InputAdornment>
           ),

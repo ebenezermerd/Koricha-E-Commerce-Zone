@@ -24,6 +24,7 @@ import {
   PasswordSchema,
   type RegistrationSchemaType,
 } from '../registration';
+import { toast } from 'src/components/snackbar';
 
 const STEPS = [
   { label: 'Basic Information', component: BasicInfoStep, schema: BasicInfoSchema },
@@ -48,6 +49,7 @@ export function CustomerSignUpView() {
       sex: '',
       address: '',
       password: '',
+      confirmPassword: '',
     },
     mode: 'onChange',
     reValidateMode: 'onBlur',
@@ -85,7 +87,7 @@ export function CustomerSignUpView() {
   const handleSubmitForm = async () => {
     try {
       const data = methods.getValues();
-      if (data.password !== data.password_confirmation) {
+      if (data.password !== data.confirmPassword) {
         setErrorMsg('Passwords do not match');
         return;
       }
@@ -98,13 +100,15 @@ export function CustomerSignUpView() {
         sex: data.sex,
         address: data.address,
         password: data.password,
-        passwordConfirmation: data.passwordConfirmation,
+        confirmPassword: data.confirmPassword,
       };
       await signUp(signUpData);
       await checkUserSession?.();
+      toast.success('Registration successful');
       setActiveStep(STEPS.length - 1);
     } catch (error) {
       console.error(error);
+      toast.error('Registration failed ' + error.message);
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
   };
