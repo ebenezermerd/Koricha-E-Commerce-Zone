@@ -22,28 +22,28 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // routes
-import Router from 'src/routes';
+import Router from './src/routes';
 // theme
-import ThemeProvider from 'src/theme';
+import ThemeProvider from './src/theme';
 // components
-import { Snackbar } from 'src/components/snackbar';
-import ScrollToTop from 'src/components/scroll-to-top';
-import { ThemeSettings, SettingsProvider } from 'src/components/settings';
-import MotionLazyContainer from 'src/components/animate/MotionLazyContainer';
+import { Snackbar } from './src/components/snackbar';
+import ScrollToTop from './src/components/scroll-to-top';
+import { ThemeSettings, SettingsProvider } from './src/components/settings';
+import MotionLazyContainer from './src/components/animate/MotionLazyContainer';
 import './index.css';
 
 // Auth Context
-import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
-import { ProfileImageProvider } from 'src/hooks/use-profile-image';
-import { CartProvider } from './contexts/cart-context';
-import { WishlistProvider } from './contexts/wishlist-context';
+import { AuthProvider as JwtAuthProvider } from './src/auth/context/jwt';
+import { ProfileImageProvider } from './src/hooks/use-profile-image';
+import { CartProvider } from './src/contexts/cart-context';
+import { WishlistProvider } from './src/contexts/wishlist-context';
 import { I18nextProvider } from 'react-i18next';
-import { LocalizationProvider as I18nLocalizationProvider } from 'src/locales';
+import { LocalizationProvider as I18nLocalizationProvider } from './src/locales';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { i18nOptions, fallbackLng } from './locales/config-locales';
+import { i18nOptions, fallbackLng } from './src/locales/config-locales';
 import { useEffect } from 'react';
-import { localStorageGetItem } from 'src/utils/storage-available';
+import { localStorageGetItem } from './src/utils/storage-available';
 
 // ----------------------------------------------------------------------
 const AuthProvider = JwtAuthProvider;
