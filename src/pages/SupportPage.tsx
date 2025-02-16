@@ -8,7 +8,7 @@ export default function SupportPage() {
   return (
     <>
       <Helmet>
-        <title>Support | ZONE UI</title>
+        <title>Support |Korecha</title>
       </Helmet>
 
       <SupportView />

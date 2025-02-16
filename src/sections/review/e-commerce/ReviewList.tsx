@@ -1,17 +1,32 @@
 // @mui
-import { Pagination, Box } from '@mui/material';
+import { Pagination, Box, CircularProgress } from '@mui/material';
 // types
-import { IReviewItemProp } from 'src/types/review';
+import { IProductReviewProps } from 'src/types/review';
 //
 import ReviewItem from './ReviewItem';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  reviews: IReviewItemProp[];
+  reviews: IProductReviewProps[];
+  loading?: boolean;
+  pagination?: {
+    total: number;
+    per_page: number;
+    current_page: number;
+    last_page: number;
+  };
 };
 
-export default function ReviewList({ reviews }: Props) {
+export default function ReviewList({ reviews, loading, pagination }: Props) {
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ pt: 5 }}>
       {reviews.map((review) => (
@@ -20,24 +35,29 @@ export default function ReviewList({ reviews }: Props) {
           name={review.name}
           avatarUrl={review.avatarUrl}
           postedAt={review.postedAt}
-          message={review.message}
+          comment={review.comment}
           rating={review.rating}
           helpful={review.helpful}
+          isPurchased={review.isPurchased}
+          attachments={review.attachments}
         />
       ))}
 
-      <Pagination
-        count={10}
-        color="primary"
-        size="large"
-        sx={{
-          mt: 5,
-          mb: 10,
-          '& .MuiPagination-ul': {
-            justifyContent: 'center',
-          },
-        }}
-      />
+      {pagination && (
+        <Pagination
+          count={pagination.last_page}
+          page={pagination.current_page}
+          color="primary"
+          size="large"
+          sx={{
+            mt: 5,
+            mb: 10,
+            '& .MuiPagination-ul': {
+              justifyContent: 'center',
+            },
+          }}
+        />
+      )}
     </Box>
   );
 }

@@ -86,5 +86,11 @@ export const endpoints = {
     create: '/api/testimonials/create',
     update: '/api/testimonials/update',
   },
+  reviews: {
+    list: '/api/reviews',
+    create: '/api/reviews',
+    update: (id: string) => `/api/reviews/${id}`,
+    helpful: (id: string) => `/api/reviews/${id}/helpful`,
+  },
 };  
 

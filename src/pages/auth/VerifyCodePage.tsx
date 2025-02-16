@@ -8,7 +8,7 @@ export default function VerifyCodePage() {
   return (
     <>
       <Helmet>
-        <title>Verify Code | ZONE UI</title>
+        <title>Verify Code |Korecha</title>
       </Helmet>
 
       <VerifyCodeView />

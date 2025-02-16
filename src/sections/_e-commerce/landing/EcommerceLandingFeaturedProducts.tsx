@@ -1,5 +1,5 @@
 // @mui
-import { Box, Typography, Container, Unstable_Grid2 as Grid, Skeleton } from '@mui/material';
+import { Box, Typography, Container, Unstable_Grid2 as Grid, Skeleton, Stack } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
 //
@@ -46,15 +46,23 @@ export default function EcommerceLandingFeaturedProducts() {
         py: { xs: 5, md: 8 },
       }}
     >
-      <Typography
-        variant="h3"
-        sx={{
-          mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
-        }}
-      >
-        Featured Products
-      </Typography>
+       <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
+       <Typography
+              variant="h3"
+              sx={{
+                background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                fontWeight: 'bold',
+              }}
+            >
+              Featured Products
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Explore our handpicked selection of premium products, from exclusive deals to trending items
+            </Typography>
+       </Stack>
 
       <Grid container spacing={3}>
         <Grid xs={12} lg={8}>

@@ -8,7 +8,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title>404 Page Not Found | ZONE UI</title>
+        <title>404 Page Not Found | Korecha</title>
       </Helmet>
 
       <Error404View />

@@ -93,14 +93,13 @@ export default function EcommerceProductView() {
             />
           </Grid>
 
-          <Grid xs={12} md={6} lg={5}>
-            {product.reviews  && (
-              <ReviewEcommerce
-                ratingsNumber={product.totalRatings}
-                reviewsNumber={product.totalReviews}
-              />
-            )}
-          </Grid>
+          {/* <Grid xs={12} md={6} lg={5}>
+            <ReviewEcommerce
+              productId={product.id}
+              ratingsNumber={product.totalRatings}
+              reviewsNumber={product.totalReviews}
+            />
+          </Grid> */}
         </Grid>
       </Container>
     </>

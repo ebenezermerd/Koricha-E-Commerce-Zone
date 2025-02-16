@@ -8,7 +8,7 @@ export default function EcommerceAccountPersonalPage() {
   return (
     <>
       <Helmet>
-        <title>Account: Personal | ZONE UI</title>
+        <title>Account: Personal | Korecha</title>
       </Helmet>
 
       <EcommerceAccountPersonalView />

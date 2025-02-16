@@ -8,7 +8,7 @@ export default function RegisterBackgroundPage() {
   return (
     <>
       <Helmet>
-        <title>Register Background | ZONE UI</title>
+        <title>Register Background |Korecha</title>
       </Helmet>
 
       <RegisterBackgroundView />

@@ -8,7 +8,7 @@ export default function EcommerceComparePage() {
   return (
     <>
       <Helmet>
-        <title>Compare | ZONE UI</title>
+        <title>Compare | Korecha</title>
       </Helmet>
 
       <EcommerceCompareView />

@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Landing | ZONE UI</title>
+        <title>Landing | Korecha</title>
       </Helmet>
 
       <EcommerceLandingView />

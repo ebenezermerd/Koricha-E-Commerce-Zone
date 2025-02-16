@@ -161,7 +161,7 @@ export default function Footer() {
           sx={{ py: 3, textAlign: 'center' }}
         >
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            © 2023. All rights reserved
+            © {new Date().getFullYear()} All rights reserved
           </Typography>
 
           <Stack direction="row" spacing={3} justifyContent="center">

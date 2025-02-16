@@ -8,7 +8,7 @@ export default function Pricing01Page() {
   return (
     <>
       <Helmet>
-        <title>Pricing 01 | ZONE UI</title>
+        <title>Pricing 01 |Korecha</title>
       </Helmet>
 
       <Pricing01View />

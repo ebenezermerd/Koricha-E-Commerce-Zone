@@ -8,7 +8,7 @@ export default function LoginIllustrationPage() {
   return (
     <>
       <Helmet>
-        <title>Login Illustration | ZONE UI</title>
+        <title>Login Illustration |Korecha</title>
       </Helmet>
 
       <LoginIllustrationView />

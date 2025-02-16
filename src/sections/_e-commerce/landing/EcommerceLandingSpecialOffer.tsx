@@ -53,7 +53,9 @@ export default function EcommerceLandingSpecialOffer() {
   };
 
   const handleBuyNow = () => {
-    navigate(`${paths.eCommerce.product}/${specialOfferProduct?.id}`);
+    if (specialOfferProduct?.id) {
+      navigate(paths.eCommerce.product.replace(':id', specialOfferProduct.id));
+    }
   };
 
   if (productsLoading) {
@@ -76,16 +78,23 @@ export default function EcommerceLandingSpecialOffer() {
 
   return (
     <Container sx={{ py: { xs: 5, md: 8 } }}>
+      <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
       <Typography
         variant="h3"
         sx={{
-          mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
+          background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+          fontWeight: 'bold',
         }}
       >
         Special Offer
       </Typography>
-
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        Discover our exclusive deals and special offers
+      </Typography>
+      </Stack>
       <Box
         gap={{ xs: 5, md: 8 }}
         display="grid"
@@ -359,8 +368,8 @@ function SpecialOfferBuyNow({
         size="large" 
         color="primary" 
         variant="contained"
+        disabled={!selectedColor || (product.sizes && product.sizes.length > 0 && !selectedSize)}
         onClick={onBuyNow}
-        disabled={!selectedSize || !selectedColor}
         sx={{
           width: 1,
           height: 48,

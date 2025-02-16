@@ -8,7 +8,7 @@ export default function EcommerceAccountWishlistPage() {
   return (
     <>
       <Helmet>
-        <title>Account: Wishlist | ZONE UI</title>
+        <title>Account: Wishlist | Korecha</title>
       </Helmet>
 
       <EcommerceAccountWishlistView />

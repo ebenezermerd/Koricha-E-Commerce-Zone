@@ -8,7 +8,7 @@ export default function EcommerceOrderCompletedPage() {
   return (
     <>
       <Helmet>
-        <title>Order Completed | ZONE UI</title>
+        <title>Order Completed | Korecha</title>
       </Helmet>
 
       <EcommerceOrderCompletedView />

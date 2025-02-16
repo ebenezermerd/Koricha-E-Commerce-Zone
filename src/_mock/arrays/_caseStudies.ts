@@ -8,7 +8,7 @@ const TITLE = [
   'Turn Key Smart',
   'Digital Shose',
   'Action Car',
-  'The Zone UI',
+  'TheKorecha',
   'Minimal UI',
   'Network Firefox',
 ];

@@ -8,7 +8,7 @@ export default function LoginCoverPage() {
   return (
     <>
       <Helmet>
-        <title>Login Cover | ZONE UI</title>
+        <title>Login Cover |Korecha</title>
       </Helmet>
 
       <LoginCoverView />

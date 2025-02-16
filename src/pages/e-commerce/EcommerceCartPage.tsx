@@ -8,7 +8,7 @@ export default function EcommerceCartPage() {
   return (
     <>
       <Helmet>
-        <title>Cart | ZONE UI</title>
+        <title>Cart | Korecha</title>
       </Helmet>
 
       <EcommerceCartView />

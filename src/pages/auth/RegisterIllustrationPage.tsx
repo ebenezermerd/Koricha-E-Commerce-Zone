@@ -8,7 +8,7 @@ export default function RegisterIllustrationPage() {
   return (
     <>
       <Helmet>
-        <title>Register Illustration | ZONE UI</title>
+        <title>Register Illustration |Korecha</title>
       </Helmet>
 
       <RegisterIllustrationView />

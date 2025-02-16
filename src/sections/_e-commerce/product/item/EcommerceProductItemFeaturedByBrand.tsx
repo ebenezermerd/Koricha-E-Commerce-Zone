@@ -56,7 +56,7 @@ export default function EcommerceProductItemFeaturedByBrand({ product, sx, ...ot
         <Stack flexGrow={1} alignItems="flex-end" justifyContent="flex-end">
           <Button
             component={RouterLink}
-            to={paths.eCommerce.product}
+            to={paths.eCommerce.product.replace(':id', product.id)}
             size="small"
             color="inherit"
             variant="contained"

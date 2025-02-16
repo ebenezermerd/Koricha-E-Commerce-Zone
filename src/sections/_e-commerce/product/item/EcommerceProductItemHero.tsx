@@ -34,6 +34,7 @@ console.log('product', product)
         md: 0,
       }}
       sx={{
+        alignItems: 'center',
         py: 10,
         px: { xs: 3, md: 10 },
       }}

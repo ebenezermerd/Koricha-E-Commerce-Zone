@@ -8,7 +8,7 @@ export default function ResetPasswordPage() {
   return (
     <>
       <Helmet>
-        <title>Reset Password | ZONE UI</title>
+        <title>Reset Password |Korecha</title>
       </Helmet>
 
       <ResetPasswordView />

@@ -45,7 +45,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
   const moreBtn = (
     <Button
       component={RouterLink}
-      to={paths.eCommerce.product}
+      to={paths.eCommerce.product.replace(':id', product.id)}
       color="inherit"
       endIcon={<Iconify icon="carbon:chevron-right" />}
       sx={{ flexShrink: 0 }}

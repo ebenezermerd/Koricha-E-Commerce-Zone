@@ -29,6 +29,8 @@ export default function EcommerceLandingView() {
 
       <EcommerceLandingFeaturedProducts />
 
+      {/* <TestimonialEcommerce /> */}
+
       <EcommerceLandingSpecialOffer />
 
       <EcommerceLandingFeaturedBrands />
@@ -36,8 +38,6 @@ export default function EcommerceLandingView() {
       <EcommerceLandingPopularProducts />
 
       <EcommerceLandingTopProducts />
-
-      <TestimonialEcommerce />
     </>
   );
 }

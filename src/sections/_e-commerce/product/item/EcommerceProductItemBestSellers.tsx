@@ -19,7 +19,7 @@ interface Props extends StackProps {
 
 export default function EcommerceProductItemBestSellers({ product, ...other }: Props) {
   return (
-    <Link component={RouterLink} to={paths.eCommerce.product} color="inherit" underline="none">
+    <Link component={RouterLink} to={paths.eCommerce.product.replace(':id', product.id)} color="inherit" underline="none">
       <Stack
         spacing={2}
         direction="row"

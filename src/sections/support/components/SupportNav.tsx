@@ -112,13 +112,13 @@ export default function SupportNav({
         <Stack spacing={2}>
           <StyledContactButton>
             <Iconify icon="carbon:email" width={24} />
-            <Typography variant="subtitle2">Email</Typography>
+            <Typography variant="subtitle2">Email
+              <Box component="span" sx={{ color: 'primary.main', pl: 1 }}>
+                support@koricha.com
+              </Box>
+            </Typography>
           </StyledContactButton>
 
-          <StyledContactButton>
-            <Iconify icon="carbon:chat" width={24} />
-            <Typography variant="subtitle2">Chat Now</Typography>
-          </StyledContactButton>
 
           <StyledContactButton>
             <Iconify icon="carbon:mobile" width={24} />

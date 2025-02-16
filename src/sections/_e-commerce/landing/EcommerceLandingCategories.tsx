@@ -19,16 +19,23 @@ export default function EcommerceLandingCategories() {
         py: { xs: 5, md: 8 },
       }}
     >
+      <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'unset' }}>
       <Typography
-        variant="h3"
-        sx={{
-          mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
-        }}
+         variant="h3"
+         sx={{
+           background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+           backgroundClip: 'text',
+           WebkitBackgroundClip: 'text',
+           color: 'transparent',
+           fontWeight: 'bold',
+         }}
       >
         Categories
       </Typography>
-
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        Explore our wide range of categories, from electronics to fashion and everything in between
+      </Typography>
+      </Stack>
       <Box
         gap={3}
         display="grid"

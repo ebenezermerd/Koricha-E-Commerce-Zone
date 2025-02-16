@@ -8,7 +8,7 @@ export default function RegisterCoverPage() {
   return (
     <>
       <Helmet>
-        <title>Register Cover | ZONE UI</title>
+        <title>Register Cover |Korecha</title>
       </Helmet>
 
       <RegisterCoverView />

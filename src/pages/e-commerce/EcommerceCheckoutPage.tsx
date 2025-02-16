@@ -8,7 +8,7 @@ export default function EcommerceCheckoutPage() {
   return (
     <>
       <Helmet>
-        <title>Checkout | ZONE UI</title>
+        <title>Checkout | Korecha</title>
       </Helmet>
 
       <EcommerceCheckoutView />

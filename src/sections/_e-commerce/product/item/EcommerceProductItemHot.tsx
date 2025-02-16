@@ -22,7 +22,7 @@ type Props = {
 
 export default function EcommerceProductItemHot({ product, hotProduct = false, sx }: Props) {
   return (
-    <Link component={RouterLink} to={paths.eCommerce.product} color="inherit" underline="none">
+    <Link component={RouterLink} to={paths.eCommerce.product.replace(':id', product.id)} color="inherit" underline="none">
       <Paper
         variant="outlined"
         sx={{

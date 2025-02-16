@@ -3,15 +3,15 @@ import { Stack, Rating, Button, Avatar, Typography } from '@mui/material';
 // utils
 import { fDate } from 'src/utils/formatTime';
 // types
-import { IReviewItemProp } from 'src/types/review';
+import { IProductReviewProps } from 'src/types/review';
 // components
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-type Props = Partial<IReviewItemProp>;
+type Props = Partial<IProductReviewProps>;
 
-export default function ReviewItem({ name, rating, message, postedAt, avatarUrl }: Props) {
+export default function ReviewItem({ name, rating, comment, postedAt, avatarUrl }: Props) {
   return (
     <Stack
       direction="row"
@@ -20,7 +20,7 @@ export default function ReviewItem({ name, rating, message, postedAt, avatarUrl 
         borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
       }}
     >
-      <Avatar alt={name} src={avatarUrl} sx={{ width: 64, height: 64, mr: 2.5 }} />
+      <Avatar alt={name} src={avatarUrl || ''} sx={{ width: 64, height: 64, mr: 2.5 }} />
 
       <Stack spacing={1}>
         <Rating
@@ -41,7 +41,7 @@ export default function ReviewItem({ name, rating, message, postedAt, avatarUrl 
           </Typography>
         )}
 
-        <Typography variant="body2">{message}</Typography>
+        <Typography variant="body2">{comment}</Typography>
 
         <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }}>
           <Typography variant="subtitle2">Was this review helpful?</Typography>

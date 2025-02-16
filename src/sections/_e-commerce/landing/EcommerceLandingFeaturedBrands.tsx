@@ -1,4 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -17,12 +18,14 @@ import { useGetProducts } from 'src/services/useProducts';
 import Iconify from 'src/components/iconify';
 //
 import { EcommerceProductItemFeaturedByBrand } from '../product/item';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingFeaturedBrands() {
   const theme = useTheme();
   const { products, productsLoading } = useGetProducts();
+  const navigate = useNavigate();
 
   // Group products by brand and get top brands
   const topBrands = products
@@ -69,16 +72,23 @@ export default function EcommerceLandingFeaturedBrands() {
         py: { xs: 5, md: 8 },
       }}
     >
+      <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
       <Typography
         variant="h3"
         sx={{
-          mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
+          background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+          fontWeight: 'bold',
         }}
       >
         Featured Brands
       </Typography>
-
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        Discover our featured brands and their products
+      </Typography>
+      </Stack>
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <BrandInfo
@@ -149,6 +159,12 @@ function BrandInfo({
   ...other 
 }: BrandInfoProps) {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleViewDetails = () => {
+    // Navigate to products page with brand filter
+    navigate(`${paths.eCommerce.products}`);
+  };
 
   return (
     <Stack
@@ -217,8 +233,7 @@ function BrandInfo({
       </Stack>
 
       <Button
-        component={RouterLink}
-        to={path}
+        onClick={handleViewDetails}
         color="inherit"
         variant="outlined"
         endIcon={<Iconify icon="carbon:chevron-right" />}

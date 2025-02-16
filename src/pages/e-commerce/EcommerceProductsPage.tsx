@@ -8,7 +8,7 @@ export default function EcommerceProductsPage() {
   return (
     <>
       <Helmet>
-        <title>Products | ZONE UI</title>
+        <title>Products | Korecha</title>
       </Helmet>
 
       <EcommerceProductsView />

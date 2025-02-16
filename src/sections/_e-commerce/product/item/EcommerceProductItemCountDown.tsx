@@ -42,7 +42,7 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
   return (
     <Link 
       component={RouterLink} 
-      to={`${paths.eCommerce.product}/${product.id}`} 
+      to={paths.eCommerce.product.replace(':id', product.id)} 
       color="inherit" 
       underline="none"
     >
@@ -53,13 +53,17 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
           borderRadius: 2,
           color: `${color}.darker`,
           bgcolor: `${color}.lighter`,
-          transition: theme.transitions.create('background-color', {
+          cursor: 'pointer',
+          transition: theme.transitions.create(['background-color', 'color'], {
             easing: theme.transitions.easing.easeIn,
             duration: theme.transitions.duration.shortest,
           }),
           '&:hover': {
             color: `${color}.lighter`,
             bgcolor: `${color}.main`,
+            '& .countdown-text': {
+              color: `${color}.lighter`,
+            },
           },
           ...sx,
         }}
@@ -75,7 +79,14 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
         />
 
         <Stack spacing={1} sx={{ textAlign: 'center' }}>
-          <TextMaxLine variant="subtitle2" sx={{ opacity: 0.72 }}>
+          <TextMaxLine 
+            variant="subtitle2" 
+            sx={{ 
+              opacity: 0.72,
+              transition: theme.transitions.create('color'),
+            }}
+            className="countdown-text"
+          >
             {product.name}
           </TextMaxLine>
 
@@ -84,18 +95,37 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
               <Typography
                 component="span"
                 variant="h5"
-                sx={{ color: 'text.disabled', textDecoration: 'line-through' }}
+                sx={{ 
+                  color: 'text.disabled', 
+                  textDecoration: 'line-through',
+                  transition: theme.transitions.create('color'),
+                }}
+                className="countdown-text"
               >
                 {fCurrency(product.price)}
               </Typography>
             )}
-            <Typography variant="h5">
+            <Typography 
+              variant="h5"
+              className="countdown-text"
+              sx={{ transition: theme.transitions.create('color') }}
+            >
               {product.priceSale > 0 ? fCurrency(product.priceSale) : fCurrency(product.price)}
             </Typography>
           </Stack>
         </Stack>
 
-        <ProductCountdownBlock expired={getExpiryDate()} />
+        <ProductCountdownBlock 
+          expired={getExpiryDate()} 
+          sx={{
+            '& .countdown-number': {
+              transition: theme.transitions.create('color'),
+            },
+            '& .countdown-text': {
+              transition: theme.transitions.create('color'),
+            }
+          }}
+        />
       </Stack>
     </Link>
   );

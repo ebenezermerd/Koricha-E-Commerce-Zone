@@ -8,7 +8,7 @@ export default function ComingSoonPage() {
   return (
     <>
       <Helmet>
-        <title>Coming Soon | ZONE UI</title>
+        <title>Coming Soon | Korecha</title>
       </Helmet>
 
       <ComingSoonView />

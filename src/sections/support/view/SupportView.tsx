@@ -1,53 +1,16 @@
 import { useState, useEffect } from 'react';
 // @mui
 import { Container, Stack, Typography, IconButton } from '@mui/material';
-// _mock
-import { _faqsSupport } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 //
 import { SupportHero, SupportNav, SupportContent } from '../components';
-
-// ----------------------------------------------------------------------
-
-const TOPICS = [
-  {
-    title: 'Account',
-    icon: '/assets/icons/faq/ic_faq_account.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: 'Payment',
-    icon: '/assets/icons/faq/ic_faq_payment.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: 'Delivery',
-    icon: '/assets/icons/faq/ic_faq_delivery.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: 'Product',
-    icon: '/assets/icons/faq/ic_faq_package.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: 'Return & Refund',
-    icon: '/assets/icons/faq/ic_faq_refund.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: 'Assurances',
-    icon: '/assets/icons/faq/ic_faq_assurances.svg',
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-];
+import { FAQ_CATEGORIES } from 'src/_mock/arrays/_faqsSupport';
 
 // ----------------------------------------------------------------------
 
 export default function SupportView() {
-  const [topic, setTopic] = useState('Payment');
-
+  const [topic, setTopic] = useState(FAQ_CATEGORIES[0].title);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleChangeTopic = (event: React.SyntheticEvent, newValue: string) => {
@@ -58,8 +21,10 @@ export default function SupportView() {
     if (mobileOpen) {
       setMobileOpen(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic]);
+
+  const currentFaqs = FAQ_CATEGORIES.find((category) => category.title === topic)?.faqs || [];
+  const hasPagination = currentFaqs.length > 8;
 
   return (
     <>
@@ -84,16 +49,21 @@ export default function SupportView() {
           Frequently Asked Questions
         </Typography>
 
-        <Stack direction="row" sx={{ pb: { xs: 10, md: 15 } }}>
+        <Stack 
+          direction="row" 
+          sx={{ 
+            pb: hasPagination ? 0 : { xs: 10, md: 15 }
+          }}
+        >
           <SupportNav
-            sidebarConfig={TOPICS}
+            sidebarConfig={FAQ_CATEGORIES}
             topic={topic}
             isOpenSidebar={mobileOpen}
             onChangeTopic={handleChangeTopic}
             onCloseSidebar={() => setMobileOpen(false)}
           />
 
-          {TOPICS.map((item) => item.title === topic && <div key={item.title}>{item.content}</div>)}
+          <SupportContent contents={currentFaqs} />
         </Stack>
       </Container>
     </>

@@ -56,7 +56,7 @@ export default function ReviewSummary({ reviewsNumber, ratingsNumber, onOpenForm
             </Stack>
 
             <Button
-              size="large"
+              size="medium"
               color="inherit"
               variant="contained"
               startIcon={<Iconify icon="carbon:edit" />}

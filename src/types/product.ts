@@ -1,3 +1,5 @@
+import { IProductReviewProps } from "./review";
+
 // ----------------------------------------------------------------------
 
 export type IProductItemHeroProps = {
@@ -17,18 +19,6 @@ export type IProductItemCompareProps = {
   coverImg: string;
   rating: number;
   details: string[];
-};
-
-export type IProductReview = {
-  id: string;
-  name: string;
-  rating: number;
-  comment: string;
-  helpful: number;
-  avatarUrl: string;
-  postedAt: IDateValue;
-  isPurchased?: boolean;
-  attachments?: string[];
 };
 
 export type IProductItemProps = {
@@ -63,7 +53,7 @@ export type IProductItemProps = {
   inventoryType: string;
   subDescription: string;
   isPublished: boolean;
-  reviews: IProductReview[];
+  reviews: IProductReviewProps[];
   vendor?: {
     id: string;
     name: string;

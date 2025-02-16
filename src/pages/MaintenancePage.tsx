@@ -8,7 +8,7 @@ export default function MaintenancePage() {
   return (
     <>
       <Helmet>
-        <title>Maintenance | ZONE UI</title>
+        <title>Maintenance | Korecha</title>
       </Helmet>
 
       <MaintenanceView />

@@ -8,7 +8,7 @@ export default function EcommerceAccountOrdersPage() {
   return (
     <>
       <Helmet>
-        <title>Account: Orders | ZONE UI</title>
+        <title>Account: Orders | Korecha</title>
       </Helmet>
 
       <EcommerceAccountOrdersView />

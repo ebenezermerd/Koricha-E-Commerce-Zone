@@ -8,7 +8,7 @@ export default function PaymentPage() {
   return (
     <>
       <Helmet>
-        <title>Payment | ZONE UI</title>
+        <title>Payment |Korecha</title>
       </Helmet>
 
       <PaymentView />

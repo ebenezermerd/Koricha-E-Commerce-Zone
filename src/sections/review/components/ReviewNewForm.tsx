@@ -15,42 +15,50 @@ import {
   DialogContent,
   FormHelperText,
 } from '@mui/material';
+// hooks
+import { useReviewActions } from 'src/services/useReview';
 // components
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import { toast } from 'src/components/snackbar';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
+  product_id: string;
   rating: number;
   review: string;
   name: string;
-  email: string;
 };
 
 interface Props extends DialogProps {
   onClose: VoidFunction;
+  open: boolean;
+  onSubmitSuccess: VoidFunction;
+  productId: string;
 }
 
 // ----------------------------------------------------------------------
 
-export default function ReviewNewForm({ onClose, ...other }: Props) {
- 
+export default function ReviewNewForm({ onClose, productId, onSubmitSuccess, open, ...other }: Props) {
+  const { createNewReview, isCreating } = useReviewActions();
+
+  const ReviewSchema = Yup.object().shape({
+    product_id: Yup.string().required(),
+    rating: Yup.number().required('Rating is required'),
+    review: Yup.string().required('Review is required'),
+    name: Yup.string().required('Name is required'),
+  });
+
   const defaultValues = {
     rating: 0,
     review: '',
     name: '',
-    email: '',
+    product_id: productId,
   };
 
-  const NewReviewSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    rating: Yup.number().required('Rating is required'),
-    review: Yup.string().required('Review is required'),
-    email: Yup.string().required('Email is required').email('That is not an email'),
-  });
-
   const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(NewReviewSchema),
+    resolver: yupResolver(ReviewSchema),
     defaultValues,
   });
 
@@ -63,50 +71,74 @@ export default function ReviewNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await createNewReview({
+        product_id: productId,
+        rating: data.rating,
+        comment: data.review,
+        name: data.name,
+      });
+      
       reset();
       onClose();
-      console.log('DATA', data);
-    } catch (error) {
+      onSubmitSuccess();
+      toast.success('Review submitted successfully!');
+    } catch (error: any) {
       console.error(error);
+      if (error.message === 'Please login to submit a review') {
+        toast.error('Please login to submit a review');
+        localStorage.setItem('pendingReview', JSON.stringify(data));
+        window.location.href = paths.auth.jwt.signIn;
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to submit review. Please try again.');
+      }
     }
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} {...other}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle sx={{ typography: 'h3', pb: 3 }}>Review</DialogTitle>
+        <DialogTitle>Write a Review</DialogTitle>
 
-        <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={2.5}>
-            <div>
-              <Typography variant="subtitle2" gutterBottom>
-                Your rating:
-              </Typography>
-
+        <DialogContent sx={{ py: 3 }}>
+          <Stack spacing={3}>
+            <Stack spacing={1.5}>
+              <Typography variant="subtitle2">Rating</Typography>
               <Controller
                 name="rating"
                 control={control}
-                render={({ field }) => <Rating {...field} value={Number(field.value)} />}
+                render={({ field }) => (
+                  <Rating
+                    {...field}
+                    value={Number(field.value)}
+                    onChange={(event, newValue) => {
+                      field.onChange(newValue);
+                    }}
+                  />
+                )}
               />
+              {errors.rating && (
+                <FormHelperText error>{errors.rating.message}</FormHelperText>
+              )}
+            </Stack>
 
-              {!!errors.rating && <FormHelperText error> {errors.rating?.message}</FormHelperText>}
-            </div>
+            <RHFTextField
+              name="review"
+              label="Review"
+              multiline
+              rows={3}
+              placeholder="Write your review here..."
+            />
 
-            <RHFTextField multiline rows={3} name="review" label="Review *" />
-
-            <RHFTextField name="name" label="Name *" />
-
-            <RHFTextField name="email" label="Email address *" />
+            <RHFTextField name="name" label="Name" />
           </Stack>
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose} color="inherit">
+          <Button color="inherit" variant="outlined" onClick={onClose}>
             Cancel
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting || isCreating}>
             Post Review
           </LoadingButton>
         </DialogActions>

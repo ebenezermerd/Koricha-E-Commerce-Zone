@@ -8,7 +8,7 @@ export default function EcommerceAccountVouchersPage() {
   return (
     <>
       <Helmet>
-        <title>Account: Vouchers | ZONE UI</title>
+        <title>Account: Vouchers | Korecha</title>
       </Helmet>
 
       <EcommerceAccountVouchersView />

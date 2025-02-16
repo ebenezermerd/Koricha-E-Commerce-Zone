@@ -59,14 +59,24 @@ export default function EcommerceLandingHotDealToday() {
         spacing={3}
         sx={{ mb: 8 }}
       >
+        <Stack sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
         <Typography
-          variant="h3"
-          sx={{
-            textAlign: { xs: 'center', md: 'unset' },
-          }}
+           variant="h3"
+           sx={{
+             background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+             backgroundClip: 'text',
+             WebkitBackgroundClip: 'text',
+             color: 'transparent',
+             fontWeight: 'bold',
+           }}
         >
           🔥 Hot Deal Today
         </Typography>
+        <Typography variant="body2" sx={{ pl: 5, color: 'text.secondary' }}>
+          Discover our hottest deals and exclusive offers
+        </Typography>
+        </Stack>
+
 
         <ProductCountdownBlock
           hiddenLabel
