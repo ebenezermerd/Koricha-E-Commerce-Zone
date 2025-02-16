@@ -8,6 +8,7 @@ import { CONFIG } from 'src/config-global';
 import  LoadingScreen  from 'src/components/loading-screen';
 
 import { useGetUser } from 'src/services/useUser';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

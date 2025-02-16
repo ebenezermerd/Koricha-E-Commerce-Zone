@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers';
 import {
@@ -17,12 +17,15 @@ import {
   InputAdornment,
   TablePagination,
   FormControlLabel,
+  Card,
 } from '@mui/material';
-// _mock
-import { _productsTable } from 'src/_mock';
+// hooks
+import { useOrders } from 'src/services/useOrders';
 // components
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+import LoadingScreen from 'src/components/loading-screen';
+import { EmptyContent } from 'src/components/empty-content';
 //
 import { EcommerceAccountLayout } from '../layout';
 import {
@@ -32,13 +35,20 @@ import {
   EcommerceAccountOrdersTableHead,
   EcommerceAccountOrdersTableToolbar,
 } from '../account/orders';
+import { IOrder, OrderStatus } from 'src/types/order';
 
 // ----------------------------------------------------------------------
 
-const TABS = ['All Orders', 'Completed', 'To Process', 'Cancelled', 'Return & Refund'];
+const STATUS_OPTIONS = {
+  'All Orders': 'all',
+  'Completed': 'completed',
+  'Pending': 'pending',
+  'Cancelled': 'cancelled',
+  'Refunded': 'refunded',
+} as const;
 
 export const TABLE_HEAD = [
-  { id: 'orderId', label: 'Order ID' },
+  { id: 'orderNumber', label: 'Order ID' },
   { id: 'item', label: 'Item' },
   { id: 'deliveryDate', label: 'Delivery date', width: 160 },
   { id: 'price', label: 'Price', width: 100 },
@@ -50,21 +60,31 @@ export const TABLE_HEAD = [
 
 export default function EcommerceAccountOrdersPage() {
   const [tab, setTab] = useState('All Orders');
-
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const [orderBy, setOrderBy] = useState('orderId');
-
+  const [orderBy, setOrderBy] = useState('orderNumber');
   const [selected, setSelected] = useState<string[]>([]);
-
   const [page, setPage] = useState(0);
-
   const [dense, setDense] = useState(false);
-
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { myOrders, ordersLoading } = useOrders();
+
+  const filteredOrders = useMemo(() => {
+    if (!myOrders?.length) return [];
+    
+    const status = STATUS_OPTIONS[tab as keyof typeof STATUS_OPTIONS];
+    
+    if (status === 'all') {
+      return myOrders;
+    }
+    
+    return myOrders.filter((order) => order.status === status);
+  }, [myOrders, tab]);
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
+    setPage(0);
+    setSelected([]);
   };
 
   const handleSort = (id: string) => {
@@ -77,7 +97,7 @@ export default function EcommerceAccountOrdersPage() {
 
   const handleSelectAllRows = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = _productsTable.map((n) => n.id);
+      const newSelected = filteredOrders.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -100,7 +120,6 @@ export default function EcommerceAccountOrdersPage() {
         selected.slice(selectedIndex + 1)
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -117,130 +136,134 @@ export default function EcommerceAccountOrdersPage() {
     setDense(event.target.checked);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - _productsTable.length) : 0;
+  if (ordersLoading) {
+    return <LoadingScreen />;
+  }
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredOrders.length) : 0;
+
+  const isNotFound = !filteredOrders.length;
 
   return (
     <EcommerceAccountLayout>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Card sx={{ p: 2 }} >
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Orders
       </Typography>
-
-      <Tabs
-        value={tab}
-        scrollButtons="auto"
-        variant="scrollable"
-        allowScrollButtonsMobile
-        onChange={handleChangeTab}
-      >
-        {TABS.map((category) => (
-          <Tab key={category} value={category} label={category} />
-        ))}
-      </Tabs>
-
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mt: 5, mb: 3 }}>
-        <TextField
-          fullWidth
-          hiddenLabel
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} alignItems="center">
-          <DatePicker label="Start Date" sx={{ width: 1, minWidth: 180 }} />
-          <DatePicker label="End Date" sx={{ width: 1, minWidth: 180 }} />
-        </Stack>
-      </Stack>
-
-      <TableContainer
-        sx={{
-          overflow: 'unset',
-          '& .MuiTableCell-head': {
-            color: 'text.primary',
-          },
-          '& .MuiTableCell-root': {
-            bgcolor: 'background.default',
-            borderBottomColor: (theme) => theme.palette.divider,
-          },
-        }}
-      >
-        <EcommerceAccountOrdersTableToolbar
-          rowCount={_productsTable.length}
-          numSelected={selected.length}
-          onSelectAllRows={handleSelectAllRows}
-        />
-
-        <Scrollbar>
-          <Table
-            sx={{
-              minWidth: 720,
-            }}
-            size={dense ? 'small' : 'medium'}
-          >
-            <EcommerceAccountOrdersTableHead
-              order={order}
-              orderBy={orderBy}
-              onSort={handleSort}
-              headCells={TABLE_HEAD}
-              rowCount={_productsTable.length}
-              numSelected={selected.length}
-              onSelectAllRows={handleSelectAllRows}
-            />
-
-            <TableBody>
-              {stableSort(_productsTable, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <EcommerceAccountOrdersTableRow
-                    key={row.id}
-                    row={row}
-                    selected={selected.includes(row.id)}
-                    onSelectRow={() => handleSelectRow(row.id)}
-                  />
-                ))}
-
-              {emptyRows > 0 && (
-                <TableRow
-                  sx={{
-                    height: (dense ? 36 : 57) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={9} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </Scrollbar>
-      </TableContainer>
-
-      <Box sx={{ position: 'relative' }}>
-        <TablePagination
-          page={page}
-          component="div"
-          count={_productsTable.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
+        <Tabs
+          value={tab}
+          onChange={handleChangeTab}
           sx={{
-            pl: 2,
-            py: 1.5,
-            top: 0,
-            position: {
-              sm: 'absolute',
-            },
+            px: 2,
+            bgcolor: 'background.neutral',
           }}
-        />
-      </Box>
+        >
+          {Object.keys(STATUS_OPTIONS).map((tab) => (
+            <Tab
+              key={tab}
+              label={tab}
+              value={tab}
+              icon={
+                <Box
+                  sx={{
+                    mr: 1,
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    bgcolor: 
+                      (tab === 'Completed' && 'success.main') ||
+                      (tab === 'Pending' && 'warning.main') ||
+                      (tab === 'Cancelled' && 'error.main') ||
+                      (tab === 'Refunded' && 'info.main') ||
+                      'text.disabled',
+                  }}
+                />
+              }
+            />
+          ))}
+        </Tabs>
+
+        {isNotFound ? (
+          <EmptyContent
+            title={`No ${tab}`}
+            description={`You don't have any ${tab.toLowerCase()} yet`}
+            imgUrl="/assets/icons/empty/ic_order.svg"
+            sx={{ py: 10 }}
+          />
+        ) : (
+          <>
+            <TableContainer>
+              <EcommerceAccountOrdersTableToolbar
+                rowCount={filteredOrders.length}
+                numSelected={selected.length}
+                onSelectAllRows={handleSelectAllRows}
+              />
+
+              <Scrollbar>
+                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                  <EcommerceAccountOrdersTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onSort={handleSort}
+                    headCells={TABLE_HEAD}
+                    rowCount={filteredOrders.length}
+                    numSelected={selected.length}
+                    onSelectAllRows={handleSelectAllRows}
+                  />
+
+                  <TableBody>
+                    {stableSort(filteredOrders, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <EcommerceAccountOrdersTableRow
+                          key={row.id}
+                          row={row}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => handleSelectRow(row.id)}
+                        />
+                      ))}
+
+                    {emptyRows > 0 && (
+                      <TableRow
+                        sx={{
+                          height: (dense ? 36 : 57) * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={9} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+
+            <Box sx={{ position: 'relative' }}>
+              <TablePagination
+                page={page}
+                component="div"
+                count={filteredOrders.length}
+                rowsPerPage={rowsPerPage}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[5, 10, 25]}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+
+              <FormControlLabel
+                control={<Switch checked={dense} onChange={handleChangeDense} />}
+                label="Dense padding"
+                sx={{
+                  pl: 2,
+                  py: 1.5,
+                  top: 0,
+                  position: {
+                    sm: 'absolute',
+                  },
+                }}
+              />
+            </Box>
+          </>
+        )}
+      </Card>
     </EcommerceAccountLayout>
   );
 }

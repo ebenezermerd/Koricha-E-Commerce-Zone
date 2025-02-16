@@ -7,6 +7,7 @@ import { CONFIG } from 'src/config-global';
 import LoadingScreen  from 'src/components/loading-screen';
 
 import { useAuthContext } from '../hooks';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

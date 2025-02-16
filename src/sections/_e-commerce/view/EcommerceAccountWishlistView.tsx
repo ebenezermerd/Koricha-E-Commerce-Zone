@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Box, Typography, Button, Stack } from '@mui/material';
+import { Box, Typography, Button, Stack, Card } from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
 // components
@@ -39,7 +39,8 @@ export default function EcommerceAccountWishlistView() {
 
   return (
     <EcommerceAccountLayout>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Card sx={{ p: 2 }} >
+      <Typography variant="h5" sx={{ mb: 1 }}>
         Wishlist
       </Typography>
 
@@ -69,6 +70,7 @@ export default function EcommerceAccountWishlistView() {
           </Stack>
         </>
       )}
+      </Card>
     </EcommerceAccountLayout>
   );
 }

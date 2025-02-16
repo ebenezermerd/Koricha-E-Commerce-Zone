@@ -92,5 +92,11 @@ export const endpoints = {
     update: (id: string) => `/api/reviews/${id}`,
     helpful: (id: string) => `/api/reviews/${id}/helpful`,
   },
+  order: {
+    list: '/api/orders/list',
+    myOrders: '/api/orders/my-orders',
+    details: (id: string) => `/api/orders/${id}`,
+    update: (id: string) => `/api/orders/${id}`,
+  },
 };  
 

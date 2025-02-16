@@ -51,7 +51,10 @@ const AuthProvider = JwtAuthProvider;
 // Initialize i18next before the App component
 i18next
   .use(initReactI18next)
-  .init(i18nOptions(fallbackLng));
+  .init({
+    ...i18nOptions(fallbackLng),
+    load: 'languageOnly'
+  });
 
 export default function App() {
   useEffect(() => {

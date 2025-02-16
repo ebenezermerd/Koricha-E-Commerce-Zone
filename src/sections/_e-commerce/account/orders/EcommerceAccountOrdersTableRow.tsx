@@ -14,7 +14,7 @@ import {
 import { fDate } from 'src/utils/formatTime';
 import { fCurrency } from 'src/utils/formatNumber';
 // types
-import { IProductOrderProps } from 'src/types/product';
+import { IOrder } from 'src/types/order';
 // components
 import Iconify from 'src/components/iconify';
 import Label from 'src/components/label';
@@ -22,7 +22,7 @@ import Label from 'src/components/label';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IProductOrderProps;
+  row: IOrder;
   selected: boolean;
   onSelectRow: VoidFunction;
 };
@@ -52,26 +52,26 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
           <Checkbox color="primary" checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.orderId} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.orderNumber} sx={inputStyles} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.item} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.items[0]?.name || ''} sx={inputStyles} />
         </TableCell>
 
-        <TableCell>{fDate(row.deliveryDate)}</TableCell>
+        <TableCell>{fDate(row.delivery?.deliveredAt || '')}</TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fCurrency(row.price)} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={fCurrency(row.totalAmount)} sx={inputStyles} />
         </TableCell>
 
         <TableCell>
           <Label
             color={
-              (row.status === 'Completed' && 'success') ||
-              (row.status === 'To Process' && 'warning') ||
-              (row.status === 'Cancelled' && 'error') ||
+              (row.status === 'completed' && 'success') ||
+              (row.status === 'pending' && 'warning') ||
+              (row.status === 'cancelled' && 'error') ||
               'default'
             }
           >

@@ -1,12 +1,13 @@
 import { Suspense, lazy, ElementType } from "react";
 // components
 import LoadingScreen from "../components/loading-screen";
+import { Box } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: ElementType) => (props: any) =>
   (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<Box sx={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}><LoadingScreen /></Box>}>
       <Component {...props} />
     </Suspense>
   );

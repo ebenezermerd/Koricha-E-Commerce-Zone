@@ -71,10 +71,6 @@ export function EcommerceAccountAddressView() {
 
   return (
     <EcommerceAccountLayout>
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Address Book
-      </Typography>
-
       <Grid container spacing={3}>
         <Grid xs={12}>
           <AccountAddressBook

@@ -7,7 +7,7 @@ import { z as zod } from 'zod';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Box, Typography, Stack, IconButton, InputAdornment } from '@mui/material';
+import { Box, Typography, Stack, IconButton, InputAdornment, Card } from '@mui/material';
 // assets
 import { countries } from 'src/assets/data';
 // components
@@ -167,10 +167,10 @@ export default function EcommerceAccountPersonalView() {
   return (
     <EcommerceAccountLayout>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h5" sx={{ mb: 3 }}>
+        <Card sx={{ p: 2 }} >
+        <Typography variant="h5" sx={{ mb: 1 }}>
           Personal
         </Typography>
-
         <Box
           rowGap={2.5}
           columnGap={2}
@@ -229,10 +229,10 @@ export default function EcommerceAccountPersonalView() {
             ))}
           </RHFSelect>
         </Box>
-
-        <Stack spacing={3} sx={{ my: 5 }}>
+        </Card>
+     <Card sx={{ mt: 2 , p: 2 }} >
+        <Stack spacing={3} sx={{ mb: 2 }}>
           <Typography variant="h5"> Change Password </Typography>
-
           <Stack spacing={2.5}>
             <RHFTextField
               name="oldPassword"
@@ -290,6 +290,7 @@ export default function EcommerceAccountPersonalView() {
         >
           Save Changes
         </LoadingButton>
+      </Card>
       </FormProvider>
     </EcommerceAccountLayout>
   );
