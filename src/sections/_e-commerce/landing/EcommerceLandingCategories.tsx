@@ -7,6 +7,7 @@ import Image from 'src/components/image';
 import TextMaxLine from 'src/components/text-max-line';
 // config
 import { productConfig } from 'src/config/product-options';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ export default function EcommerceLandingCategories() {
           <Link
             key={category.label}
             component={RouterLink}
-            to={category.path}
+            to={`${paths.eCommerce.products}`}
             underline="none"
             color="inherit"
           >
