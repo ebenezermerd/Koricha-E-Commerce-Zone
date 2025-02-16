@@ -98,7 +98,7 @@ export function CustomerSignUpView() {
         sex: data.sex,
         address: data.address,
         password: data.password,
-        password_confirmation: data.password_confirmation,
+        passwordConfirmation: data.passwordConfirmation,
       };
       await signUp(signUpData);
       await checkUserSession?.();

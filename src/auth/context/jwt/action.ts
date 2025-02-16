@@ -21,7 +21,7 @@ export type SignUpParams = {
   sex: string;
   address: string;
   password: string;
-  password_confirmation: string;
+  passwordConfirmation: string;
   companyName?: string;
   description?: string;
   companyEmail?: string;
