@@ -87,11 +87,9 @@ export function CustomerSignUpView() {
   const handleSubmitForm = async () => {
     try {
       const data = methods.getValues();
-      if (data.password !== data.confirmPassword) {
-        setErrorMsg('Passwords do not match');
-        return;
-      }
-      const signUpData = {
+      
+      // Remove manual password check (Zod already handles this)
+      const signUpData = { 
         role: data.role,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -102,14 +100,17 @@ export function CustomerSignUpView() {
         password: data.password,
         confirmPassword: data.confirmPassword,
       };
-      await signUp(signUpData);
-      await checkUserSession?.();
+  
+      await signUp(signUpData); // This will now throw on API errors
+      
       toast.success('Registration successful');
-      setActiveStep(STEPS.length - 1);
+      setActiveStep(STEPS.length - 1); // Only show success on actual success
+      
     } catch (error) {
       console.error(error);
-      toast.error('Registration failed ' + error.message);
-      setErrorMsg(typeof error === 'string' ? error : error.message);
+      const errorMessage = error.response?.data?.message || 'Registration failed';
+      toast.error(errorMessage);
+      setErrorMsg(errorMessage);
     }
   };
 

@@ -73,14 +73,13 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
 /** **************************************
  * Sign up
  *************************************** */
-export const signUp = async (params: SignUpParams): Promise<{ data: {}; error: null } | { data: null; error: Error }> => {
+export const signUp = async (params: SignUpParams) => {
   try {
     const res = await axios.post(endpoints.auth.signUp, params);
-    return { data: res.data, error: null };
-    
+    return res.data;
   } catch (error) {
     console.error('Error during sign up:', error);
-    return { data: null, error };
+    throw error; // Propagate the error instead of returning it
   }
 };
 
