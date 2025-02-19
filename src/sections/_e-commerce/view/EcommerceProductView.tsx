@@ -52,7 +52,7 @@ export default function EcommerceProductView() {
 
         <Grid container spacing={{ xs: 5, md: 8 }}>
           <Grid xs={12} md={6} lg={7}>
-            <EcommerceProductDetailsCarousel images={product.images} />
+            <EcommerceProductDetailsCarousel images={[product.coverImg, ...product.images]} />
           </Grid>
 
           <Grid xs={12} md={6} lg={5}>
