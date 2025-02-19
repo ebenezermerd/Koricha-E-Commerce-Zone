@@ -23,10 +23,10 @@ export function useTranslate(ns?: string) {
       try {
         const langChangePromise = i18n.changeLanguage(newLang);
         
+        
         // Persist the language choice
         localStorageSetItem('i18nextLng', newLang);
         document.documentElement.lang = newLang;
-        document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
 
         const currentMessages = messages[newLang] || messages.en;
 
@@ -48,6 +48,7 @@ export function useTranslate(ns?: string) {
   return {
     t,
     i18n,
+
     onChangeLang,
     currentLang: currentLang ?? fallback,
   };
