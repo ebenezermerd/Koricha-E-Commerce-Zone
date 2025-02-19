@@ -1,0 +1,49 @@
+{
+  "hero": {
+    "title": "Bittaa Salphaatti",
+    "subtitle": "Bittaa Guyyaa Keessan Jalqabaa",
+    "description": "Oomishaalee haaraa gatii gaarii waliin. Hanga 40% OFF meeshaalee filataman irratti.",
+    "shopNow": "Amma Biti"
+  },
+  "categories": {
+    "title": "Ramaddii",
+    "subtitle": "Ramaddiidhaan Ilaali",
+    "viewAll": "Hunda Ilaali"
+  },
+  "hotDeals": {
+    "title": "Bitaa Ho'aa Har'a",
+    "subtitle": "Gatii gaarii hin dhabinaa",
+    "timeLeft": "Yeroo Hafe",
+    "days": "Guyyaa",
+    "hours": "Sa'aatii",
+    "minutes": "Daqiiqaa",
+    "seconds": "Sekoondii"
+  },
+  "featured": {
+    "title": "Oomishaalee Filatamaa",
+    "subtitle": "Oomishaalee gatii olaanaa harkaan filataman, waliigaltee addaa irraa kaasee hanga meeshaalee beekamaa ta'anitti sakatta'aa"
+  },
+  "specialOffer": {
+    "title": "Dhiyeessii Addaa",
+    "subtitle": "Hanga 50% Qusadhu",
+    "description": "Yeroo murtaa'eef meeshaalee filataman irratti",
+    "shopNow": "Amma Biti"
+  },
+  "brands": {
+    "title": "Brandoota Filatamaa",
+    "subtitle": "Brandoota filatamaa keenya fi oomishaalee isaanii argadhaa",
+    "viewAll": "Ibsa Dabalataa",
+    "products": "Oomishaalee",
+    "sales": "Gurgurtaa"
+  },
+  "popular": {
+    "title": "Oomishaalee Beekamaa",
+    "subtitle": "Meeshaalee barbaachisaa",
+    "viewAll": "Hunda Ilaali"
+  },
+  "topProducts": {
+    "title": "Oomishaalee Ol'aanaa",
+    "subtitle": "Meeshaalee irra caalaatti gurguraman",
+    "viewAll": "Hunda Ilaali"
+  }
+} 

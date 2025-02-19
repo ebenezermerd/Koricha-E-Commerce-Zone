@@ -21,9 +21,9 @@ import { PaymentMethod } from 'src/types/checkout';
 // ----------------------------------------------------------------------
 
 const DELIVERY_OPTIONS = [
-  { value: 0, label: 'Free', description: '5-7 days delivery' },
-  { value: 10, label: 'Standard', description: '3-5 days delivery' },
-  { value: 20, label: 'Express', description: '2-3 days delivery' },
+  { value: 0, label: 'Free', description: '3-5 days delivery' },
+  { value: 100, label: 'Standard', description: '2-3 days delivery' },
+  { value: 200, label: 'Express', description: '1-2 days delivery' },
 ];
 
 // ----------------------------------------------------------------------
@@ -43,7 +43,7 @@ export default function CheckoutPayment() {
   const { dispatch: cartDispatch } = useCart();
 
   const defaultValues: PaymentFormValues = {
-    delivery: checkout.shipping,
+    delivery: 0,
     payment: '',
   };
 
@@ -82,9 +82,6 @@ export default function CheckoutPayment() {
         size: item.size || 'OS',
         quantity: item.quantity
       }));
-
-      console.log('Formatted Items:', formattedItems);
-      console.log('Original Items:', checkout.items);
 
       const baseOrder= {
         items: formattedItems,
@@ -149,7 +146,6 @@ export default function CheckoutPayment() {
         <Grid xs={12} md={8}>
           <CheckoutDelivery
             options={DELIVERY_OPTIONS}
-            onApplyShipping={checkout.onApplyShipping}
           />
 
           <CheckoutPaymentMethods />
@@ -171,6 +167,7 @@ export default function CheckoutPayment() {
             subtotal={checkout.subtotal}
             discount={checkout.discount}
             shipping={checkout.shipping}
+            items={checkout.items}
           />
 
           <LoadingButton

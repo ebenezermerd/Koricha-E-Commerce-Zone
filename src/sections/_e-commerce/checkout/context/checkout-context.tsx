@@ -41,6 +41,7 @@ export type CheckoutContextProps = ICheckoutState & {
   onApplyDiscount: (value: number) => void;
   //
   onCreateBilling: (address: IAddressItem) => void;
+  onEditBilling: (address: IAddressItem) => void;
 };
 
 const initialState: ICheckoutState = {
@@ -94,8 +95,12 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
   }, []);
 
   const onApplyShipping = useCallback((value: number) => {
-    cartDispatch({ type: 'UPDATE_SHIPPING', payload: { cost: value } });
-  }, [cartDispatch]);
+    setState((prev) => ({
+      ...prev,
+      shipping: value,
+      total: prev.subtotal - prev.discount + value,
+    }));
+  }, []);
 
   const onApplyDiscount = useCallback((value: number) => {
     setState((prev) => ({
@@ -112,18 +117,26 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
     }));
   }, []);
 
+  const onEditBilling = useCallback((address: IAddressItem) => {
+    setState((prev) => ({
+      ...prev,
+      billing: address,
+    }));
+  }, []);
   const value = useMemo(
     () => ({
       ...state,
       completed,
       activeStep,
       onReset,
+      
       onNextStep,
       onBackStep,
       onGotoStep,
       onApplyShipping,
       onApplyDiscount,
       onCreateBilling,
+      onEditBilling,
     }),
     [
       state,
@@ -136,6 +149,7 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
       onApplyShipping,
       onApplyDiscount,
       onCreateBilling,
+      onEditBilling,
     ]
   );
 

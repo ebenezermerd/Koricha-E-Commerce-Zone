@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
+import { useTranslate } from 'src/locales';
 // components
 import Iconify from 'src/components/iconify';
 //
@@ -30,6 +31,7 @@ const SORT_OPTIONS = {
 
 export default function EcommerceLandingTopProducts() {
   const theme = useTheme();
+  const { t } = useTranslate('landing');
   const [sortBy, setSortBy] = useState('trending');
   const { products, productsLoading } = useGetProducts();
 
@@ -96,10 +98,10 @@ export default function EcommerceLandingTopProducts() {
                 fontWeight: 'bold',
               }}
             >
-              Top Products
+              {t('topProducts.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Discover our most loved and trending items
+              {t('topProducts.subtitle')}
             </Typography>
           </Stack>
 
@@ -170,7 +172,7 @@ export default function EcommerceLandingTopProducts() {
                   sx={{ color: 'info.main' }}
                 />
                 <Typography variant="subtitle2">
-                  Want to be notified when new {SORT_OPTIONS[sortBy as keyof typeof SORT_OPTIONS].toLowerCase()} are available?
+                 Products are not available in the {SORT_OPTIONS[sortBy as keyof typeof SORT_OPTIONS].toLowerCase()} section.
                 </Typography>
               </Stack>
             </Alert>
@@ -199,10 +201,10 @@ export default function EcommerceLandingTopProducts() {
                 fontWeight: 'bold',
               }}
             >
-              Top Products
+              {t('topProducts.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Discover our most loved and trending items
+              {t('topProducts.subtitle')}
             </Typography>
           </Stack>
 

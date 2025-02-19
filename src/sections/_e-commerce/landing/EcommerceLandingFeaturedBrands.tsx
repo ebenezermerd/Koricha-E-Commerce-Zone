@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
+import { useTranslate } from 'src/locales';
 // components
 import Iconify from 'src/components/iconify';
 //
@@ -24,6 +25,7 @@ import { paths } from 'src/routes/paths';
 
 export default function EcommerceLandingFeaturedBrands() {
   const theme = useTheme();
+  const { t } = useTranslate('landing');
   const { products, productsLoading } = useGetProducts();
   const navigate = useNavigate();
 
@@ -73,21 +75,21 @@ export default function EcommerceLandingFeaturedBrands() {
       }}
     >
       <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
-      <Typography
-        variant="h3"
-        sx={{
-          background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          fontWeight: 'bold',
-        }}
-      >
-        Featured Brands
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Discover our featured brands and their products
-      </Typography>
+        <Typography
+          variant="h3"
+          sx={{
+            background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            fontWeight: 'bold',
+          }}
+        >
+          {t('brands.title')}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {t('brands.subtitle')}
+        </Typography>
       </Stack>
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
@@ -159,6 +161,7 @@ function BrandInfo({
   ...other 
 }: BrandInfoProps) {
   const theme = useTheme();
+  const { t } = useTranslate('landing');
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
@@ -220,14 +223,14 @@ function BrandInfo({
         <Stack spacing={0.5} alignItems="center">
           <Typography variant="h6">{totalProducts}</Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Products
+            {t('brands.products')}
           </Typography>
         </Stack>
 
         <Stack spacing={0.5} alignItems="center">
           <Typography variant="h6">{totalSales}</Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Sales
+            {t('brands.sales')}
           </Typography>
         </Stack>
       </Stack>
@@ -244,7 +247,7 @@ function BrandInfo({
           },
         }}
       >
-        View Details
+        {t('brands.viewAll')}
       </Button>
     </Stack>
   );

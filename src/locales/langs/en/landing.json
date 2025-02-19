@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "Shopping Made Easy",
+    "subtitle": "Start Your Daily Shopping",
+    "description": "The latest products with great deals. Up to 40% OFF on selected items.",
+    "shopNow": "Shop Now"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Browse by Category",
+    "viewAll": "View All"
+  },
+  "hotDeals": {
+    "title": "Hot Deals Today",
+    "subtitle": "Don't miss out on great deals",
+    "timeLeft": "Time Left",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Explore our handpicked selection of premium products, from exclusive deals to trending items",
+    "viewAll": "View All"
+  },
+  "specialOffer": {
+    "title": "Special Offer",
+    "subtitle": "Save up to 50%",
+    "description": "Limited time offer on selected items",
+    "shopNow": "Shop Now"
+  },
+  "brands": {
+    "title": "Featured Brands",
+    "subtitle": "Discover our featured brands and their products",
+    "viewAll": "View Details",
+    "products": "Products",
+    "sales": "Sales"
+  },
+  "popular": {
+    "title": "Popular Products",
+    "subtitle": "Must-have pieces",
+    "viewAll": "View All"
+  },
+  "topProducts": {
+    "title": "Top Products",
+    "subtitle": "Best selling items",
+    "viewAll": "View All"
+  }
+} 

@@ -1,7 +1,7 @@
 // core (MUI)
 import {
   amET as amETCore,
-  arSA as arSACore,
+  enUS as enUSCore,
 } from '@mui/material/locale';
 // date pickers (MUI)
 import {
@@ -10,7 +10,6 @@ import {
 // data grid (MUI)
 import {
   enUS as enUSDataGrid,
-  arSD as arSDDataGrid,
 } from '@mui/x-data-grid/locales';
 
 // ----------------------------------------------------------------------
@@ -21,15 +20,14 @@ export const allLangs = [
     label: 'English',
     countryCode: 'GB',
     adapterLocale: 'en',
-    numberFormat: { code: 'en-US', currency: 'USD' },
+    numberFormat: { code: 'en-US', currency: 'ETB' },
     systemValue: {
-      components: { ...enUSDate.components, ...enUSDataGrid.components },
+      components: { ...enUSCore.components, ...enUSDate.components, ...enUSDataGrid.components },
     },
   },
-
   {
     value: 'am',
-    label: 'Ethiopian',
+    label: 'አማርኛ',
     countryCode: 'ET',
     adapterLocale: 'am',
     numberFormat: { code: 'am-ET', currency: 'ETB' },
@@ -38,13 +36,13 @@ export const allLangs = [
     },
   },
   {
-    value: 'ar',
-    label: 'Arabic',
-    countryCode: 'SA',
-    adapterLocale: 'ar-sa',
-    numberFormat: { code: 'ar', currency: 'AED' },
+    value: 'om',
+    label: 'Afaan Oromoo',
+    countryCode: 'ET', 
+    adapterLocale: 'om',
+    numberFormat: { code: 'om-ET', currency: 'ETB' },
     systemValue: {
-      components: { ...arSACore.components, ...arSDDataGrid.components },
+      components: { ...amETCore.components },
     },
   },
 ];

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, LinkProps } from "react-router-dom";
 // @mui
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import {
@@ -13,6 +12,12 @@ import {
   Toolbar,
   Box,
   Link,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  MenuItemProps,
 } from "@mui/material";
 
 // hooks
@@ -56,38 +61,83 @@ const StyledRoot = styled("div")(({ theme }) => ({
   }),
 }));
 
+interface StyledMenuItemProps extends MenuItemProps {
+  active: boolean;
+  component?: React.ElementType;
+  to?: string;
+  onClick?: () => void;
+}
+
+const StyledMenuItem = styled(MenuItem)<StyledMenuItemProps>(({ theme, active }) => ({
+  margin: '4px 8px',
+  borderRadius: theme.shape.borderRadius,
+  fontSize: '0.875rem',
+  ...(active && {
+    backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    },
+    '& .MuiListItemIcon-root': {
+      color: theme.palette.primary.main,
+    },
+    '& .MuiListItemText-primary': {
+      color: theme.palette.primary.main,
+      fontWeight: 600,
+    },
+  }),
+}));
+
 // ----------------------------------------------------------------------
 
 export default function Header() {
   const theme = useTheme();
+  const location = useLocation();
   const { t } = useTranslate('common');
-  const { authenticated } = useAuthContext();
+  const { authenticated, user } = useAuthContext();
   const { state: cartState } = useCart();
   const { state: wishlistState } = useWishlist();
 
   const isMdUp = useResponsive("up", "md");
   const isOffset = useOffSetTop();
   const [openMenuMobile, setOpenMenuMobile] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Calculate total items in cart
   const cartItemCount = cartState.items.reduce((total, item) => total + item.quantity, 0);
   // Calculate total items in wishlist
   const wishlistItemCount = wishlistState.items.length;
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isActiveRoute = (path: string) => location.pathname === path;
+
+  const menuItems = [
+    { path: paths.eCommerce.landing, label: 'home', icon: 'eva:home-fill' },
+    { path: paths.eCommerce.products, label: 'products', icon: 'eva:shopping-bag-fill' },
+    { path: paths.support, label: 'support', icon: 'eva:question-mark-circle-fill' },
+    { path: paths.eCommerce.wishlist, label: 'wishlist', icon: 'eva:heart-fill', badge: wishlistItemCount },
+    { path: paths.eCommerce.cart, label: 'cart', icon: 'eva:shopping-cart-fill', badge: cartItemCount },
+  ];
+
   return (
     <AppBar
       color="transparent"
       sx={{
-        boxShadow: "none",
         bgcolor: theme.palette.background.neutral,
-        borderRadius: "5px"
+        borderRadius: "5px",
+        boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
       }}
     >
       <Toolbar
         disableGutters
         sx={{
           mx: { xs: 2, md: 10 },
-
           height: {
             xs: HEADER.H_MOBILE,
             md: HEADER.H_MAIN_DESKTOP,
@@ -96,7 +146,6 @@ export default function Header() {
             easing: theme.transitions.easing.easeInOut,
             duration: theme.transitions.duration.shorter,
           }),
-
           ...(isOffset && {
             ...bgBlur({ color: theme.palette.background.default }),
             color: "text.primary",
@@ -109,129 +158,197 @@ export default function Header() {
         <Container sx={{ height: 1, display: "flex", alignItems: "center" }}>
           <Box sx={{ lineHeight: 0, position: "relative", mr: 6 }}>
             <Logo />
-            <Link
-              href="https://zone-docs.vercel.app/changelog"
-              target="_blank"
-              rel="noopener"
-            >
-              <Label
-                color="info"
-                sx={{
-                  ml: 0.5,
-                  px: 0.5,
-                  top: 5,
-                  right: 10,
-                  height: 20,
-                  fontSize: 11,
-                  cursor: "pointer",
-                  position: "absolute",
-                }}
-              >
-                v1.0
-              </Label>
-            </Link>
           </Box>
 
-          <Stack
-            spacing={2}
-            flexGrow={1}
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <Button
-              component={RouterLink}
-              to={paths.eCommerce.landing}
-              color="inherit"
+          {isMdUp ? (
+            // Desktop view
+            <Stack
+              spacing={2}
+              flexGrow={1}
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
             >
-              {t('home')}
-            </Button>
-            <Button
-              component={RouterLink}
-              to={paths.eCommerce.products}
-              color="inherit"
-            >
-              {t('products')}
-            </Button>
-            <Button
-              component={RouterLink}
-              to={paths.support}
-              color="inherit"
-            >
-              {t('support')}
-            </Button>
-            {/* <Box sx={{ px: "20px" }}>
-              {isMdUp ? (
-                <MegaMenuDesktopHorizon data={data} />
+              {menuItems.slice(0, 3).map((item) => (
+                <Button
+                  key={item.path}
+                  component={RouterLink}
+                  to={item.path}
+                  color={isActiveRoute(item.path) ? "primary" : "inherit"}
+                >
+                  {t(item.label)}
+                </Button>
+              ))}
+              
+              <Stack spacing={1} direction="row" alignItems="center">
+                <Searchbar />
+                <LanguagePopover />
+              </Stack>
+              <Badge badgeContent={wishlistItemCount} color="info">
+                <IconButton
+                  component={RouterLink}
+                  to={paths.eCommerce.wishlist}
+                  size="small"
+                  color="inherit"
+                  sx={{ p: 0 }}
+                >
+                  <Iconify icon="carbon:favorite" width={24} />
+                </IconButton>
+              </Badge>
+              <Badge badgeContent={cartItemCount} color="error">
+                <IconButton
+                  component={RouterLink}
+                  to={paths.eCommerce.cart}
+                  size="small"
+                  color="inherit"
+                  sx={{ p: 0 }}
+                >
+                  <Iconify icon="carbon:shopping-cart" width={24} />
+                </IconButton>
+              </Badge>
+              {authenticated ? (
+                <IconButton
+                  component={RouterLink}
+                  to={paths.eCommerce.account.personal}
+                  size="small"
+                  color="inherit"
+                  sx={{ p: 0 }}
+                >
+                  {user?.avatarUrl ? (
+                    <Box
+                      component="img"
+                      src={user.avatarUrl}
+                      alt="user avatar"
+                      sx={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Iconify icon="mdi:account-circle" width={34} />
+                  )}
+                </IconButton>
               ) : (
-                openMenuMobile && (
-                  <MegaMenuMobile
-                    data={data}
-                    open={openMenuMobile}
-                    onOpen={() => setOpenMenuMobile(true)}
-                    onClose={() => setOpenMenuMobile(false)}
-                    action={
-                      <Button
-                        color="inherit"
-                        onClick={() => setOpenMenuMobile(true)}
-                      >
-                        {t('categories')}
-                      </Button>
-                    }
-                  />
-                )
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component={RouterLink}
+                  to={paths.auth.jwt.signIn}
+                >
+                  {t('signIn')}
+                </Button>
               )}
-            </Box> */}
-            <Stack spacing={1} direction="row" alignItems="center">
+            </Stack>
+          ) : (
+            // Mobile view
+            <Stack
+              flexGrow={1}
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
+              spacing={1}
+            >
               <Searchbar />
               <LanguagePopover />
-              <SettingsDrawer />
+              <IconButton
+                color="inherit"
+                onClick={handleMenuOpen}
+                size="small"
+              >
+                <Iconify icon="eva:menu-2-fill" width={20} />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                PaperProps={{
+                  sx: {
+                    width: 260,
+                    maxWidth: '100%',
+                    mt: 1.5,
+                    pb: 1,
+                  }
+                }}
+              >
+                {menuItems.map((item) => (
+                  <StyledMenuItem
+                    key={item.path}
+                    component={RouterLink}
+                    to={item.path}
+                    onClick={handleMenuClose}
+                    active={isActiveRoute(item.path)}
+                  >
+                    <ListItemIcon>
+                      <Iconify icon={item.icon} width={20} />
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary={t(item.label)}
+                      primaryTypographyProps={{ fontSize: '0.875rem' }}
+                    />
+                    {item.badge && item.badge > 0 && (
+                      <Label color={item.label === 'cart' ? 'error' : 'info'} sx={{ fontSize: '0.75rem' }}>
+                        {item.badge}
+                      </Label>
+                    )}
+                  </StyledMenuItem>
+                ))}
+                
+                <Divider sx={{ my: 1 }} />
+                
+                {authenticated ? (
+                  <StyledMenuItem
+                    component={RouterLink}
+                    to={paths.eCommerce.account.personal}
+                    onClick={handleMenuClose}
+                    active={isActiveRoute(paths.eCommerce.account.personal)}
+                  >
+                    <ListItemIcon>
+                      {user?.avatarUrl ? (
+                        <Box
+                          component="img"
+                          src={user.avatarUrl}
+                          alt="user avatar"
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: '50%',
+                          }}
+                        />
+                      ) : (
+                        <Iconify icon="mdi:account-circle" width={20} />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary={t('account')}
+                      primaryTypographyProps={{ fontSize: '0.875rem' }}
+                    />
+                  </StyledMenuItem>
+                ) : (
+                  <StyledMenuItem
+                    component={RouterLink}
+                    to={paths.auth.jwt.signIn}
+                    onClick={handleMenuClose}
+                    active={isActiveRoute(paths.auth.jwt.signIn)}
+                  >
+                    <ListItemIcon>
+                      <Iconify icon="eva:log-in-fill" width={20} />
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary={t('signIn')}
+                      primaryTypographyProps={{ fontSize: '0.875rem' }}
+                    />
+                  </StyledMenuItem>
+                )}
+              </Menu>
             </Stack>
-            <Badge badgeContent={wishlistItemCount} color="info">
-              <IconButton
-                component={RouterLink}
-                to={paths.eCommerce.wishlist}
-                size="small"
-                color="inherit"
-                sx={{ p: 0 }}
-              >
-                <Iconify icon="carbon:favorite" width={24} />
-              </IconButton>
-            </Badge>
-            <Badge badgeContent={cartItemCount} color="error">
-              <IconButton
-                component={RouterLink}
-                to={paths.eCommerce.cart}
-                size="small"
-                color="inherit"
-                sx={{ p: 0 }}
-              >
-                <Iconify icon="carbon:shopping-cart" width={24} />
-              </IconButton>
-            </Badge>
-            {authenticated ? (
-              <IconButton
-                component={RouterLink}
-                to={paths.eCommerce.account.personal}
-                size="small"
-                color="inherit"
-                sx={{ p: 0 }}
-              >
-                <Iconify icon="carbon:user-avatar" width={24} />
-              </IconButton>
-            ) : (
-              <Button
-                variant="outlined"
-                color="inherit"
-                component={RouterLink}
-                to={paths.auth.jwt.signIn}
-              >
-                {t('signIn')}
-              </Button>
-            )}
-          </Stack>
-
-          {!isMdUp && <NavMobile data={navConfig} />}
+          )}
         </Container>
       </Toolbar>
 

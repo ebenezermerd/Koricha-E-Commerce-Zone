@@ -1,5 +1,6 @@
 // @mui
 import { Checkbox, Stack, FormControlLabel, StackProps } from '@mui/material';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -15,6 +16,8 @@ export default function EcommerceFilterBrand({
   onChangeBrand,
   ...other
 }: Props) {
+  const { t } = useTranslate('product');
+
   return (
     <Stack {...other}>
       {options.map((option) => (
@@ -28,7 +31,7 @@ export default function EcommerceFilterBrand({
               onChange={() => onChangeBrand(option)}
             />
           }
-          label={option}
+          label={t(`brands.${option.toLowerCase().replace(/\s+/g, '_')}`)}
         />
       ))}
     </Stack>

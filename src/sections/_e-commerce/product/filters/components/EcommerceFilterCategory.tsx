@@ -2,6 +2,7 @@
 import { Stack, StackProps } from '@mui/material';
 // components
 import Iconify from 'src/components/iconify';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,8 @@ export default function EcommerceFilterCategory({
   onChangeCategories,
   ...other
 }: Props) {
+  const { t } = useTranslate('product');
+
   return (
     <Stack spacing={1} alignItems="flex-start" {...other}>
       {options.map((option) => (
@@ -34,7 +37,7 @@ export default function EcommerceFilterCategory({
           }}
         >
           <Iconify icon="carbon:chevron-right" width={12} sx={{ mr: 1 }} />
-          {option}
+          {t(`categories.${option.toLowerCase().replace(/\s+/g, '_')}`)}
         </Stack>
       ))}
     </Stack>

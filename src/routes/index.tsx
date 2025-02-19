@@ -11,7 +11,6 @@ import {
   // E-Commerce
   HomePage,
   EcommerceCartPage,
-  EcommerceComparePage,
   EcommerceProductPage,
   EcommerceCheckoutPage,
   EcommerceProductsPage,
@@ -125,7 +124,6 @@ export default function Router() {
               element: <EcommerceOrderCompletedPage />,
             },
             { path: "wishlist", element: <EcommerceWishlistPage /> },
-            { path: "compare", element: <EcommerceComparePage /> },
             {
               path: "account",
               children: [

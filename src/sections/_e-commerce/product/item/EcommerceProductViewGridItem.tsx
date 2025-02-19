@@ -32,15 +32,15 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
       }}
       {...other}
     >
-      {product.label === 'new' && (
+      {product.newLabel.enabled && (
         <Label color="info" sx={{ position: 'absolute', m: 1, top: 0, right: 0, zIndex: 9 }}>
-          NEW
+          {product.newLabel.content}
         </Label>
       )}
 
-      {product.label === 'sale' && (
+      {product.saleLabel.enabled && (
         <Label color="error" sx={{ position: 'absolute', m: 1, top: 0, right: 0, zIndex: 9 }}>
-          SALE
+          {product.saleLabel.content}
         </Label>
       )}
 
@@ -71,6 +71,10 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
           src={product.coverImg}
           sx={{
             flexShrink: 0,
+            width: 180,
+            height: 200,
+            objectFit: 'cover',
+            objectPosition: 'center',
             borderRadius: 1.5,
             bgcolor: 'background.neutral',
           }}  

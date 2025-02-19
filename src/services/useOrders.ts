@@ -4,6 +4,8 @@ import { endpoints } from 'src/utils/axios';
 import { IOrder } from 'src/types/order';
 import axios from 'src/utils/axios';
 
+console.log('My Orders endpoint:', endpoints.order.myOrders);
+
 export function useOrders() {
   const {
     data: orders,
@@ -12,7 +14,29 @@ export function useOrders() {
     mutate: mutateOrders,
   } = useSWR(endpoints.order.list);
 
-  const myOrders = useSWR(endpoints.order.myOrders);
+  const {
+    data: myOrdersData,
+    isLoading: myOrdersLoading,
+    error: myOrdersError,
+    mutate: mutateMyOrders
+  } = useSWR(endpoints.order.myOrders, {
+    onSuccess: (data) => {
+      console.log('My Orders response:', {
+        data,
+        endpoint: endpoints.order.myOrders,
+        hasOrders: data?.orders?.length > 0
+      });
+    },
+    onError: (error) => {
+      console.error('My Orders error:', {
+        error,
+        message: error.message,
+        endpoint: endpoints.order.myOrders,
+        status: error.response?.status,
+        responseData: error.response?.data
+      });
+    }
+  });
 
   const ordersList = useMemo(
     () => (orders?.orders as IOrder[]) || [],
@@ -20,8 +44,13 @@ export function useOrders() {
   );
 
   const myOrdersList = useMemo(
-    () => (myOrders?.data?.orders as IOrder[]) || [],
-    [myOrders.data]
+    () => {
+      console.log('Processing myOrdersData:', myOrdersData);
+      const orders = (myOrdersData?.orders as IOrder[]) || [];
+      console.log('Processed orders:', orders);
+      return orders;
+    },
+    [myOrdersData]
   );
 
   const getOrder = async (id: string) => {
@@ -50,8 +79,11 @@ export function useOrders() {
     myOrders: myOrdersList,
     ordersLoading,
     ordersError,
+    myOrdersLoading,
+    myOrdersError,
     getOrder,
     updateOrderStatus,
     mutateOrders,
+    mutateMyOrders,
   };
 } 

@@ -170,6 +170,18 @@ export default function EcommerceAccountMenu({ open, onClose }: Props) {
                 flexShrink: 0,
                 width: 'auto',
               }),
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: (theme) => `0 4px 8px ${theme.palette.primary.light}`,
+                bgcolor: (theme) => alpha(theme.palette.primary.light, 0.08),
+                padding: '4px 8px',
+                borderRadius: '5%',
+              },
+              '&:active': {
+                transform: 'translateY(0)',
+                boxShadow: (theme) => `0 2px 4px ${alpha(theme.palette.grey[500], 0.24)}`,
+              }
             }}
           >
             <Iconify icon="carbon:edit" sx={{ mr: 1 }} />

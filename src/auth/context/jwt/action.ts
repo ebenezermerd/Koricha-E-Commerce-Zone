@@ -66,7 +66,9 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
     setSession(accessToken);
   } catch (error) {
     console.error('Error during sign in:', error);
-    throw error;
+    // Extract error message from axios error response
+    const message = error.response?.data?.message || error.message || 'Sign in failed';
+    throw new Error(message);
   }
 };
 

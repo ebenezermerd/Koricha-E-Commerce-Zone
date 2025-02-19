@@ -5,7 +5,6 @@ export { default as EcommerceProductsView } from './EcommerceProductsView';
 export { default as EcommerceCheckoutView } from './EcommerceCheckoutView';
 export { default as EcommerceOrderCompletedView } from './EcommerceOrderCompletedView';
 export { default as EcommerceWishlistView } from './EcommerceWishlistView';
-export { default as EcommerceCompareView } from './EcommerceCompareView';
 //
 export { default as EcommerceAccountPersonalView } from './EcommerceAccountPersonalView';
 export { default as EcommerceAccountWishlistView } from './EcommerceAccountWishlistView';

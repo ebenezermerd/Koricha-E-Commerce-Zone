@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Stack, Button, Rating, Typography, TextField, Divider, StackProps } from '@mui/material';
+import { Stack, Button, Rating, Typography, TextField, Divider, StackProps, Grid } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 // routes
@@ -147,15 +147,6 @@ export default function EcommerceProductDetailsInfo({
     <Stack direction="row" spacing={3} justifyContent="center">
       <Button
         size="large"
-        variant="outlined"
-        startIcon={<Iconify icon="carbon:share" />}
-        sx={{ flexGrow: 1 }}
-      >
-        Share
-      </Button>
-
-      <Button
-        size="large"
         variant={isInWishlist ? "contained" : "outlined"}
         startIcon={<Iconify icon="carbon:favorite" />}
         sx={{ flexGrow: 1 }}
@@ -268,21 +259,24 @@ export default function EcommerceProductDetailsInfo({
         </Stack>
       )}
 
-      <Stack spacing={2}>
-        <Button
-          fullWidth
-          size="large"
-          color="primary"
-          variant="contained"
-          startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+      <Grid container sx={{ flexGrow: 1, gap: 2 }}>
+        <Grid item xs={12} md={5}>
+          <Button
+            fullWidth
+            size="large"
+            color="primary"
+            variant="contained"
+            startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
           onClick={handleAddCart}
           disabled={!selectedColor || !selectedSize || !quantity}
         >
           Add to Cart
         </Button>
-
+        </Grid>
+        <Grid item xs={12} md={5}>
         {renderShare}
-      </Stack>
+        </Grid>
+      </Grid>
     </Stack>
   );
 }

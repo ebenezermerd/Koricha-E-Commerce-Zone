@@ -29,6 +29,7 @@ import {
 } from "./components";
 import { ColorPicker } from 'src/components/color-utils';
 import { productConfig } from 'src/config/product-options';
+import { useTranslate } from 'src/locales';
 
 
 // ----------------------------------------------------------------------
@@ -62,6 +63,7 @@ type Props = {
 
 export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, onFiltersChange }: Props) {
   const isMdUp = useResponsive("up", "md");
+  const { t } = useTranslate('product');
 
   const getSelected = (selectedItems: string[], item: string) =>
     selectedItems.includes(item)
@@ -153,7 +155,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         width: { xs: 1, md: NAV.W_DRAWER },
       }}
     >
-      <Block title="Category">
+      <Block title={t('filters.category')}>
         <EcommerceFilterCategory
           options={productConfig.categories.flatMap(group => group.classify)}
           filterCategories={filters.filterCategories}
@@ -161,7 +163,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title="Brand">
+      <Block title={t('filters.brand')}>
         {filters.filterCategories && (
           <EcommerceFilterBrand
             options={productConfig.getBrandsByCategory(filters.filterCategories).map(brand => brand.name)}
@@ -171,10 +173,10 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         )}
       </Block>
 
-      <Block title="Colors">
+      <Block title={t('filters.colors')}>
         <EcommerceFilterColor
           options={productConfig.colors.map(color => ({
-            name: color.label,
+            name: t(`colors.${color.label.toLowerCase()}`),
             code: color.value,
           }))}
           filterColor={filters.filterColor}
@@ -182,7 +184,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title="Gender">
+      <Block title={t('filters.gender')}>
         <EcommerceFilterGender
           options={productConfig.genders.map(gender => gender.value)}
           filterGender={filters.filterGender}
@@ -190,7 +192,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title="Price">
+      <Block title={t('filters.price')}>
         <EcommerceFilterPrice
           filterPrice={filters.filterPrice}
           onChangeStartPrice={handleChangeStartPrice}
@@ -199,7 +201,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title="Ratings">
+      <Block title={t('filters.ratings')}>
         <EcommerceFilterRating
           filterRating={filters.filterRating}
           onChangeRating={handleChangeRating}
@@ -207,7 +209,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title="Tags">
+      <Block title={t('filters.tags')}>
         <EcommerceFilterTag
           options={productConfig.tags}
           filterTag={filters.filterTag}
@@ -228,7 +230,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         startIcon={<Iconify icon="carbon:trash-can" />}
         onClick={handleClearAll}
       >
-        Clear All
+        {t('filters.clearAll')}
       </Button>
     </Stack>
   );

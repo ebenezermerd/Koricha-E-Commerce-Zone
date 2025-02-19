@@ -15,7 +15,6 @@ export const paths = {
     checkout: `/e-commerce/checkout`,
     orderCompleted: "/e-commerce/order-completed",
     wishlist: `/e-commerce/wishlist`,
-    compare: `/e-commerce/compare`,
     account: {
       personal: `/e-commerce/account/personal`,
       wishlist: `/e-commerce/account/wishlist`,

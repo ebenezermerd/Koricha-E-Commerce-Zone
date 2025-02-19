@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
+import { useTranslate } from 'src/locales';
 //
 import { EcommerceProductItemBestSellers } from '../product/item';
 import Iconify from 'src/components/iconify';
@@ -25,7 +26,7 @@ const TABS = [
     value: 'featured',
     label: 'Featured Products',
     icon: 'solar:star-bold',
-    filter: (product: any) => product.featured && product.rating >= 4
+    filter: (product: any) => product.rating >= 4 && product.totalSold > 10
   },
   { 
     value: 'topRated',
@@ -45,6 +46,7 @@ const TABS = [
 
 export default function EcommerceLandingPopularProducts() {
   const theme = useTheme();
+  const { t } = useTranslate('landing');
   const [currentTab, setCurrentTab] = useState('featured');
   const { products, productsLoading } = useGetProducts();
 
@@ -100,10 +102,10 @@ export default function EcommerceLandingPopularProducts() {
                 fontWeight: 'bold',
               }}
             >
-              Popular Products
+              {t('popular.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Discover our most loved and trending items
+              {t('popular.subtitle')}
             </Typography>
           </Stack>
 

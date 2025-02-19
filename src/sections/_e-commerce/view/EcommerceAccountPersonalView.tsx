@@ -7,23 +7,28 @@ import { z as zod } from 'zod';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Box, Typography, Stack, IconButton, InputAdornment, Card } from '@mui/material';
+import { Box, Typography, Stack, IconButton, InputAdornment, Card, MenuItem } from '@mui/material';
 // assets
 import { countries } from 'src/assets/data';
 // components
 import Iconify from 'src/components/iconify';
-import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFSelect, RHFDatePicker } from 'src/components/hook-form';
 //
 import { EcommerceAccountLayout } from '../layout';
 import { useGetUser, updateUserWithPassword } from 'src/services/useUser';
 import { toast } from 'src/components/snackbar';
 import LoadingScreen from 'src/components/loading-screen';
 import { useProfileImage } from 'src/hooks/use-profile-image';
+import { parseISO, format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTIONS = ['Male', 'Female'] as const;
-type Gender = typeof GENDER_OPTIONS[number];
+const GENDER_OPTIONS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+];
+
+type Gender = (typeof GENDER_OPTIONS)[number]['value'];
 
 // ----------------------------------------------------------------------
 
@@ -32,10 +37,10 @@ const UpdateUserSchema = zod.object({
   lastName: zod.string().min(1, 'Last name is required'),
   emailAddress: zod.string().email('Must be a valid email'),
   phoneNumber: zod.string().optional(),
-  birthday: zod.any().optional(),
+  birthdate: zod.any().optional(),
   gender: zod
     .string()
-    .refine((val) => GENDER_OPTIONS.includes(val as Gender), {
+    .refine((val) => GENDER_OPTIONS.map(opt => opt.value).includes(val as Gender), {
       message: 'Please select either Male or Female',
     }),
   streetAddress: zod.string().optional(),
@@ -66,6 +71,21 @@ const UpdateUserSchema = zod.object({
   path: ['newPassword'], // This will show the error under the newPassword field
 });
 
+// First, let's update the type for the user data
+interface UpdateUserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  birthdate: string | null; // Changed from birthday to birthdate
+  gender: string;
+  streetAddress?: string;
+  city?: string;
+  zipCode?: string;
+  country?: string;
+  image?: File;
+}
+
 export default function EcommerceAccountPersonalView() {
   const [showPassword, setShowPassword] = useState(false);
   const { user, userLoading, revalidateUser } = useGetUser();
@@ -85,10 +105,10 @@ export default function EcommerceAccountPersonalView() {
     lastName: user.lastName,
     emailAddress: user.email,
     phoneNumber: user.phoneNumber,
-    birthday: user.birthday || '',
-    gender: user.gender && GENDER_OPTIONS.includes(user.gender as Gender) 
-      ? user.gender 
-      : GENDER_OPTIONS[0],
+    birthdate: user.birthdate ? new Date(user.birthdate).toISOString() : null, // Use birthdate from user but store as birthdate
+    gender: user.gender 
+      ? GENDER_OPTIONS.find(opt => opt.value.toLowerCase() === user.gender?.toLowerCase())?.value || GENDER_OPTIONS[0].value
+      : GENDER_OPTIONS[0].value,
     streetAddress: user.streetAddress,
     zipCode: user.zipCode,
     city: user.city,
@@ -121,21 +141,28 @@ export default function EcommerceAccountPersonalView() {
           }
         : undefined;
 
+      // Format the date to YYYY-MM-DD format for MySQL
+      const formattedBirthdate = data.birthdate 
+        ? format(new Date(data.birthdate), 'yyyy-MM-dd')
+        : null;
+
+      const userData: UpdateUserData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.emailAddress,
+        phoneNumber: data.phoneNumber,
+        birthdate: formattedBirthdate, // Use birthdate here
+        gender: data.gender,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        zipCode: data.zipCode,
+        country: data.country,
+        image: pendingImage || undefined,
+      };
+
       await updateUserWithPassword(
         user.id,
-        {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.emailAddress,
-          phoneNumber: data.phoneNumber,
-          birthday: data.birthday?.toString(),
-          gender: data.gender,
-          streetAddress: data.streetAddress,
-          city: data.city,
-          zipCode: data.zipCode,
-          country: data.country,
-          image: pendingImage || undefined,
-        },
+        userData,
         passwordData
       );
 
@@ -185,21 +212,9 @@ export default function EcommerceAccountPersonalView() {
 
           <RHFTextField name="phoneNumber" label="Phone Number" />
 
-          <Controller
-            name="birthday"
-            render={({ field, fieldState: { error } }) => (
-              <DatePicker
-                label="Birthday"
-                slotProps={{
-                  textField: {
-                    helperText: error?.message,
-                    error: !!error?.message,
-                  },
-                }}
-                {...field}
-                value={field.value}
-              />
-            )}
+          <RHFDatePicker
+            name="birthdate"
+            label="Birth Date"
           />
 
           <RHFSelect 
@@ -208,9 +223,16 @@ export default function EcommerceAccountPersonalView() {
             InputLabelProps={{ shrink: true }}
           >
             {GENDER_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
+              <MenuItem 
+                key={option.value} 
+                value={option.value}
+                sx={{ 
+                  textTransform: 'capitalize',
+                  cursor: 'pointer'
+                }}
+              >
+                {option.label}
+              </MenuItem>
             ))}
           </RHFSelect>
 
@@ -295,5 +317,3 @@ export default function EcommerceAccountPersonalView() {
     </EcommerceAccountLayout>
   );
 }
-
-

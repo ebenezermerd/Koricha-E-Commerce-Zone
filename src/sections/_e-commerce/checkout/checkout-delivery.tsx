@@ -8,26 +8,9 @@ import FormHelperText from '@mui/material/FormHelperText';
 // components
 import { varAlpha } from 'src/theme/styles';
 import { fCurrency } from 'src/utils/formatNumber';
+import { useCheckout } from './context/checkout-context';
 
 // ----------------------------------------------------------------------
-
-export const DELIVERY_OPTIONS = [
-  {
-    value: 0,
-    label: 'Free',
-    description: 'Standard delivery (5-7 business days)',
-  },
-  {
-    value: 100,
-    label: 'Br 100',
-    description: 'Express delivery (2-3 business days)',
-  },
-  {
-    value: 200,
-    label: 'Br 200',
-    description: 'Same day delivery',
-  },
-];
 
 type OptionProps = {
   label: string;
@@ -37,11 +20,11 @@ type OptionProps = {
 
 type Props = {
   options: OptionProps[];
-  onApplyShipping: (value: number) => void;
 };
 
-export function CheckoutDelivery({ options, onApplyShipping }: Props) {
+export function CheckoutDelivery({ options }: Props) {
   const { control } = useFormContext();
+  const checkout = useCheckout();
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -59,7 +42,7 @@ export function CheckoutDelivery({ options, onApplyShipping }: Props) {
                 selected={field.value === option.value}
                 onClick={() => {
                   field.onChange(option.value);
-                  onApplyShipping(option.value);
+                  checkout.onApplyShipping(option.value);
                 }}
               />
             ))}

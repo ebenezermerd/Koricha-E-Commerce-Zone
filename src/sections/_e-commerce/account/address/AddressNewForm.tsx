@@ -17,6 +17,8 @@ import { IAddressItem } from 'src/types/address';
 import FormProvider, { RHFTextField, RHFSelect, RHFCheckbox } from 'src/components/hook-form';
 import { countries } from 'src/assets/data';
 import { toast } from 'src/components/snackbar';
+import { useAddAddress, useUpdateAddress } from 'src/services/useAddress';
+import { add } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +70,7 @@ export const AddressSchema = zod.object({
   city: zod.string().min(1, 'City is required'),
   state: zod.string().min(1, 'State is required'),
   country: zod.string().min(1, 'Country is required'),
-  zipCode: zod.string().min(1, 'Zip code is required'),
+  zipCode: zod.string().optional(),
   primary: zod.boolean().default(false),
   addressType: zod.enum(['Home', 'Office', 'Other']).default('Home'),
 });
@@ -78,8 +80,9 @@ type FormValuesProps = zod.infer<typeof AddressSchema>;
 // ----------------------------------------------------------------------
 
 export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Props) {
+  const { updateAddress } = useUpdateAddress();
   const isEdit = Boolean(address);
-
+  const { addAddress } = useAddAddress();
   const defaultValues: FormValuesProps = {
     name: '',
     email: '',
@@ -142,10 +145,12 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
       };
 
       if (isEdit) {
+        await updateAddress(addressData.id!, addressData);
         onEdit(addressData);
         toast.success('Address updated successfully');
       } else {
-        onCreate(addressData);
+        const createdAddress = await addAddress(addressData);
+        onCreate(createdAddress);
         toast.success('Address added successfully');
       }
 

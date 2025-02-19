@@ -2,12 +2,14 @@
 import { Box, Typography, Container, Unstable_Grid2 as Grid, Skeleton, Stack } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
+import { useTranslate } from 'src/locales';
 //
 import { EcommerceProductItemHot, EcommerceProductItemCountDown } from '../product/item';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingFeaturedProducts() {
+  const { t } = useTranslate('landing');
   const { products, productsLoading } = useGetProducts();
 
   // Filter products for countdown section (products with active sales)
@@ -57,10 +59,10 @@ export default function EcommerceLandingFeaturedProducts() {
                 fontWeight: 'bold',
               }}
             >
-              Featured Products
+              {t('featured.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Explore our handpicked selection of premium products, from exclusive deals to trending items
+              {t('featured.subtitle')}
             </Typography>
        </Stack>
 

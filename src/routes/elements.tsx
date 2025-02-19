@@ -23,9 +23,6 @@ export const EcommerceCartPage = Loadable(
 export const EcommerceCheckoutPage = Loadable(
   lazy(() => import("../pages/e-commerce/EcommerceCheckoutPage"))
 );
-export const EcommerceComparePage = Loadable(
-  lazy(() => import("../pages/e-commerce/EcommerceComparePage"))
-);
 export const HomePage = Loadable(lazy(() => import("../pages/HomePage")));
 export const EcommerceOrderCompletedPage = Loadable(
   lazy(() => import("../pages/e-commerce/EcommerceOrderCompletedPage"))

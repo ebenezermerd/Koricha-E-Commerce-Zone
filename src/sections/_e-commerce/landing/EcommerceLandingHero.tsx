@@ -8,12 +8,6 @@ import { useCarousel, Carousel } from 'src/components/carousel';
 import { EcommerceProductItemHero } from '../product/item';
 import { CarouselArrowBasicButtons } from 'src/components/carousel/components/carousel-arrow-buttons';
 
-const HERO_TITLES = [
-  'New Collection 2024',
-  'Best Sellers of the Month',
-  'Exclusive Limited Edition',
-  'Special Holiday Offers',
-];
 
 export default function EcommerceLandingHero() {
   const theme = useTheme();
@@ -24,11 +18,11 @@ export default function EcommerceLandingHero() {
     .slice(0, 4)
     .map((product, index) => ({
       id: product.id,
-      title: `${HERO_TITLES[index]} - ${product.name}`,
+      title: `${product.subDescription} - ${product.name}`,
       caption: product.caption || product.subDescription || product.description.slice(0, 120),
       coverImg: product.coverImg,
       path: `/products/${product.id}`,
-      label: product.label || (product.priceSale > 0 ? 'Sale' : 'New'),
+      label: product.saleLabel.enabled ? product.saleLabel.content : (product.newLabel.enabled ? product.newLabel.content : 'New'),
     }));
 
   const carousel = useCarousel({
@@ -38,13 +32,10 @@ export default function EcommerceLandingHero() {
     axis: 'x',
   });
 
-  console.log('Products:', products);
-  console.log('Hero Products:', heroProducts);
-
   if (productsLoading) {
     return (
       <Container sx={{ pt: { xs: 5, md: 8 } }}>
-        <Skeleton variant="rectangular" height={500} />
+        <Skeleton variant="rectangular" height={400} />
       </Container>
     );
   }

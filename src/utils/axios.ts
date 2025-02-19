@@ -9,12 +9,45 @@ import { CONFIG } from 'src/config-global';
 
 const axiosInstance = axios.create({ baseURL: CONFIG.serverUrl });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
+// Add request interceptor to log requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    console.log('Making request:', {
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+    });
+    return config;
+  },
   (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor to log responses
+axiosInstance.interceptors.response.use(
+  (response) => {
+    console.log('Received response:', {
+      url: response.config.url,
+      status: response.status,
+      data: response.data,
+    });
+    return response;
+  },
+  (error) => {
+    console.error('Response error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+    });
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      window.location.href = paths.auth.jwt.signIn;
+      // Get current path for return URL
+      const currentPath = window.location.pathname;
+      const returnTo = encodeURIComponent(currentPath);
+      
+      // Redirect to sign in with return URL
+      window.location.href = `${paths.auth.jwt.signIn}?returnTo=${returnTo}`;
     }
     return Promise.reject(error);
   }
@@ -97,6 +130,12 @@ export const endpoints = {
     myOrders: '/api/orders/my-orders',
     details: (id: string) => `/api/orders/${id}`,
     update: (id: string) => `/api/orders/${id}`,
+  },
+  address: {
+    list: '/api/addresses',
+    create: '/api/addresses',
+    update: (id: string) => `/api/addresses/${id}`,
+    delete: (id: string) => `/api/addresses/${id}`,
   },
 };  
 

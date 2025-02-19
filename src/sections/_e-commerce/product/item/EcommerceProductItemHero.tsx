@@ -25,17 +25,16 @@ export default function EcommerceProductItemHero({ product }: Props) {
   const theme = useTheme();
 
   const { label, title, caption, coverImg } = product;
-console.log('product', product)
   return (
     <Grid
       container
       rowSpacing={{
-        xs: 5,
+        xs: 4,
         md: 0,
       }}
       sx={{
         alignItems: 'center',
-        py: 10,
+        py: 5,
         px: { xs: 3, md: 10 },
       }}
     >
@@ -79,6 +78,7 @@ console.log('product', product)
               `drop-shadow(20px 20px 24px ${alpha(theme.palette.common.black, 0.16)})`
             ),
             maxWidth: 400,
+            height: 500,
             ml: 'auto',
             mr: { xs: 'auto', md: 'unset' },
           }}

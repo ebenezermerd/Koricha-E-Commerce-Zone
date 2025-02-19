@@ -6,7 +6,7 @@ import {
   Radio,
   StackProps,
 } from "@mui/material";
-
+import { useTranslate } from "src/locales";
 // ----------------------------------------------------------------------
 
 interface Props extends StackProps {
@@ -21,6 +21,7 @@ export default function EcommerceFilterGender({
   onChangeGender,
   ...other
 }: Props) {
+  const { t } = useTranslate('product');
   return (
     <Stack {...other}>
       <RadioGroup value={filterGender} onChange={onChangeGender}>
@@ -29,7 +30,7 @@ export default function EcommerceFilterGender({
             key={gender}
             value={gender}
             control={<Radio />}
-            label={gender}
+            label={t(`gender.${gender}`)}
           />
         ))}
       </RadioGroup>

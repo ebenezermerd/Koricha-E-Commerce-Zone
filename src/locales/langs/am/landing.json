@@ -1,0 +1,49 @@
+{
+  "hero": {
+    "title": "ግዢዎን በቀላሉ",
+    "subtitle": "የዕለት ግዢዎን ይጀምሩ",
+    "description": "አዳዲስ ምርቶች በጥሩ ቅናሽ። እስከ 40% ቅናሽ በተመረጡ እቃዎች ላይ።",
+    "shopNow": "አሁን ይግዙ"
+  },
+  "categories": {
+    "title": "ምድቦች",
+    "subtitle": "በምድብ ያስሱ",
+    "viewAll": "ሁሉንም ይመልከቱ"
+  },
+  "hotDeals": {
+    "title": "የዛሬ ጥሩ ቅናሾች",
+    "subtitle": "ጥሩ ቅናሾችን አያምልጥዎት",
+    "timeLeft": "የቀረው ጊዜ",
+    "days": "ቀናት",
+    "hours": "ሰዓታት",
+    "minutes": "ደቂቃዎች",
+    "seconds": "ሰከንዶች"
+  },
+  "featured": {
+    "title": "የተመረጡ ምርቶች",
+    "subtitle": "በእጃችን የተመረጡ ጥራት ያላቸው ምርቶችን፣ ከልዩ ቅናሾች እስከ ተወዳጅ እቃዎች ድረስ ያስሱ"
+  },
+  "specialOffer": {
+    "title": "ልዩ ቅናሽ",
+    "subtitle": "እስከ 50% ቅናሽ ያግኙ",
+    "description": "በተመረጡ እቃዎች ላይ ለተወሰነ ጊዜ",
+    "shopNow": "አሁን ይግዙ"
+  },
+  "brands": {
+    "title": "የተመረጡ ብራንዶች",
+    "subtitle": "የእኛን የተመረጡ ብራንዶች እና የእነሱን ምርቶች ያግኙ",
+    "viewAll": "ዝርዝሩን ይመልከቱ",
+    "products": "ምርቶች",
+    "sales": "ሽያጮች"
+  },
+  "popular": {
+    "title": "ታዋቂ ምርቶች",
+    "subtitle": "መያዝ ያለብዎት ምርቶች",
+    "viewAll": "ሁሉንም ይመልከቱ"
+  },
+  "topProducts": {
+    "title": "ከፍተኛ ምርቶች",
+    "subtitle": "ብዙ የሚሸጡ እቃዎች",
+    "viewAll": "ሁሉንም ይመልከቱ"
+  }
+} 

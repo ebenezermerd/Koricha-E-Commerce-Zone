@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "Oomishaalee",
+    "newProduct": "Oomisha Haaraa",
+    "search": "Oomisha barbaadi...",
+    "filters": "Calaltuu",
+    "inStock": "Ni argama",
+    "outOfStock": "Hin argamu",
+    "price": "Gatii",
+    "priceRange": "Daangaa Gatii",
+    "category": "Ramaddii",
+    "gender": "Saala",
+    "color": "Bifa",
+    "size": "Guddina"
+  },
+  "details": {
+    "addToCart": "Gara gabbaatti dabali",
+    "buyNow": "Amma biti",
+    "quantity": "Baay'ina",
+    "available": "Kan jiru",
+    "description": "Ibsa",
+    "reviews": "Gamaaggama",
+    "relatedProducts": "Oomishaalee walfakkaatan"
+  },
+  "catalog": "Oomishaalee",
+  "filters": {
+    "category": "Ramaddii",
+    "brand": "Brand",
+    "colors": "Halluu",
+    "gender": "Saala",
+    "price": "Gatii",
+    "ratings": "Sadarkaa",
+    "tags": "Taagii",
+    "stock": "Kan Jiran Qofa",
+    "clearAll": "Hunda Haqi"
+  },
+  "colors": {
+    "red": "Diimaa",
+    "blue": "Cuquliisa",
+    "pink": "Pinki",
+    "green": "Magariisa",
+    "yellow": "Keelloo",
+    "violet": "Damma Gurracha",
+    "black": "Gurraacha",
+    "white": "Adii"
+  },
+  "gender": {
+    "Men": "Dhiira",
+    "Women": "Dubartii",
+    "Kids": "Daa'imman"
+  },
+  "stock": {
+    "inStock": "Ni Jira",
+    "lowStock": "Xiqqaa Jira",
+    "outOfStock": "Hin Jiru"
+  }
+
+} 

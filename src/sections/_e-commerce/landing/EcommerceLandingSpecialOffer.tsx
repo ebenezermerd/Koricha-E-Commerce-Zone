@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
+import { useTranslate } from 'src/locales';
 // components
 import Image from 'src/components/image';
 import { paths } from 'src/routes/paths';
@@ -28,6 +29,7 @@ import { IProductItemProps } from 'types/product';
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingSpecialOffer() {
+  const { t } = useTranslate('landing');
   const navigate = useNavigate();
   const { products, productsLoading } = useGetProducts();
 
@@ -89,10 +91,10 @@ export default function EcommerceLandingSpecialOffer() {
           fontWeight: 'bold',
         }}
       >
-        Special Offer
+        {t('specialOffer.title')}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Discover our exclusive deals and special offers
+        {t('specialOffer.subtitle')}
       </Typography>
       </Stack>
       <Box
@@ -105,8 +107,8 @@ export default function EcommerceLandingSpecialOffer() {
           expired={add(new Date(), { days: 1, hours: 8 })}
         />
 
-        <Box sx={{ borderRadius: 1.5, bgcolor: 'background.neutral' }}>
-          <Image src={specialOfferProduct.coverImg} />
+        <Box sx={{ borderRadius: 1.5, maxHeight: 530, bgcolor: 'background.neutral' }}>
+          <Image src={specialOfferProduct.coverImg} sx={{  height: '100%', alignSelf: 'center', objectFit: 'cover' }} />
         </Box>
 
         <SpecialOfferBuyNow
@@ -131,6 +133,8 @@ interface SpecialOfferCountdownProps extends StackProps {
 }
 
 function SpecialOfferCountdown({ product, expired, sx, ...other }: SpecialOfferCountdownProps) {
+  const { t } = useTranslate('landing');
+  
   return (
     <Stack
       alignItems="center"
@@ -145,7 +149,7 @@ function SpecialOfferCountdown({ product, expired, sx, ...other }: SpecialOfferC
       {...other}
     >
       <Typography variant="overline" sx={{ color: 'primary.main' }}>
-        {product.saleLabel.content || 'Special Offer'}
+        {product.saleLabel.content || t('specialOffer.title')}
       </Typography>
 
       <Typography variant="h5" sx={{ mt: 1, mb: 3 }}>
@@ -170,7 +174,7 @@ function SpecialOfferCountdown({ product, expired, sx, ...other }: SpecialOfferC
       <Divider sx={{ borderStyle: 'dashed', my: 3, width: 1 }} />
 
       <Typography variant="body2" sx={{ mb: 2 }}>
-        Deal ends in:
+        {t('specialOffer.description')}
       </Typography>
 
       <ProductCountdownBlock
@@ -212,6 +216,7 @@ function SpecialOfferBuyNow({
   sx,
   ...other
 }: SpecialOfferBuyNowProps) {
+  const { t } = useTranslate('landing');
   const theme = useTheme();
   
   // Transform product sizes to picker format
@@ -380,7 +385,7 @@ function SpecialOfferBuyNow({
           },
         }}
       >
-        Buy Now
+        {t('specialOffer.shopNow')}
       </Button>
     </Stack>
   );

@@ -23,7 +23,7 @@ function Logo({ single = false, sx }: LogoProps) {
       component="img"
       src={`${CONFIG.assetsDir}/assets/logo/logo-single.png`}
       width="100%"
-      height="100%"
+      height="90%"
     />
   );
 
@@ -47,7 +47,7 @@ function Logo({ single = false, sx }: LogoProps) {
     >
       <Box
         sx={{
-          width: single ? 200 : 145,
+          width: single ? 180 : 145,
           lineHeight: 0,
           cursor: "pointer",
           display: "inline-flex",

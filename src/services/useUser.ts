@@ -104,16 +104,32 @@ export async function updatePassword(userId: string, passwordData: UpdatePasswor
 }
 
 // Combined function to update both user data and password
-export async function updateUserWithPassword(
-  userId: string,
-  userData: UpdateUserPayload,
-  passwordData?: UpdatePasswordPayload
-) {
+export const updateUserWithPassword = async (
+  userId: string | number,
+  userData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    birthdate: string | null;
+    gender: string;
+    streetAddress?: string;
+    city?: string;
+    zipCode?: string;
+    country?: string;
+    image?: File;
+  },
+  passwordData?: {
+    oldPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+  }
+) => {
   try {
-    const updatePromises: Promise<any>[] = [updateUser(userId, userData)];
+    const updatePromises: Promise<any>[] = [updateUser(userId.toString(), userData)];
 
     if (passwordData) {
-      updatePromises.push(updatePassword(userId, passwordData));
+      updatePromises.push(updatePassword(userId.toString(), passwordData));
     }
 
     await Promise.all(updatePromises);

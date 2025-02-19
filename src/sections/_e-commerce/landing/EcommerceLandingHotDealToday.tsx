@@ -13,11 +13,13 @@ import { Carousel, useCarousel, CarouselDotButtons, CarouselArrowBasicButtons } 
 import { ProductCountdownBlock } from '../components';
 import { EcommerceProductItemHot } from '../product/item';
 import { alpha } from '@mui/material/styles';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingHotDealToday() {
   const theme = useTheme();
+  const { t } = useTranslate('landing');
   const isMdUp = useResponsive('up', 'md');
   const { products, productsLoading } = useGetProducts();
 
@@ -70,10 +72,10 @@ export default function EcommerceLandingHotDealToday() {
              fontWeight: 'bold',
            }}
         >
-          🔥 Hot Deal Today
+          {t('hotDeals.title')}
         </Typography>
         <Typography variant="body2" sx={{ pl: 5, color: 'text.secondary' }}>
-          Discover our hottest deals and exclusive offers
+          {t('hotDeals.subtitle')}
         </Typography>
         </Stack>
 

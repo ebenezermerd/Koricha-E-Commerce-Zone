@@ -7,7 +7,7 @@ export type UserType = {
   lastName: string;
   email: string;
   phoneNumber: string;
-  birthday?: string | Date;
+  birthdate: string | Date;
   gender: 'Male' | 'Female' | 'Other';
   streetAddress: string;
   city: string;
@@ -27,7 +27,7 @@ export type UpdateUserPayload = {
   lastName?: string;
   email?: string;
   phoneNumber?: string;
-  birthday?: string;
+  birthdate: string | null;
   gender?: string;
   streetAddress?: string;
   city?: string;
@@ -50,7 +50,7 @@ export const transformBackendUser = (backendUser: any): UserType => ({
   lastName: backendUser.lastName || '',
   email: backendUser.email,
   phoneNumber: backendUser.phone || backendUser.phoneNumber || '',
-  birthday: backendUser.birthday || '',
+  birthdate: backendUser.birthdate || '',
   gender: backendUser.gender || 'Other',
   streetAddress: backendUser.address || '',
   city: backendUser.city || '',

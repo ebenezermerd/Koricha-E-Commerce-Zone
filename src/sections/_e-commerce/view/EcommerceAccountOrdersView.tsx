@@ -67,10 +67,40 @@ export default function EcommerceAccountOrdersPage() {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const { myOrders, ordersLoading } = useOrders();
+  const { myOrders, myOrdersLoading, myOrdersError } = useOrders();
+
+  // Add debugging
+  console.log('Orders View State:', {
+    myOrders,
+    myOrdersLoading,
+    myOrdersError,
+    currentTab: tab,
+  });
+
+  if (myOrdersError) {
+    console.error('Error loading orders:', {
+      error: myOrdersError,
+      message: myOrdersError.message,
+      response: myOrdersError.response
+    });
+    return (
+      <EmptyContent
+        title="Error loading orders"
+        description="There was an error loading your orders. Please try again later."
+        imgUrl="/assets/icons/empty/ic_error.svg"
+      />
+    );
+  }
+
+  if (myOrdersLoading) {
+    return <LoadingScreen />;
+  }
 
   const filteredOrders = useMemo(() => {
-    if (!myOrders?.length) return [];
+    if (!myOrders || !Array.isArray(myOrders)) {
+      console.log('No orders or invalid format:', myOrders);
+      return [];
+    }
     
     const status = STATUS_OPTIONS[tab as keyof typeof STATUS_OPTIONS];
     
@@ -135,10 +165,6 @@ export default function EcommerceAccountOrdersPage() {
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDense(event.target.checked);
   };
-
-  if (ordersLoading) {
-    return <LoadingScreen />;
-  }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredOrders.length) : 0;
 

@@ -43,15 +43,14 @@ export const SignInSchema = zod.object({
 
 export function JwtSignInView() {
   const router = useRouter();
+  const searchParams = new URLSearchParams(window.location.search);
+  const returnTo = searchParams.get('returnTo');
 
   const { checkUserSession } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
 
   const password = useBoolean();
-
-
-
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
   });
@@ -63,14 +62,18 @@ export function JwtSignInView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setErrorMsg('');
       await signInWithPassword({ email: data.email, password: data.password });
       await checkUserSession?.();
 
-      router.refresh();
+      if (returnTo && returnTo === paths.eCommerce.checkout) {
+        router.push(returnTo);
+      } else {
+        router.push(paths.eCommerce.landing);
+      }
     } catch (error) {
-      console.error(error);
-      setErrorMsg(error.error);
-      console.log(error.error);
+      console.error('Sign in error:', error);
+      setErrorMsg(error.message || 'Failed to sign in. Please try again.');
     }
   });
 
@@ -82,15 +85,6 @@ export function JwtSignInView() {
         label="Email address" InputLabelProps={{ shrink: true }} />
 
       <Box gap={1.5} display="flex" flexDirection="column">
-        <Link
-          component={RouterLink}
-          href="#"
-          variant="body2"
-          color="inherit"
-          sx={{ alignSelf: 'flex-end' }}
-        >
-          Forgot password?
-        </Link>
 
         <RHFTextField
           name="password"
@@ -108,6 +102,15 @@ export function JwtSignInView() {
             ),
           }}
         />
+          <Link
+            component={RouterLink}
+            href="#"
+            variant="body2"
+            color="primary"
+            sx={{ alignSelf: 'flex-end' }}
+          >
+            Forgot password?
+          </Link>
       </Box>
 
       <LoadingButton
@@ -130,9 +133,9 @@ export function JwtSignInView() {
         title="Sign in to your account"
         description={
           <>
-            {`Don’t have an account? `}
+            {`Don't have an account? `}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-              Get started
+              Create a new account
             </Link>
           </>
         }

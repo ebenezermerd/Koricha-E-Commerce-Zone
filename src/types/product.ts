@@ -12,15 +12,6 @@ export type IProductItemHeroProps = {
 
 export type IDateValue = string | number | null;
 
-export type IProductItemCompareProps = {
-  id: string;
-  name: string;
-  price: number;
-  coverImg: string;
-  rating: number;
-  details: string[];
-};
-
 export type IProductItemProps = {
   id: string;
   name: string;

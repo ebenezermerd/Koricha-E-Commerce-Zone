@@ -30,7 +30,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
 
   if (!product) return null;
 
-  const coverImg = <Image src={product.coverImg} />;
+  const coverImg = <Image src={product.coverImg} sx={{ height: 200, width: '100%', }} />;
 
   const nameText = (
     <TextMaxLine variant="h5" line={1}>

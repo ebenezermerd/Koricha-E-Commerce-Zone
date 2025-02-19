@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useSWRConfig } from 'swr';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 // utils
 import { API_ENDPOINTS } from 'src/utils/endpoints';
 import axios from 'src/utils/axios';
@@ -21,11 +21,14 @@ const getAuthHeader = () => {
   };
 };
 
+const ENDPOINTS = {
+  addresses: '/api/addresses',
+  address: (id: string) => `/api/addresses/${id}`,
+};
+
 export function useGetAddresses() {
   const { user } = useAuthContext();
   const { mutate: globalMutate } = useSWRConfig();
-
-
 
   const {
     data: addresses = [],
@@ -54,8 +57,10 @@ export function useGetAddresses() {
     [mutate, globalMutate]
   );
 
+  const addressesMemo = useMemo(() => addresses || [], [addresses]);
+
   return {
-    addresses,
+    addresses: addressesMemo,
     isLoading,
     error,
     mutate: mutateAddresses,
@@ -147,4 +152,4 @@ export function useDeleteAddress() {
   );
 
   return { deleteAddress };
-} 
+}

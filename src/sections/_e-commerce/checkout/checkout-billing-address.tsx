@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 // hooks
-import { useGetAddresses } from 'src/services/useAddress';
+import { useGetAddresses, useAddAddress } from 'src/services/useAddress';
 // components
 import Iconify from 'src/components/iconify';
 import { useCheckout } from './context/checkout-context';
@@ -14,13 +14,15 @@ import { AddressItem } from '../account/address/AddressItem';
 import { AddressNewForm } from '../account/address/AddressNewForm';
 import LoadingScreen from 'src/components/loading-screen';
 import { EmptyContent } from 'src/components/empty-content';
+import { toast } from 'src/components/snackbar';
 
 import { IAddressItem } from 'src/types/address';
 
 // ----------------------------------------------------------------------
 
 export default function CheckoutBillingAddress() {
-  const { addresses, isLoading } = useGetAddresses();
+  const { addresses, isLoading, mutate: revalidateAddresses } = useGetAddresses();
+  const { addAddress } = useAddAddress();
   const checkout = useCheckout();
 
   const [open, setOpen] = useState(false);
@@ -33,10 +35,28 @@ export default function CheckoutBillingAddress() {
     setOpen(false);
   }, []);
 
+  const handleCreateAddress = async (address: IAddressItem) => {
+    try {
+      // Create address in backend
+      const createdAddress = await addAddress(address);
+      
+      // Update billing address in checkout context
+      checkout.onCreateBilling(createdAddress);
+      
+      // Revalidate addresses list
+      await revalidateAddresses(createdAddress);
+      
+      handleClose();
+    } catch (error) {
+      console.error('Error creating address:', error);
+      toast.error('Failed to create address');
+    }
+  };
+
   if (isLoading) {
     return <LoadingScreen />;
   }
-
+console.log(addresses);
   return (
     <>
       <Card sx={{ mb: 3 }}>
@@ -107,13 +127,10 @@ export default function CheckoutBillingAddress() {
 
       <AddressNewForm
         open={open}
-        onEdit={(address) => {
-          checkout.onCreateBilling(address);
-          handleClose();
-        }}
         onClose={handleClose}
-        onCreate={(address) => {
-          checkout.onCreateBilling(address);
+        onCreate={checkout.onCreateBilling}
+        onEdit={(address) => {
+          checkout.onEditBilling(address);
           handleClose();
         }}
       />

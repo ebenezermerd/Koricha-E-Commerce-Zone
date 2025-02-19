@@ -21,5 +21,37 @@
     "description": "መግለጫ",
     "reviews": "ግምገማዎች",
     "relatedProducts": "ተዛማጅ ምርቶች"
+  },
+  "catalog": "ምርቶች",
+  "filters": {
+    "category": "ምድብ",
+    "brand": "ብራንድ",
+    "colors": "ቀለማት",
+    "gender": "ፆታ",
+    "price": "ዋጋ",
+    "ratings": "ደረጃዎች",
+    "tags": "መለያዎች",
+    "stock": "በስቶክ ያሉ ብቻ",
+    "clearAll": "ሁሉንም አጽዳ"
+  },
+  "colors": {
+    "red": "ቀይ",
+    "blue": "ሰማያዊ",
+    "pink": "ሮዝ",
+    "green": "አረንጓዴ",
+    "yellow": "ቢጫ",
+    "violet": "ወይን ጠጅ",
+    "black": "ጥቁር",
+    "white": "ነጭ"
+  },
+  "gender": {
+    "Men": "ወንድ",
+    "Women": "ሴት",
+    "Kids": "ልጆች"
+  },
+  "stock": {
+    "inStock": "በስቶክ",
+    "lowStock": "ዝቅተኛ ስቶክ",
+    "outOfStock": "ከስቶክ ውጪ"
   }
 } 

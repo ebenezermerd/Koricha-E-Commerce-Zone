@@ -30,16 +30,19 @@ export default function EcommerceCheckoutView() {
 
   useEffect(() => {
     if (!authenticated) {
-      navigate(paths.auth.jwt.signIn);
+      // Redirect to sign in with return URL set to checkout
+      const returnTo = paths.eCommerce.checkout;
+      navigate(`${paths.auth.jwt.signIn}?returnTo=${encodeURIComponent(returnTo)}`);
+      return;
     }
-  }, [authenticated, navigate]);
 
-  useEffect(() => {
+    // If cart is empty, redirect to products page
     if (empty) {
       navigate(paths.eCommerce.products);
     }
-  }, [empty, navigate]);
+  }, [authenticated, empty, navigate]);
 
+  // Show nothing while checking authentication or if cart is empty
   if (!authenticated || empty) {
     return null;
   }

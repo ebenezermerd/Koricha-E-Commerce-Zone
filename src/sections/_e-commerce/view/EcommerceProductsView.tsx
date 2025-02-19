@@ -18,8 +18,6 @@ import SplashScreen from 'src/components/loading-screen';
 
 // config
 import { NAV } from 'src/config-global';
-// _mock
-import { _products } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 //
@@ -30,7 +28,7 @@ import { EcommerceProductList, EcommerceProductListBestSellers } from '../produc
 import { EmptyContent } from 'src/components/empty-content';
 // types
 import { IProductFiltersProps } from 'src/types/product';
-
+import { useTranslate } from 'src/locales';
 // ----------------------------------------------------------------------
 
 const VIEW_OPTIONS = [
@@ -47,6 +45,7 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductsView() {
+  const { t } = useTranslate('product');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState<IProductFiltersProps>({
@@ -126,7 +125,7 @@ export default function EcommerceProductsView() {
             py: 5,
           }}
         >
-          <Typography variant="h3">Catalog</Typography>
+          <Typography variant="h3">{t('catalog')}</Typography>
 
           <Button
             color="inherit"
@@ -137,7 +136,7 @@ export default function EcommerceProductsView() {
               display: { md: 'none' },
             }}
           >
-            Filters
+            {t('filters.filters')}
           </Button>
         </Stack>
 

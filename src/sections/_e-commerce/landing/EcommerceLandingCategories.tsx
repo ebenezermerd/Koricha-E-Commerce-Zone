@@ -8,10 +8,12 @@ import TextMaxLine from 'src/components/text-max-line';
 // config
 import { productConfig } from 'src/config/product-options';
 import { paths } from 'src/routes/paths';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingCategories() {
+  const { t } = useTranslate('landing');
   const categories = productConfig.landing.categories.flatMap(group => group.items);
 
   return (
@@ -21,21 +23,21 @@ export default function EcommerceLandingCategories() {
       }}
     >
       <Stack spacing={1} sx={{ mb: 4 }} alignItems={{ xs: 'center', md: 'unset' }}>
-      <Typography
-         variant="h3"
-         sx={{
-           background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-           backgroundClip: 'text',
-           WebkitBackgroundClip: 'text',
-           color: 'transparent',
-           fontWeight: 'bold',
-         }}
-      >
-        Categories
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Explore our wide range of categories, from electronics to fashion and everything in between
-      </Typography>
+        <Typography
+          variant="h3"
+          sx={{
+            background: theme => `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            fontWeight: 'bold',
+          }}
+        >
+          {t('categories.title')}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {t('categories.subtitle')}
+        </Typography>
       </Stack>
       <Box
         gap={3}
