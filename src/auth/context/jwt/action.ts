@@ -145,7 +145,7 @@ export const signOut = async (): Promise<void> => {
 export const resetPassword = async ({
   email,
   options,
-}: ResetPasswordParams): Promise<{ data: {}; error: null } | { data: null; error: Error }> => {
+}: ResetPasswordParams): Promise<{ data: {}; error: null } | { data: null; error: { message: string, response: { data: { message: string } }  } }> => {
   try {
     const params = {
       email,
@@ -158,7 +158,7 @@ export const resetPassword = async ({
     return { data, error: null };
   } catch (error) {
     console.error('Error during password reset:', error);
-    return { data: null, error };
+    return { data: null, error: { message: error.response.data.message, response: { data: { message: error.response.data.message } } } };
   }
 };
 

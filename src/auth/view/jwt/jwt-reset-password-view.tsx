@@ -58,12 +58,13 @@ export function JwtResetPasswordView() {
       const result = await resetPassword({
         email: data.email,
         options: {
-          redirectTo: `${window.location.origin}${paths.auth.jwt.updatePassword}?email=${encodeURIComponent(data.email)}`,
+          redirectTo: `${import.meta.env.VITE_APP_URL}${paths.auth.jwt.updatePassword}?email=${encodeURIComponent(data.email)}`,
         },
       });
 
       if (result.error) {
         setErrorMsg(result.error.message);
+        console.log( 'console error', result.error.response.data.message);
       } else {
         setSuccessMsg('Password reset link has been sent to your email');
         
@@ -74,7 +75,7 @@ export function JwtResetPasswordView() {
         reset(defaultValues);
       }
     } catch (error) {
-      console.error(error);
+      console.log( 'console error', error.data.message);
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
   });
