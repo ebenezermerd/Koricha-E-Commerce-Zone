@@ -49,21 +49,46 @@ export function JwtSignInView() {
   const { checkUserSession } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const password = useBoolean();
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setIsSubmitting(true);
       setErrorMsg('');
-      await signInWithPassword({ email: data.email, password: data.password });
+
+      const response = await signInWithPassword({ 
+        email: data.email, 
+        password: data.password 
+      });
+
+      if (response.error) {
+        setErrorMsg(response.error.message || 'Invalid email or password');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        window.location.reload();
+        return;
+      }
+
+      // Check if email needs verification
+      if (response.data?.status === 'verification_required') {
+        // Store email for verification page
+        sessionStorage.setItem('verification_email', data.email);
+        router.push(paths.auth.jwt.verify);
+        return;
+      }
+
       await checkUserSession?.();
 
       if (returnTo && returnTo === paths.eCommerce.checkout) {
@@ -73,7 +98,15 @@ export function JwtSignInView() {
       }
     } catch (error) {
       console.error('Sign in error:', error);
-      setErrorMsg(error.message || 'Failed to sign in. Please try again.');
+      setErrorMsg(
+        error.response?.data?.message || 
+        error.message || 
+        'Invalid email or password'
+      );
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      window.location.reload();
+    } finally {
+      setIsSubmitting(false);
     }
   });
 
@@ -102,15 +135,15 @@ export function JwtSignInView() {
             ),
           }}
         />
-          <Link
-            component={RouterLink}
-            href="#"
-            variant="body2"
-            color="primary"
-            sx={{ alignSelf: 'flex-end' }}
-          >
-            Forgot password?
-          </Link>
+        <Link
+          component={RouterLink}
+          href={paths.auth.jwt.resetPassword}
+          variant="body2"
+          color="inherit"
+          sx={{ alignSelf: 'flex-end' }}
+        >
+          Forgot password?
+        </Link>
       </Box>
 
       <LoadingButton

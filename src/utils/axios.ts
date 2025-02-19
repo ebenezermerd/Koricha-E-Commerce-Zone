@@ -82,8 +82,16 @@ export const endpoints = {
     verify: '/api/auth/verify',
     signIn: '/api/auth/sign-in',
     signUp: '/api/auth/sign-up',
+    forgotPassword: '/api/auth/forgot-password',
     resetPassword: '/api/auth/reset-password',
+    checkResetToken: (token: string) => `/api/auth/reset-password/${token}`,
+
     updatePassword: '/api/auth/update-password',
+
+    
+    emailVerify: '/api/auth/email/verify',
+    emailVerifyResend: '/api/auth/email/verify/resend',
+    emailSendOtp: '/api/auth/email/send-otp',
   },
   mail: {
     list: '/api/mail/list',
