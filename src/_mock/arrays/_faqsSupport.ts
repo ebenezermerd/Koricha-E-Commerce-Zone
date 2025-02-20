@@ -17,7 +17,7 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
     {
       id: _mock.id(0),
       question: 'How do I create an account on Korecha E-Commerce?',
-      answer: 'Creating an account is simple! Click "Sign Up" at the top of the page, enter your email, create a password, and fill in your basic information. You\'ll receive a verification email to confirm your account.',
+      answer: 'Creating an account is simple! Click "Create a new account" at the mid section of the sign in page, enter your email, create a password, and fill in your basic information. You\'ll receive a verification email to confirm your account.',
     },
     {
       id: _mock.id(6),
@@ -42,7 +42,7 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
     {
       id: _mock.id(10),
       question: 'Can I change my email address?',
-      answer: 'Yes, you can change your email address in your account settings. You\'ll need to verify the new email address before the change takes effect.',
+      answer: 'Yes, you can change your email address if you are a customer. You can do this by going to your account settings. You\'ll need to verify the new email address before the change takes effect.',
     },
     {
       id: _mock.id(11),
@@ -57,32 +57,12 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
     {
       id: _mock.id(13),
       question: 'Can I merge multiple accounts?',
-      answer: 'For security reasons, we cannot merge multiple accounts. Please contact customer support if you need help managing multiple accounts.',
-    },
-    {
-      id: _mock.id(14),
-      question: 'How do I subscribe to your newsletter?',
-      answer: 'You can subscribe to our newsletter during account creation or by visiting your account settings. Look for the "Newsletter Preferences" section.',
-    },
-    {
-      id: _mock.id(15),
-      question: 'What should I do if I forget my username?',
-      answer: 'Your username is typically your email address. If you\'ve forgotten it, click "Forgot Username" on the login page and follow the recovery steps.',
-    },
-    {
-      id: _mock.id(16),
-      question: 'How can I change my notification settings?',
-      answer: 'Go to "Account Settings" and look for "Notification Preferences". You can customize email, SMS, and push notification settings there.',
+      answer: 'For security reasons, we cannot merge multiple in. Plinease contact customer support if you need help managing multiple accounts.',
     },
     {
       id: _mock.id(17),
       question: 'Is there a mobile app available?',
       answer: 'Yes, our mobile app is available for both iOS and Android devices. You can download it from the App Store or Google Play Store.',
-    },
-    {
-      id: _mock.id(18),
-      question: 'How do I link my social media accounts?',
-      answer: 'In your account settings, look for "Connected Accounts" or "Social Media Links". You can connect various social platforms for easier login.',
     },
     {
       id: _mock.id(19),
@@ -95,11 +75,6 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
       answer: 'We use industry-standard security measures including two-factor authentication, encrypted passwords, and regular security audits to protect your account.',
     },
     {
-      id: _mock.id(21),
-      question: 'What information is visible on my public profile?',
-      answer: 'By default, only your username and review history are public. You can adjust your privacy settings to control what information is visible to others.',
-    },
-    {
       id: _mock.id(22),
       question: 'How often should I update my password?',
       answer: 'We recommend updating your password every 3-6 months. Always use strong passwords with a mix of letters, numbers, and special characters.',
@@ -109,44 +84,19 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
     {
       id: _mock.id(1),
       question: 'What payment methods are accepted on Korecha?',
-      answer: 'We accept major credit/debit cards (Visa, Mastercard), PayPal, mobile money transfers, and bank transfers. All payments are processed securely through our payment gateway.',
-    },
-    {
-      id: _mock.id(35),
-      question: 'Is it safe to save my payment information?',
-      answer: 'Yes, we use industry-standard encryption to protect your payment information. Your card details are tokenized and stored securely for future purchases.',
-    },
-    {
-      id: _mock.id(36),
-      question: 'How do I add or remove a payment method?',
-      answer: 'Go to "Payment Methods" in your account settings. You can add new cards or delete existing ones. For security, you\'ll need to verify your identity when making changes.',
+      answer: 'We accept major payment gateway (Chapa), and mobile money transfers.',
     },
     {
       id: _mock.id(37),
       question: 'What currencies do you accept?',
-      answer: 'We accept payments in USD, EUR, GBP, and several other major currencies. The price will be converted to your local currency at checkout.',
+      answer: 'We accept payments in Ethiopian Birr (ETB).',
     },
-    {
-      id: _mock.id(38),
-      question: 'Do you offer installment payments?',
-      answer: 'Yes, we partner with several buy-now-pay-later services. Eligible purchases can be split into installments at checkout.',
-    }
   ],
   Delivery: [
     {
-      id: _mock.id(2),
-      question: 'How can I track my order status?',
-      answer: 'Once your order is confirmed, you\'ll receive a tracking number via email. You can use this number in the "Track Order" section of your account to monitor your delivery status in real-time.',
-    },
-    {
       id: _mock.id(39),
       question: 'What are the shipping costs?',
-      answer: 'Shipping costs vary based on location and delivery speed. Free shipping is available for orders over $50. You can calculate exact costs at checkout.',
-    },
-    {
-      id: _mock.id(40),
-      question: 'Do you ship internationally?',
-      answer: 'Yes, we ship to most countries worldwide. International shipping times and costs vary by location. Check our shipping calculator for specific details.',
+      answer: 'Shipping costs vary based on location and delivery speed. Free shipping is available for orders over 000 ETB. You can calculate exact costs at checkout.',
     },
     {
       id: _mock.id(41),

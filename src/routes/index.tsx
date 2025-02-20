@@ -41,6 +41,9 @@ import {
   SupportPage,
   ComingSoonPage,
   MaintenancePage,
+
+  EcommercePaymentSuccessPage,
+  EcommercePaymentFailurePage,
 } from "./elements";
 
 // ----------------------------------------------------------------------
@@ -123,6 +126,7 @@ export default function Router() {
               path: "order-completed",
               element: <EcommerceOrderCompletedPage />,
             },
+            
             { path: "wishlist", element: <EcommerceWishlistPage /> },
             {
               path: "account",
@@ -144,6 +148,19 @@ export default function Router() {
                   element: <AuthGuard><EcommerceAccountAddressPage /></AuthGuard> 
                 },
               ],
+            },
+            {
+              path: "payment",
+              children: [
+                { 
+                  path: "success",
+                  element: <EcommercePaymentSuccessPage />
+                },
+                { 
+                  path: "failed",
+                  element: <EcommercePaymentFailurePage />
+                }
+              ]
             },
           ],
         },
@@ -190,6 +207,7 @@ export default function Router() {
         },
       ],
     },
+
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }

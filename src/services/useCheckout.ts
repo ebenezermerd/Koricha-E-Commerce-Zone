@@ -54,6 +54,13 @@ export type PaymentData = {
   amount: number;
 };
 
+interface UpdateOrderStatusParams {
+  orderId: string;
+  status: 'pending' | 'completed' | 'failed';
+  transactionId?: string;
+  txRef?: string;
+}
+
 async function createOrder(url: string, { arg }: { arg: OrderData }) {
   const response = await axios.post(url, arg);
   return response.data;
@@ -63,6 +70,17 @@ async function processPayment(url: string, { arg }: { arg: PaymentData }) {
   const response = await axios.post(url, arg);
   return response.data;
 }
+
+const updateOrderStatus = async (params: UpdateOrderStatusParams) => {
+  const response = await fetch(`/api/orders/${params.orderId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+};
 
 export function useCheckout() {
   const {
@@ -94,7 +112,6 @@ export function useCheckout() {
       throw error;
     }
   };
-
 
   return {
     orders,

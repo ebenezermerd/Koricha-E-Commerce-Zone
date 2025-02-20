@@ -33,7 +33,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
       {...other}
     >
       {product.newLabel.enabled && (
-        <Label color="info" sx={{ position: 'absolute', m: 1, top: 0, right: 0, zIndex: 9 }}>
+        <Label color="info" sx={{ position: 'absolute', m: 1, top: 0, left: 0, zIndex: 9 }}>
           {product.newLabel.content}
         </Label>
       )}

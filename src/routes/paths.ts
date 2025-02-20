@@ -15,6 +15,11 @@ export const paths = {
     checkout: `/e-commerce/checkout`,
     orderCompleted: "/e-commerce/order-completed",
     wishlist: `/e-commerce/wishlist`,
+    payment: {
+      success: '/e-commerce/payment/success',
+      failed: '/e-commerce/payment/failed',
+    },
+    
     account: {
       personal: `/e-commerce/account/personal`,
       wishlist: `/e-commerce/account/wishlist`,

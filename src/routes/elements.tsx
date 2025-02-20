@@ -51,6 +51,13 @@ export const EcommerceAccountVouchersPage = Loadable(
 export const EcommerceAccountWishlistPage = Loadable(
   lazy(() => import("../pages/e-commerce/account/EcommerceAccountWishlistPage"))
 );
+export const EcommercePaymentSuccessPage = Loadable(
+  lazy(() => import("../pages/e-commerce/EcommercePaymentSuccess"))
+);
+export const EcommercePaymentFailurePage = Loadable(
+  lazy(() => import("../pages/e-commerce/EcommercePaymentFailure"))
+);
+
 
 
 

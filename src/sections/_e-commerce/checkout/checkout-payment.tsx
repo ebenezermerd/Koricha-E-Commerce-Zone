@@ -17,6 +17,7 @@ import { CheckoutDelivery } from './checkout-delivery';
 import { useCart } from 'src/contexts/cart-context';
 import { toast } from 'src/components/snackbar';
 import { PaymentMethod } from 'src/types/checkout';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -98,38 +99,44 @@ export default function CheckoutPayment() {
       }
 
       if (data.payment === 'chapa') {
-      const chapaOrderData = {
-        ...baseOrder,
-        payment: {
-          method: data.payment as PaymentMethod,
-          amount: checkout.total,
-          currency: 'ETB',
-          tx_ref: `order-${Date.now()}`,
-        },
-        callback_url: `${window.location.origin}/api/order-success`,
-        return_url: `${window.location.origin}/api/payment-failed`,
-      };
+        const chapaOrderData = {
+          ...baseOrder,
+          payment: {
+            method: data.payment as PaymentMethod,
+            amount: checkout.total,
+            currency: 'ETB',
+            tx_ref: `order-${Date.now()}`,
+          },
+          return_url: `${import.meta.env.VITE_APP_URL}${paths.eCommerce.payment.success}`,
+          cancel_url: `${import.meta.env.VITE_APP_URL}${paths.eCommerce.payment.failed}`,
+        };
 
-      const order = await createNewOrder(chapaOrderData);
-      window.location.href = order.checkout_url;
-
+        const order = await createNewOrder(chapaOrderData);
+        localStorage.setItem('pendingOrder', JSON.stringify({
+          orderId: order.id,
+          items: checkout.items,
+          total: checkout.total,
+          billing: checkout.billing,
+        }));
+        
+        window.location.href = order.checkout_url;
       } else if (data.payment === 'cash') {
-      const cashOrderData = {
-        ...baseOrder,
-        payment: {
-          method: data.payment as PaymentMethod,
-          amount: checkout.total,
-          currency: 'ETB',
-          status: 'pending'
-        },
-        created_at: new Date().toISOString()
-      };
+        const cashOrderData = {
+          ...baseOrder,
+          payment: {
+            method: data.payment as PaymentMethod,
+            amount: checkout.total,
+            currency: 'ETB',
+            status: 'pending'
+          },
+          created_at: new Date().toISOString()
+        };
 
-      const order = await createNewOrder(cashOrderData);
-      toast.success('Order placed successfully!');
-      checkout.onNextStep();
-      checkout.onReset();
-    
+        const order = await createNewOrder(cashOrderData);
+        toast.success('Order placed successfully!');
+        checkout.onNextStep();
+        checkout.onReset();
+      
       }
       checkout.onNextStep();
       cartDispatch({ type: 'RESET' });
