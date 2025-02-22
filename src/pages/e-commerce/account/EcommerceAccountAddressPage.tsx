@@ -8,7 +8,7 @@ export default function EcommerceAccountAddressPage() {
   return (
     <>
       <Helmet>
-        <title>Account: Address Book | Koricha</title>
+        <title>Account: Address Book | Korecha</title>
       </Helmet>
 
       <EcommerceAccountAddressView />

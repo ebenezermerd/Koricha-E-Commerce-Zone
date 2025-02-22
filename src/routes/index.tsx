@@ -170,7 +170,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        { path: "payment", element: <PaymentPage /> },
+        
         {
           path: "auth",
           children: [

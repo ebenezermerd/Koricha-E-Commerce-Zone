@@ -92,7 +92,13 @@
     "tiffany_&_co.": "Tiffany & Co",
     "levi's": "Levi's",
     "polo_ralph_lauren": "Polo Ralph Lauren"  
-  }
+  },
 
+  "empty": {
+    "category": "No products in this category",
+    "category_description": "We couldn't find any products in this category",
+    "products": "No products found",
+    "products_description": "Try adjusting your filters to find what you're looking for"
+  }
 
 } 

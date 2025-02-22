@@ -36,6 +36,7 @@ import {
   EcommerceAccountOrdersTableToolbar,
 } from '../account/orders';
 import { IOrder, OrderStatus } from 'src/types/order';
+import OrderDetailsCard from '../account/orders/OrderDetailsCard';
 
 // ----------------------------------------------------------------------
 
@@ -48,10 +49,10 @@ const STATUS_OPTIONS = {
 } as const;
 
 export const TABLE_HEAD = [
-  { id: 'orderNumber', label: 'Order ID' },
-  { id: 'item', label: 'Item' },
+  { id: 'orderNumber', label: 'Order ID'},
+  { id: 'item', label: 'Item' , width: 120},
   { id: 'deliveryDate', label: 'Delivery date', width: 160 },
-  { id: 'price', label: 'Price', width: 100 },
+  { id: 'price', label: 'Price', width: 120 },
   { id: 'status', label: 'Status', width: 100 },
   { id: '' },
 ];
@@ -67,49 +68,43 @@ export default function EcommerceAccountOrdersPage() {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const { myOrders, myOrdersLoading, myOrdersError } = useOrders();
+  const { 
+    orders, 
+    pagination, 
+    isLoading, 
+    error: ordersError, 
+    mutate: mutateOrders 
+  } = useOrders();
 
-  // Add debugging
-  console.log('Orders View State:', {
-    myOrders,
-    myOrdersLoading,
-    myOrdersError,
-    currentTab: tab,
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+    const status = STATUS_OPTIONS[tab as keyof typeof STATUS_OPTIONS];
+    return status === 'all' 
+      ? orders 
+      : orders.filter((order: IOrder) => order.status === status);
+  }, [orders, tab]);
+
+  console.log('Orders data:', {
+    rawOrders: orders,
+    pagination,
+    loading: isLoading,
+    error: ordersError
   });
 
-  if (myOrdersError) {
-    console.error('Error loading orders:', {
-      error: myOrdersError,
-      message: myOrdersError.message,
-      response: myOrdersError.response
-    });
-    return (
-      <EmptyContent
-        title="Error loading orders"
-        description="There was an error loading your orders. Please try again later."
-        imgUrl="/assets/icons/empty/ic_error.svg"
-      />
-    );
-  }
-
-  if (myOrdersLoading) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
 
-  const filteredOrders = useMemo(() => {
-    if (!myOrders || !Array.isArray(myOrders)) {
-      console.log('No orders or invalid format:', myOrders);
-      return [];
-    }
-    
-    const status = STATUS_OPTIONS[tab as keyof typeof STATUS_OPTIONS];
-    
-    if (status === 'all') {
-      return myOrders;
-    }
-    
-    return myOrders.filter((order) => order.status === status);
-  }, [myOrders, tab]);
+  if (ordersError) {
+    return (
+      <EmptyContent
+        title="Error loading orders"
+        description={ordersError.message || 'Failed to load orders'}
+        imgUrl="/assets/icons/empty/ic_error.svg"
+        sx={{ py: 10 }}
+      />
+    );
+  }
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -127,7 +122,7 @@ export default function EcommerceAccountOrdersPage() {
 
   const handleSelectAllRows = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = filteredOrders.map((n) => n.id);
+      const newSelected = filteredOrders.map((n: IOrder) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -137,19 +132,13 @@ export default function EcommerceAccountOrdersPage() {
   const handleSelectRow = (id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];
-
+    
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = [id];
+    } else {
+      newSelected = [];
     }
+    
     setSelected(newSelected);
   };
 
@@ -240,7 +229,7 @@ export default function EcommerceAccountOrdersPage() {
                   <TableBody>
                     {stableSort(filteredOrders, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
+                      .map((row: IOrder) => (
                         <EcommerceAccountOrdersTableRow
                           key={row.id}
                           row={row}
@@ -287,6 +276,12 @@ export default function EcommerceAccountOrdersPage() {
                 }}
               />
             </Box>
+
+            {selected.length === 1 && (
+              <OrderDetailsCard 
+                order={orders.find((order) => order.id === selected[0]) as IOrder} 
+              />
+            )}
           </>
         )}
       </Card>

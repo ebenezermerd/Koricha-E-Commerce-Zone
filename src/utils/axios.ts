@@ -135,7 +135,7 @@ export const endpoints = {
   },
   order: {
     list: '/api/orders/list',
-    myOrders: '/api/orders/my-orders',
+    myOrders: '/api/orders/user',
     details: (id: string) => `/api/orders/${id}`,
     update: (id: string) => `/api/orders/${id}`,
   },

@@ -30,7 +30,6 @@ export default function EcommerceCheckoutView() {
 
   useEffect(() => {
     if (!authenticated) {
-      // Redirect to sign in with return URL set to checkout
       const returnTo = paths.eCommerce.checkout;
       navigate(`${paths.auth.jwt.signIn}?returnTo=${encodeURIComponent(returnTo)}`);
       return;

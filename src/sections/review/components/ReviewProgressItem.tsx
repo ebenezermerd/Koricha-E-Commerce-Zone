@@ -34,14 +34,14 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
           </Stack>
 
           <LinearProgress
-            color="inherit"
+            color="primary"
             variant="determinate"
             value={(number / totals) * 100}
             sx={{
               mx: 2,
-              width: 1,
+              width: '50px',
               height: 6,
-              '&:before': { opacity: 1, bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12) },
+              '&:before': { opacity: 1, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12) },
             }}
           />
 

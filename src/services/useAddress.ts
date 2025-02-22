@@ -21,10 +21,6 @@ const getAuthHeader = () => {
   };
 };
 
-const ENDPOINTS = {
-  addresses: '/api/addresses',
-  address: (id: string) => `/api/addresses/${id}`,
-};
 
 export function useGetAddresses() {
   const { user } = useAuthContext();

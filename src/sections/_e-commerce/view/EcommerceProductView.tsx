@@ -93,13 +93,14 @@ export default function EcommerceProductView() {
             />
           </Grid>
 
-          {/* <Grid xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <ReviewEcommerce
               productId={product.id}
               ratingsNumber={product.totalRatings}
               reviewsNumber={product.totalReviews}
+              reviews={product.reviews}
             />
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     </>

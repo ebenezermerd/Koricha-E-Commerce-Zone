@@ -96,7 +96,7 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
     {
       id: _mock.id(39),
       question: 'What are the shipping costs?',
-      answer: 'Shipping costs vary based on location and delivery speed. Free shipping is available for orders over 000 ETB. You can calculate exact costs at checkout.',
+      answer: 'Shipping costs vary based on location and delivery speed. Free shipping is available for orders over 1000 ETB. You can calculate exact costs at checkout.',
     },
     {
       id: _mock.id(41),
@@ -120,43 +120,16 @@ export const SUPPORT_FAQS: Record<string, FaqItem[]> = {
       question: 'Are all products authentic?',
       answer: 'Yes, we only sell authentic products sourced directly from manufacturers or authorized distributors. Each product comes with a guarantee of authenticity.',
     },
-    {
-      id: _mock.id(44),
-      question: 'What if the product is out of stock?',
-      answer: 'You can click "Notify Me" on out-of-stock items to receive an email when they\'re available. We regularly restock popular items.',
-    },
-    {
-      id: _mock.id(45),
-      question: 'Do products come with warranty?',
-      answer: 'Most products include manufacturer warranties. Warranty details are listed on product pages. We also offer extended warranty options for eligible items.',
-    },
-    {
-      id: _mock.id(46),
-      question: 'Can I request product customization?',
-      answer: 'Some products offer customization options. Look for the "Customize" button on eligible product pages. Custom orders may take longer to process.',
-    }
+
   ],
   'Return & Refund': [
-    {
-      id: _mock.id(3),
-      question: 'What is the return and refund policy?',
-      answer: 'We offer a 30-day return policy for most items. Products must be unused and in original packaging. Once we receive the return, refunds are processed within 5-7 business days.',
-    },
+
     {
       id: _mock.id(28),
       question: 'How long do I have to return an item?',
       answer: 'You have 30 days from the date of delivery to initiate a return. The item must be unused, in its original packaging, and include all accessories and documentation.',
     },
-    {
-      id: _mock.id(29),
-      question: 'How do I start a return?',
-      answer: 'To start a return, log into your account, go to "Order History", select the item you want to return, and click "Return Item". Follow the prompts to print your return label and shipping instructions.',
-    },
-    {
-      id: _mock.id(30),
-      question: 'When will I receive my refund?',
-      answer: 'Once we receive and inspect your return, we\'ll process your refund within 5-7 business days. The time it takes for the money to appear in your account depends on your payment method and financial institution.',
-    }
+ 
   ],
   Assurances: [
     {

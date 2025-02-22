@@ -44,16 +44,22 @@ import { initReactI18next } from 'react-i18next';
 import { i18nOptions, fallbackLng } from './src/locales/config-locales';
 import { useEffect } from 'react';
 import { localStorageGetItem } from './src/utils/storage-available';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 // ----------------------------------------------------------------------
 const AuthProvider = JwtAuthProvider;
 
 // Initialize i18next before the App component
 i18next
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     ...i18nOptions(fallbackLng),
-    load: 'languageOnly'
+    load: 'languageOnly',
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
+    }
   });
 
 export default function App() {
@@ -62,9 +68,10 @@ export default function App() {
     if (savedLang) {
       document.documentElement.lang = savedLang;
       document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+      i18next.changeLanguage(savedLang).catch(console.error);
     }
   }, []);
-
+  
   return (
     <I18nextProvider i18n={i18next}>
       <I18nLocalizationProvider>

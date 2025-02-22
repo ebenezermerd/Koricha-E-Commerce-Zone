@@ -109,12 +109,12 @@ export default function SupportNav({
           Always support whenever you need (24/7).
         </Typography>
 
-        <Stack spacing={2}>
+        <Stack spacing={2} sx={{ width: '260px' }}>
           <StyledContactButton>
             <Iconify icon="carbon:email" width={24} />
             <Typography variant="subtitle2">Email
               <Box component="span" sx={{ color: 'primary.main', pl: 1 }}>
-                support@koricha.com
+                support@Korecha.com
               </Box>
             </Typography>
           </StyledContactButton>
@@ -125,7 +125,7 @@ export default function SupportNav({
             <Typography variant="subtitle2">
               {`Call `}
               <Box component="span" sx={{ color: 'primary.main' }}>
-                552-917-1454
+                +251 922 49 6959
               </Box>
             </Typography>
           </StyledContactButton>

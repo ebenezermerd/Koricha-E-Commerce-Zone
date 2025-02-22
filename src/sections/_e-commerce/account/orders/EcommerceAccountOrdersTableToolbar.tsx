@@ -34,7 +34,7 @@ export default function EcommerceAccountOrdersTableToolbar({
         height: 58,
         borderRadius: 1,
         position: 'absolute',
-        bgcolor: 'text.primary',
+        bgcolor: 'primary.main',
         color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
       }}
     >
@@ -42,6 +42,12 @@ export default function EcommerceAccountOrdersTableToolbar({
         indeterminate={numSelected > 0 && numSelected < rowCount}
         checked={rowCount > 0 && numSelected === rowCount}
         onChange={onSelectAllRows}
+        sx={{
+          color: 'white',
+          '&.Mui-checked': {
+            color: 'white',
+          },
+        }}
         inputProps={{
           'aria-label': 'select all desserts',
         }}
@@ -51,11 +57,7 @@ export default function EcommerceAccountOrdersTableToolbar({
         {numSelected} selected
       </Typography>
 
-      <Tooltip title="Delete">
-        <IconButton color="inherit">
-          <Iconify icon="carbon:trash-can" />
-        </IconButton>
-      </Tooltip>
+      
     </Stack>
   );
 }

@@ -26,11 +26,7 @@ const fetcher = async (url: string) => {
 // Create review mutation
 const createReview = async (url: string, { arg }: { arg: IReviewPayload }) => {
   try {
-    const response = await axios.post(url, arg, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-      }
-    });
+    const response = await axios.post(url, arg);
     return response.data.review as IProductReviewProps;
   } catch (error) {
     if (error.response?.status === 401) {
@@ -78,7 +74,7 @@ export function useGetReviews(productId?: string) {
 }
 
 export function useReviewActions() {
-  const { authenticated } = useAuthContext();
+  const { authenticated, user } = useAuthContext();
 
   const { trigger: createTrigger, isMutating: isCreating } = useSWRMutation(
     endpoints.reviews.create,
@@ -101,7 +97,7 @@ export function useReviewActions() {
     }
 
     try {
-      const result = await createTrigger(reviewData);
+      const result = await createTrigger({ ...reviewData, user_id: user?.id });
       return result;
     } catch (error) {
       throw error;

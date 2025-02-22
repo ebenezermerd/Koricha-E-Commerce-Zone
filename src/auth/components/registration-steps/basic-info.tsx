@@ -10,21 +10,21 @@ export function BasicInfoStep() {
         <RHFTextField
           name="firstName"
           label="First name"
-          placeholder="Enter first name"
+          placeholder="Enter your first name"
           InputLabelProps={{ shrink: true }}
         />
 
         <RHFTextField
           name="lastName"
           label="Last name"
-          placeholder="Enter last name"
+          placeholder="Enter your last name"
           InputLabelProps={{ shrink: true }}
         />
       </Box>
 
       <RHFTextField
         name="email"
-        label="Email address"
+        label="Enter your email address"
         placeholder="Enter email address"
         InputLabelProps={{ shrink: true }}
       />
@@ -32,14 +32,14 @@ export function BasicInfoStep() {
       <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
         <RHFTextField
           name="phone"
-          label="Phone"
+          label="Enter your phone number"
           placeholder="Enter phone number"
           InputLabelProps={{ shrink: true }}
         />
 
         <RHFSelect
           name="sex"
-          label="Sex"
+          label="Select your gender"
           InputLabelProps={{ shrink: true }}
         >
           <MenuItem value="male">Male</MenuItem>
@@ -49,7 +49,7 @@ export function BasicInfoStep() {
 
       <RHFTextField
         name="address"
-        label="Address"
+        label="Enter your address with more details to help us find you"
         placeholder="Enter your address"
         multiline
         rows={3}

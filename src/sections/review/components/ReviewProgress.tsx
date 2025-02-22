@@ -5,26 +5,23 @@ import ReviewProgressItem from './ReviewProgressItem';
 
 // ----------------------------------------------------------------------
 
-const RATINGS = [
-  { value: '5start', number: 5212 },
-  { value: '4start', number: 2442 },
-  { value: '3start', number: 523 },
-  { value: '2start', number: 423 },
-  { value: '1start', number: 80 },
-];
+type ReviewProgressProps = {
+  ratings: {
+    rating: number;
+    count: number;
+  }[];
+};
 
 // ----------------------------------------------------------------------
 
-export default function ReviewProgress({ ...other }: StackProps) {
-  const totals = RATINGS.map((rating) => rating.number).reduce(
-    (accumulator: number, curr: number) => accumulator + curr
-  );
+export default function ReviewProgress({ ratings, ...other }: ReviewProgressProps & StackProps) {
+  const totals = ratings.reduce((accumulator, curr) => accumulator + curr.count, 0);
 
   return (
     <RadioGroup>
       <Stack spacing={2} {...other}>
-        {RATINGS.map((rating, index) => (
-          <ReviewProgressItem key={rating.value} rating={rating} index={index} totals={totals} />
+        {ratings.map((rating, index) => (
+          <ReviewProgressItem key={rating.rating} rating={{ value: `${rating.rating}star`, number: rating.count }} index={index} totals={totals} />
         ))}
       </Stack>
     </RadioGroup>

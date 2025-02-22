@@ -4,6 +4,7 @@ import { Stack, StackProps } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useTranslate } from 'src/locales';
 
+
 // ----------------------------------------------------------------------
 
 interface Props extends StackProps {
@@ -27,7 +28,7 @@ export default function EcommerceFilterCategory({
           key={option}
           direction="row"
           alignItems="center"
-          onClick={() => onChangeCategories(option)}
+          onClick={() => onChangeCategories(filterCategories === option ? '' : option)}
           sx={{
             typography: 'body2',
             cursor: 'pointer',

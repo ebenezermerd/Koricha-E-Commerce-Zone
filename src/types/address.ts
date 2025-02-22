@@ -1,9 +1,9 @@
 export type IAddressItem = {
     id?: string;
-    name: string;
+    name?: string;
     firstName?: string;
     lastName?: string;
-    email: string;
+    email?: string;
     city?: string;
     state?: string;
     country?: string;

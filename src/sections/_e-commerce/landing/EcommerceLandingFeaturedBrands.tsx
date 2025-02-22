@@ -32,20 +32,19 @@ export default function EcommerceLandingFeaturedBrands() {
   // Group products by brand and get top brands
   const topBrands = products
     ? Object.entries(
-        products.reduce((acc: Record<string, { products: any[]; totalSales: number; logo: string; description: string }>, product) => {
+        products.reduce((acc: Record<string, { products: any[]; totalSales: number; description: string }>, product) => {
           const brand = product.brand || 'Other';
           if (!acc[brand.name]) {
             acc[brand.name] = {
               products: [],
               totalSales: 0,
-              logo: (product.brand.logo || getBrandIcon(brand.name)) as string,
               description: product.brand.description || getDefaultBrandDescription(brand.description),
             };
           }
           acc[brand.name].products.push(product);
           acc[brand.name].totalSales += product.totalSold || 0;
           return acc;
-        }, {} as Record<string, { products: any[]; totalSales: number; logo: any; description: string }>)
+        }, {} as Record<string, { products: any[]; totalSales: number; description: string }>)
       )
         .sort(([, a], [, b]) => b.totalSales - a.totalSales)
         .slice(0, 1)
@@ -94,7 +93,6 @@ export default function EcommerceLandingFeaturedBrands() {
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <BrandInfo
-            logo={brandData.logo}
             name={featuredBrand}
             description={brandData.description}
             path={`/brand/${featuredBrand.toLowerCase()}`}
@@ -145,13 +143,11 @@ interface BrandInfoProps extends StackProps {
   name: string;
   path: string;
   description: string;
-  logo: React.ReactNode;
   totalProducts: number;
   totalSales: number;
 }
 
 function BrandInfo({ 
-  logo, 
   name, 
   description, 
   path, 
@@ -183,18 +179,16 @@ function BrandInfo({
       }}
       {...other}
     >
-      <Box
-        sx={{
-          
-          p: 2.5,
-          borderRadius: '50%',
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+      <Typography 
+        variant="h2" 
+        sx={{ 
+          mb: 1, 
+          fontWeight: 'bold', 
+          color: theme.palette.primary.main,
+          textTransform: 'uppercase',
+          letterSpacing: 0,
         }}
       >
-        {logo}
-      </Box>
-
-      <Typography variant="h5" sx={{ mb: 1 }}>
         {name}
       </Typography>
 
@@ -254,15 +248,6 @@ function BrandInfo({
 }
 
 // Helper functions
-function getBrandIcon(brand: string) {
-  const icons: Record<string, string> = {
-    Apple: 'ri:apple-fill',
-    Samsung: 'ri:samsung-fill',
-    // Add more brand icons as needed
-  };
-  return <Iconify icon={icons[brand] || 'mdi:shopping'} width={40} />;
-}
-
 function getDefaultBrandDescription(brand: string) {
   return `${brand} is a leading brand in our store, offering high-quality products and innovative solutions for our customers.`;
 }

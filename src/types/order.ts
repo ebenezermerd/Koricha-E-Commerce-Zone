@@ -15,6 +15,8 @@ export interface IOrderItem {
   quantity: number;
   subtotal: number;
   coverUrl: string;
+  image?: string;
+  cardType?: string;
 }
 
 export interface IOrderShippingAddress {
@@ -27,6 +29,8 @@ export interface IOrderPayment {
   method: string;
   status: string;
   amount: number;
+  cardType?: string;
+  tx_ref?: string;
   txRef?: string;
 }
 
@@ -34,10 +38,13 @@ export interface IOrderDelivery {
   trackingNumber: string;
   status: string;
   deliveredAt?: Date;
+  shipBy?: string;
+  speedy?: string;
 }
 
 export interface IOrderHistory {
   status: string;
+  deliveryTime?: string;
   timeline: Array<{
     title: string;
     time: string;

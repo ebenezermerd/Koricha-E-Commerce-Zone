@@ -55,7 +55,7 @@ export function useGetProducts() {
 }
 
 export function useGetProduct(productId: string) {
-  const { data, isLoading, error, isValidating } = useSWR<MinimalProductResponse>(
+  const { data, isLoading, error, isValidating, mutate } = useSWR<MinimalProductResponse>(
     productId ? `${endpoints.product.details}?productId=${productId}` : null,
     fetcher,
     swrOptions
@@ -67,6 +67,7 @@ export function useGetProduct(productId: string) {
       productLoading: isLoading,
       productError: error,
       productValidating: isValidating,
+      revalidateProduct: mutate,
     }),
     [data?.product, error, isLoading, isValidating]
   );

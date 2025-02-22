@@ -1,89 +1,69 @@
 import useSWR from 'swr';
-import { useMemo } from 'react';
-import { endpoints } from 'src/utils/axios';
+import { useCallback, useMemo } from 'react';
+import { API_ENDPOINTS } from 'src/utils/endpoints';
+import axios , { endpoints } from 'src/utils/axios';
+import { useAuthContext } from 'src/auth/hooks';
+import { STORAGE_KEY } from 'src/auth/context/jwt/constant';
 import { IOrder } from 'src/types/order';
-import axios from 'src/utils/axios';
+import { useSWRConfig } from 'swr';
+import { mapOrder } from 'src/utils/map-order';
 
 console.log('My Orders endpoint:', endpoints.order.myOrders);
 
+const getAuthHeader = () => {
+  const token = sessionStorage.getItem(STORAGE_KEY);
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 export function useOrders() {
-  const {
-    data: orders,
-    isLoading: ordersLoading,
-    error: ordersError,
-    mutate: mutateOrders,
-  } = useSWR(endpoints.order.list);
+  const { user } = useAuthContext();
+  const { mutate: globalMutate } = useSWRConfig();
 
-  const {
-    data: myOrdersData,
-    isLoading: myOrdersLoading,
-    error: myOrdersError,
-    mutate: mutateMyOrders
-  } = useSWR(endpoints.order.myOrders, {
-    onSuccess: (data) => {
-      console.log('My Orders response:', {
-        data,
-        endpoint: endpoints.order.myOrders,
-        hasOrders: data?.orders?.length > 0
-      });
-    },
-    onError: (error) => {
-      console.error('My Orders error:', {
-        error,
-        message: error.message,
-        endpoint: endpoints.order.myOrders,
-        status: error.response?.status,
-        responseData: error.response?.data
-      });
-    }
-  });
-
-  const ordersList = useMemo(
-    () => (orders?.orders as IOrder[]) || [],
-    [orders]
+  const ordersEndpoint = useMemo(
+    () => (user?.id ? `${endpoints.order.myOrders}` : null),
+    [user?.id]
   );
 
-  const myOrdersList = useMemo(
-    () => {
-      console.log('Processing myOrdersData:', myOrdersData);
-      const orders = (myOrdersData?.orders as IOrder[]) || [];
-      console.log('Processed orders:', orders);
-      return orders;
+  const {
+    data: responseData,
+    isLoading,
+    error,
+    mutate,
+  } = useSWR<{ orders: IOrder[]; pagination?: any }>(
+    ordersEndpoint,
+    async (url: string) => {
+      const response = await axios.get(url, getAuthHeader());
+      return {
+        ...response.data,
+        orders: response.data.orders?.map(mapOrder) || []
+      };
     },
-    [myOrdersData]
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
   );
 
-  const getOrder = async (id: string) => {
-    try {
-      const response = await axios.get(endpoints.order.details(id));
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching order:', error);
-      throw error;
-    }
-  };
+  const orders = useMemo(() => responseData?.orders || [], [responseData]);
+  const pagination = useMemo(() => responseData?.pagination || {}, [responseData]);
 
-  const updateOrderStatus = async (id: string, status: string) => {
-    try {
-      const response = await axios.put(endpoints.order.update(id), { status });
-      await mutateOrders();
-      return response.data;
-    } catch (error) {
-      console.error('Error updating order status:', error);
-      throw error;
-    }
-  };
+  const mutateOrders = useCallback(
+    async (data: IOrder[]) => {
+      await mutate({ ...responseData, orders: data }, false);
+    },
+    [mutate, responseData]
+  );
 
   return {
-    orders: ordersList,
-    myOrders: myOrdersList,
-    ordersLoading,
-    ordersError,
-    myOrdersLoading,
-    myOrdersError,
-    getOrder,
-    updateOrderStatus,
-    mutateOrders,
-    mutateMyOrders,
+    orders,
+    pagination,
+    isLoading,
+    error,
+    mutate: mutateOrders,
   };
 } 

@@ -1,9 +1,11 @@
 // @mui
-import { Pagination, Box, CircularProgress } from '@mui/material';
+import { Pagination, Box, CircularProgress, Stack, Card, CardContent, Typography, Rating } from '@mui/material';
 // types
 import { IProductReviewProps } from 'src/types/review';
 //
 import ReviewItem from './ReviewItem';
+import { EmptyContent } from 'src/components/empty-content';
+import LoadingScreen  from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -20,27 +22,23 @@ type Props = {
 
 export default function ReviewList({ reviews, loading, pagination }: Props) {
   if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingScreen />;
+  }
+
+  if (!reviews.length) {
+    return <EmptyContent title="No Reviews Yet" description="Be the first to review this product!" />;
   }
 
   return (
     <Box sx={{ pt: 5 }}>
       {reviews.map((review) => (
-        <ReviewItem
-          key={review.id}
-          name={review.name}
-          avatarUrl={review.avatarUrl}
-          postedAt={review.postedAt}
-          comment={review.comment}
-          rating={review.rating}
-          helpful={review.helpful}
-          isPurchased={review.isPurchased}
-          attachments={review.attachments}
-        />
+        <Card key={review.id} sx={{ mb: 2 }}>
+          <CardContent>
+            <Typography variant="h6">{review.name}</Typography>
+            <Rating value={review.rating} readOnly />
+            <Typography variant="body2">{review.comment}</Typography>
+          </CardContent>
+        </Card>
       ))}
 
       {pagination && (

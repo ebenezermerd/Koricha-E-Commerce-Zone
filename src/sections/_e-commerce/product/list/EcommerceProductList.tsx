@@ -9,6 +9,9 @@ import {
   EcommerceProductViewListItemSkeleton,
   EcommerceProductViewGridItemSkeleton,
 } from '../item';
+import { useTranslate } from 'src/locales';
+import { EmptyContent } from 'src/components/empty-content';
+
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +82,25 @@ const filterProducts = (products: IProductItemProps[], filters: IProductFiltersP
 };
 
 export default function EcommerceProductList({ loading, viewMode, products, filters }: Props) {
+  const { t } = useTranslate('product');
   const filteredProducts = filterProducts(products, filters);
+
+  if (!loading && filteredProducts.length === 0) {
+    const categoryName = filters.filterCategories 
+      ? t(`categories.${filters.filterCategories.toLowerCase().replace(/\s+/g, '_')}`)
+      : null;
+
+    return (
+      <Box sx={{ py: 5 }}>
+        <EmptyContent
+          title={categoryName ? t('empty.category', { category: categoryName }) : t('empty.products')}
+          description={categoryName ? t('empty.category_description') : t('empty.products_description')}
+          imgUrl="/assets/icons/empty/ic_product.svg"
+          sx={{ py: 10 }}
+        />
+      </Box>
+    );
+  }
 
   return (
     <>

@@ -3,13 +3,14 @@
 import { IDateValue } from "./product";
 
 // Type for creating/updating reviews (matches backend requirements)
-export type IReviewPayload = {
-  product_id: string;
-  rating: number;
+export interface IReviewPayload {
   comment: string;
   name: string;
+  product_id: string;
+  rating: number;
+  user_id: string;
   attachments?: string[];
-};
+}
 
 // Type for review response from backend
 export type IProductReviewProps = {
@@ -23,6 +24,7 @@ export type IProductReviewProps = {
   isPurchased: boolean;
   attachments: string[];
   product_id: string;
+  user_id: string;
 };
 
 // Type for review response meta data

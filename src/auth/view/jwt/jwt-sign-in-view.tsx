@@ -83,7 +83,6 @@ export function JwtSignInView() {
 
       // Check if email needs verification
       if (response.data?.status === 'verification_required') {
-        // Store email for verification page
         sessionStorage.setItem('verification_email', data.email);
         router.push(paths.auth.jwt.verify);
         return;
@@ -91,7 +90,8 @@ export function JwtSignInView() {
 
       await checkUserSession?.();
 
-      if (returnTo && returnTo === paths.eCommerce.checkout) {
+      // Redirect to the original page if returnTo is set
+      if (returnTo) {
         router.push(returnTo);
       } else {
         router.push(paths.eCommerce.landing);

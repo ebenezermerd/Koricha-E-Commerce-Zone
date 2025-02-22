@@ -42,8 +42,8 @@ export default defineConfig({
         ]
       },
       manifest: {
-        name: 'Koricha E-commerce',
-        short_name: 'Koricha',
+        name: 'Korecha E-commerce',
+        short_name: 'Korecha',
         description: 'Modern E-commerce Platform',
         theme_color: '#000000',
         background_color: '#ffffff',

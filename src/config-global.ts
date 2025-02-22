@@ -53,7 +53,7 @@ export type ConfigValue = {
 // ----------------------------------------------------------------------
 
 export const CONFIG: ConfigValue = {
-  appName: 'Koricha E-commerce',
+  appName: 'Korecha E-commerce',
   appVersion: packageJson.version,
   serverUrl: import.meta.env.VITE_SERVER_URL || '',
   assetsDir: import.meta.env.VITE_ASSETS_DIR || '',

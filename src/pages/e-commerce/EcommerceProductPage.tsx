@@ -8,7 +8,7 @@ export default function EcommerceProductPage() {
   return (
     <>
       <Helmet>
-        <title>Apple iPhone | Korecha</title>
+        <title>Product Details | Korecha</title>
       </Helmet>
 
       <EcommerceProductView />

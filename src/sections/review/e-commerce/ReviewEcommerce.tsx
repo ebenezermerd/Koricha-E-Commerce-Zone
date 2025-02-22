@@ -8,6 +8,7 @@ import Iconify from 'src/components/iconify';
 import ReviewNewForm from '../components/ReviewNewForm';
 import ReviewList from './ReviewList';
 import ReviewSummary from './ReviewSummary';
+import { IProductReviewProps } from 'types/review';
 
 // ----------------------------------------------------------------------
 
@@ -15,6 +16,7 @@ interface Props extends CardProps {
   productId: string;
   ratingsNumber: number;
   reviewsNumber: number;
+  reviews: IProductReviewProps[];
   onOpenForm?: VoidFunction;
 }
 
@@ -22,12 +24,13 @@ export default function ReviewEcommerce({
   productId,
   ratingsNumber = 0,
   reviewsNumber = 0,
+  reviews,
   onOpenForm,
   ...other 
 }: Props) {
   const [openForm, setOpenForm] = useState(false);
-
-  const { reviews, meta, reviewsLoading, revalidateReviews } = useGetReviews(productId);
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 2; // Number of reviews to display per page
 
   const handleOpenForm = () => {
     setOpenForm(true);
@@ -38,8 +41,15 @@ export default function ReviewEcommerce({
 
   const handleReviewSubmitted = () => {
     setOpenForm(false);
-    revalidateReviews();
   };
+
+  // Calculate the current reviews to display
+  const indexOfLastReview = currentPage * reviewsPerPage;
+  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <Card {...other}>
@@ -47,17 +57,36 @@ export default function ReviewEcommerce({
 
       <ReviewSummary
         ratingsNumber={ratingsNumber}
+        reviews={reviews}
         reviewsNumber={reviewsNumber}
         onOpenForm={handleOpenForm}
       />
 
       <Container>
         <ReviewList 
-          reviews={reviews} 
-          loading={reviewsLoading}
-          pagination={meta}
+          reviews={currentReviews} 
+          loading={false}
         />
       </Container>
+
+      {/* Pagination Controls */}
+      <Stack spacing={2} alignItems="center" sx={{ my: 2 }}>
+        <Button 
+          variant="outlined" 
+          onClick={() => paginate(currentPage - 1)} 
+          disabled={currentPage === 1}
+        >
+          Previous
+        </Button>
+        <Typography variant="body2">Page {currentPage}</Typography>
+        <Button 
+          variant="outlined" 
+          onClick={() => paginate(currentPage + 1)} 
+          disabled={indexOfLastReview >= reviews.length}
+        >
+          Next
+        </Button>
+      </Stack>
 
       <ReviewNewForm 
         open={openForm} 

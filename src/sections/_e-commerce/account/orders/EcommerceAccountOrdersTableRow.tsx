@@ -47,7 +47,12 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
 
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow 
+        hover 
+        selected={selected}
+        onClick={onSelectRow}
+        sx={{ cursor: 'pointer' }}
+      >
         <TableCell padding="checkbox">
           <Checkbox color="primary" checked={selected} onClick={onSelectRow} />
         </TableCell>
@@ -60,7 +65,7 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
           <InputBase value={row.items[0]?.name || ''} sx={inputStyles} />
         </TableCell>
 
-        <TableCell>{fDate(row.delivery?.deliveredAt || '')}</TableCell>
+        <TableCell>{fDate(row.history?.deliveryTime || '')}</TableCell>
 
         <TableCell>
           <InputBase value={fCurrency(row.totalAmount)} sx={inputStyles} />
@@ -85,31 +90,6 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
           </IconButton>
         </TableCell>
       </TableRow>
-
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: { p: 1, width: 160 },
-        }}
-      >
-        <MenuItem onClick={handleClose}>
-          <Iconify icon="carbon:view" sx={{ mr: 1 }} /> View
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <Iconify icon="carbon:edit" sx={{ mr: 1 }} /> Edit
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed', mt: 0.5 }} />
-
-        <MenuItem onClick={handleClose} sx={{ color: 'error.main' }}>
-          <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} /> Delete
-        </MenuItem>
-      </Popover>
     </>
   );
 }

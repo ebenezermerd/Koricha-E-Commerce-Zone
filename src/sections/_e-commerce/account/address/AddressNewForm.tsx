@@ -39,38 +39,10 @@ const ADDRESS_TYPES = [
 ];
 
 export const AddressSchema = zod.object({
-  name: zod.string().min(1, 'Name is required'),
-  phoneNumber: zod.string().refine((val) => {
-    if (!val) return true;
-    
-    // Remove any spaces or special characters
-    const cleaned = val.replace(/\s+/g, '');
-
-    // Check for international format (+251)
-    if (cleaned.startsWith('+251')) {
-      return cleaned.length === 13 && /^\+251[79]\d{8}$/.test(cleaned);
-    }
-    
-    // Check for 10 digit format (09/07)
-    if (cleaned.length === 10) {
-      return /^0[79]\d{8}$/.test(cleaned);
-    }
-    
-    // Check for 9 digit format (9/7)
-    if (cleaned.length === 9) {
-      return /^[79]\d{8}$/.test(cleaned);
-    }
-
-    return false;
-  }, {
-    message: 'Phone number must be either:\n- 10 digits starting with 09/07\n- 9 digits starting with 9/7\n- International format +251 followed by 9 digits',
-  }),
-  email: zod.string().email('Must be a valid email'),
   address: zod.string().min(1, 'Address is required'),
   city: zod.string().min(1, 'City is required'),
   state: zod.string().min(1, 'State is required'),
   country: zod.string().min(1, 'Country is required'),
-  zipCode: zod.string().optional(),
   primary: zod.boolean().default(false),
   addressType: zod.enum(['Home', 'Office', 'Other']).default('Home'),
 });
@@ -84,14 +56,10 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
   const isEdit = Boolean(address);
   const { addAddress } = useAddAddress();
   const defaultValues: FormValuesProps = {
-    name: '',
-    email: '',
-    phoneNumber: '',
     address: '',
     city: '',
     state: '',
     country: '',
-    zipCode: '',
     primary: false,
     addressType: 'Home',
   };
@@ -111,17 +79,13 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
     if (address) {
       try {
         const addressParts = address.fullAddress?.split(', ') || [];
-        const [streetAddress, city, state, country, zipCode] = addressParts;
+        const [streetAddress, city, state, country] = addressParts;
 
         reset({
-          name: address.name || '',
-          email: address.email || '',
-          phoneNumber: address.phoneNumber || '',
           address: streetAddress || '',
           city: city || '',
           state: state || '',
           country: country || '',
-          zipCode: zipCode || '',
           primary: address.primary || false,
           addressType: (address.addressType as 'Home' | 'Office' | 'Other') || 'Home',
         });
@@ -136,10 +100,7 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
     try {
       const addressData: IAddressItem = {
         id: address?.id,
-        name: data.name,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipCode}`,
+        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}`,
         addressType: data.addressType,
         primary: data.primary,
       };
@@ -182,32 +143,16 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
 
         <DialogContent dividers>
           <Grid container spacing={2} sx={{ pt: 1 }}>
-            <Grid xs={12} sm={6}>
-              <RHFTextField name="name" label="Full Name" />
-            </Grid>
-
-            <Grid xs={12} sm={6}>
-              <RHFTextField name="phoneNumber" label="Phone Number" />
-            </Grid>
-
             <Grid xs={12}>
-              <RHFTextField name="email" label="Email" />
+              <RHFTextField name="address" label="Write your address here with more details " />
             </Grid>
 
-            <Grid xs={12}>
-              <RHFTextField name="address" label="Address" />
-            </Grid>
-
-            <Grid xs={12} sm={4}>
+            <Grid xs={12} sm={6}>
               <RHFTextField name="city" label="City" />
             </Grid>
 
-            <Grid xs={12} sm={4}>
+            <Grid xs={12} sm={6}>
               <RHFTextField name="state" label="State/Region" />
-            </Grid>
-
-            <Grid xs={12} sm={4}>
-              <RHFTextField name="zipCode" label="Zip/Code" />
             </Grid>
 
             <Grid xs={12} sm={6}>

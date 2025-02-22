@@ -21,8 +21,6 @@ import {
   EcommerceFilterTag,
   EcommerceFilterBrand,
   EcommerceFilterPrice,
-  EcommerceFilterStock,
-  EcommerceFilterRating,
   EcommerceFilterCategory,
   EcommerceFilterGender,
   EcommerceFilterColor,
@@ -92,13 +90,6 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
     });
   };
 
-  const handleChangeRating = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onFiltersChange({
-      ...filters,
-      filterRating: (event.target as HTMLInputElement).value,
-    });
-  };
-
   const handleChangeStartPrice = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -121,12 +112,6 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
     });
   };
 
-  const handleChangeStock = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onFiltersChange({
-      ...filters,
-      filterStock: event.target.checked,
-    });
-  };
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     onFiltersChange({
@@ -201,13 +186,7 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
         />
       </Block>
 
-      <Block title={t('filters.ratings')}>
-        <EcommerceFilterRating
-          filterRating={filters.filterRating}
-          onChangeRating={handleChangeRating}
-          sx={{ mt: 2 }}
-        />
-      </Block>
+      
 
       <Block title={t('filters.tags')}>
         <EcommerceFilterTag
@@ -216,11 +195,6 @@ export default function EcommerceFilters({ mobileOpen, onMobileClose, filters, o
           onChangeTag={handleChangeTag}
         />
       </Block>
-
-      <EcommerceFilterStock
-        filterStock={filters.filterStock}
-        onChangeStock={handleChangeStock}
-      />
 
       <Button
         fullWidth
