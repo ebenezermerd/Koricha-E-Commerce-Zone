@@ -14,6 +14,7 @@ import {
   DialogActions,
   DialogContent,
   FormHelperText,
+  Alert,
 } from '@mui/material';
 // hooks
 import { useReviewActions } from 'src/services/useReview';
@@ -23,6 +24,7 @@ import { useGetProduct } from 'src/services/useProducts';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { toast } from 'src/components/snackbar';
 import { paths } from 'src/routes/paths';
+import Iconify from 'src/components/iconify';
 import { IReviewPayload } from 'src/types/review';
 
 // ----------------------------------------------------------------------
@@ -46,7 +48,7 @@ interface Props extends DialogProps {
 
 export default function ReviewNewForm({ onClose, productId, onSubmitSuccess, open, ...other }: Props) {
   const { createNewReview, isCreating } = useReviewActions();
-  const { user } = useAuthContext();
+  const { user, authenticated } = useAuthContext();
   const { revalidateProduct } = useGetProduct(productId);
   
   const ReviewSchema = Yup.object().shape({
@@ -100,6 +102,31 @@ export default function ReviewNewForm({ onClose, productId, onSubmitSuccess, ope
 console.log(isCreating, methods.formState.isValid)
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} {...other}>
+        {!authenticated && (
+            <Alert 
+              severity="warning"
+              variant="filled"
+              icon={<Iconify icon="ic:round-warning" width={24} />}
+              sx={{
+                
+                color: 'common.white',
+                '& .MuiAlert-message': {
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  lineHeight: 0
+                }
+              }}
+            >
+              <Typography variant="subtitle2">
+                Authentication Required
+              </Typography>
+              <Typography variant="body2">
+                You need to be signed in to review this product. Please sign in to continue.
+              </Typography>
+            </Alert>
+          )}
+
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle>Write a Review</DialogTitle>
 
