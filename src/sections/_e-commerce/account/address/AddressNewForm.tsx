@@ -44,7 +44,11 @@ export const AddressSchema = zod.object({
   state: zod.string().min(1, 'State is required'),
   country: zod.string().min(1, 'Country is required'),
   primary: zod.boolean().default(false),
-  addressType: zod.enum(['Home', 'Office', 'Other']).default('Home'),
+  addressType: zod.string()
+    .transform(val => val.toLowerCase())
+    .pipe(zod.enum(['home', 'office', 'other']))
+    .transform(val => val.charAt(0).toUpperCase() + val.slice(1))
+    .default('Home'),
 });
 
 type FormValuesProps = zod.infer<typeof AddressSchema>;
@@ -87,7 +91,12 @@ export function AddressNewForm({ open, onClose, onCreate, onEdit, address }: Pro
           state: state || '',
           country: country || '',
           primary: address.primary || false,
-          addressType: (address.addressType as 'Home' | 'Office' | 'Other') || 'Home',
+          addressType: (() => {
+            const type = address.addressType?.toLowerCase();
+            return type === 'home' ? 'Home' :
+                   type === 'office' ? 'Office' :
+                   type === 'other' ? 'Other' : 'Home';
+          })(),
         });
       } catch (error) {
         console.error('Error parsing address:', error);
