@@ -1,5 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Stack, FormGroup, StackProps } from '@mui/material';
+import { useColors } from 'src/hooks/useProductFilter';
+import { useTranslate } from 'src/locales';
+import LoadingScreen from 'src/components/loading-screen';
 
 const ColorButton = styled('button')<{ color?: string; selected?: boolean }>(({ theme, color, selected }) => ({
   display: 'flex',
@@ -36,24 +39,31 @@ interface ColorOption {
 }
 
 interface Props extends StackProps {
-  options: ColorOption[];
   filterColor: string[];
   onChangeColor: (name: string) => void;
 }
 
-export default function EcommerceFilterColor({ options, filterColor, onChangeColor, ...other }: Props) {
+export default function EcommerceFilterColor({ filterColor, onChangeColor, ...other }: Props) {
+  const { colors, isLoading } = useColors();
+  const { t } = useTranslate('product');
+
+  console.log('colors reterived', colors);
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Stack {...other}>
       <FormGroup>
-        {options.map((color) => (
+        {colors.map((color: { code: string; name: string }) => (
           <ColorButton
-            key={color.name}
+            key={color.code}
             color={color.code}
-            selected={filterColor.includes(color.name)}
-            onClick={() => onChangeColor(color.name)}
+            selected={filterColor.includes(color.code)}
+            onClick={() => onChangeColor(color.code)}
           >
             <ColorDot color={color.code} />
-            {color.name}
+            {t(`colors.${color.name.toLowerCase()}`)}
           </ColorButton>
         ))}
       </FormGroup>

@@ -1,5 +1,5 @@
 // @mui
-import { Box, Stack, Pagination } from '@mui/material';
+import { Box, Stack, Pagination, Typography } from '@mui/material';
 // types
 import { IProductItemProps, IProductFiltersProps } from 'src/types/product';
 //
@@ -11,138 +11,211 @@ import {
 } from '../item';
 import { useTranslate } from 'src/locales';
 import { EmptyContent } from 'src/components/empty-content';
+import { useProductFilter, useCategories, Category } from 'src/hooks/useProductFilter';
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  products: IProductItemProps[];
   viewMode: string;
-  loading?: boolean;
   filters: IProductFiltersProps;
+  sort: string;
+  onFiltersChange: (newFilters: IProductFiltersProps) => void;
 };
 
-const filterProducts = (products: IProductItemProps[], filters: IProductFiltersProps) => {
+// Local filtering for non-category/brand filters
+const applyLocalFilters = (products: IProductItemProps[], filters: IProductFiltersProps) => {
+  if (!products) return [];
+
   return products.filter(product => {
-    // Category filter
-    if (filters.filterCategories && product.category !== filters.filterCategories) {
-      return false;
-    }
-
-    // Color filter
-    if (filters.filterColor.length && !filters.filterColor.some(color => 
-      product.colors.includes(color)
-    )) {
-      return false;
-    }
-
-    // Brand filter - safely handle null/undefined brand
-    if (filters.filterBrand.length) {
-      const productBrandName = product.brand?.name || '';
-      if (!filters.filterBrand.includes(productBrandName)) {
+    // Only apply color filter if colors are selected
+    if (filters.filterColor && filters.filterColor.length > 0) {
+      if (!filters.filterColor.some(color => product.colors.includes(color))) {
         return false;
       }
     }
 
-    // Price filter
-    if (filters.filterPrice.start > 0 || filters.filterPrice.end > 0) {
+    // Only apply price filter if either start or end is set
+    if (filters.filterPrice && (filters.filterPrice.start > 0 || filters.filterPrice.end > 0)) {
       const price = product.priceSale || product.price;
-      if (price < filters.filterPrice.start || price > filters.filterPrice.end) {
+      if (filters.filterPrice.start > 0 && price < filters.filterPrice.start) {
+        return false;
+      }
+      if (filters.filterPrice.end > 0 && price > filters.filterPrice.end) {
         return false;
       }
     }
 
-    // Gender filter - check if any selected gender matches product's genders
-    if (filters.filterGender && !product.gender.includes(filters.filterGender)) {
-      return false;
+    // Only apply gender filter if it's set
+    if (filters.filterGender && filters.filterGender !== '') {
+      if (!product.gender.includes(filters.filterGender)) {
+        return false;
+      }
     }
 
-    // Stock filter - check inventory status
-    if (filters.filterStock) {
+    // Only apply stock filter if it's true
+    if (filters.filterStock === true) {
       const inventoryStatus = product.inventoryType;
       if (inventoryStatus === 'out_of_stock' || inventoryStatus === 'discontinued') {
         return false;
       }
     }
 
-    // Rating filter
-    if (filters.filterRating && product.rating < Number(filters.filterRating)) {
-      return false;
-    }
-
-    // Tag filter - check if product has any of the selected tags
-    if (filters.filterTag.length && !filters.filterTag.some(tag => 
-      product.tags.includes(tag)
-    )) {
-      return false;
+    // Only apply rating filter if it's set
+    if (filters.filterRating && filters.filterRating !== null) {
+      if (product.rating < Number(filters.filterRating)) {
+        return false;
+      }
     }
 
     return true;
   });
 };
 
-export default function EcommerceProductList({ loading, viewMode, products, filters }: Props) {
+export default function EcommerceProductList({ viewMode, filters, sort, onFiltersChange }: Props) {
   const { t } = useTranslate('product');
-  const filteredProducts = filterProducts(products, filters);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(1);
+  const { categories: categoriesFromHook } = useCategories();
+  const { products, meta, isLoading } = useProductFilter(filters, sort, page, viewMode);
 
-  if (!loading && filteredProducts.length === 0) {
-    const categoryName = filters.filterCategories 
-      ? t(`categories.${filters.filterCategories.toLowerCase().replace(/\s+/g, '_')}`)
-      : null;
+  // Reset page when view mode changes
+  useEffect(() => {
+    setPage(1);
+  }, [viewMode]);
 
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Add debug logging to track filter application
+  useEffect(() => {
+    console.debug('Products before local filtering:', products?.length);
+    const filtered = applyLocalFilters(products, filters);
+    console.debug('Products after local filtering:', filtered.length);
+    console.debug('Applied filters:', {
+      colors: filters.filterColor?.length ?? 0 > 0,
+      price: filters.filterPrice && (filters.filterPrice.start > 0 || filters.filterPrice.end > 0),
+      gender: !!filters.filterGender,
+      stock: filters.filterStock,
+      rating: !!filters.filterRating
+    });
+  }, [products, filters]);
+
+  // Handle URL parameters and category changes...
+  useEffect(() => {
+    const categoryId = searchParams.get('category');
+    if (categoryId && (!filters.filterCategories || categoryId !== filters.filterCategories.id.toString())) {
+      const category = findCategoryById(categoriesFromHook, parseInt(categoryId));
+      if (category) {
+        onFiltersChange({
+          ...filters,
+          filterCategories: category,
+          filterBrand: [],
+        });
+      }
+    }
+  }, [searchParams, categoriesFromHook]);
+
+  // Apply remaining filters locally
+  const filteredProducts = applyLocalFilters(products, filters);
+
+  if (isLoading) {
     return (
-      <Box sx={{ py: 5 }}>
-        <EmptyContent
-          title={categoryName ? t('empty.category', { category: categoryName }) : t('empty.products')}
-          description={categoryName ? t('empty.category_description') : t('empty.products_description')}
-          imgUrl="/assets/icons/empty/ic_product.svg"
+      <Box
+        gap={3}
+        display="grid"
+        sx={{ minWidth: '800px', md: { minWidth: '1200px' }, lg: { minWidth: '1600px' }, }}
+        gridTemplateColumns={viewMode === 'grid' 
+          ? { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)', lg: 'repeat(4, 1fr)' }
+          : '1fr'
+        }
+      >
+        {[...Array(12)].map((_, index) => (
+          <Box key={index}>
+            {viewMode === 'grid' ? (
+              <EcommerceProductViewGridItemSkeleton />
+            ) : (
+              <EcommerceProductViewListItemSkeleton />
+            )}
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
+  if (!filteredProducts.length) {
+    return (
+      <Stack justifyContent="center" alignItems="center" sx={{ minHeight: '500px', minWidth: '800px', md: { minWidth: '1200px' }, lg: { minWidth: '1600px' }, }}>
+        <EmptyContent 
+          title={t('no_products_found')} 
           sx={{ py: 10 }}
         />
-      </Box>
+      </Stack>
     );
   }
 
   return (
     <>
-      {viewMode === 'grid' ? (
-        <Box
-          rowGap={4}
-          columnGap={3}
-          display="grid"
-          gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(4, 1fr)' }}
-        >
-          {(loading ? [...Array(16)] : filteredProducts).map((product, index) =>
-            product ? (
-              <EcommerceProductViewGridItem key={product.id} product={product} />
+      <Box
+        gap={3}
+        display="grid"
+        gridTemplateColumns={viewMode === 'grid' 
+          ? { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)', lg: 'repeat(4, 1fr)' }
+          : '1fr'
+        }
+      >
+        {filteredProducts.map((product) => (
+          <Box key={product.id}>
+            {viewMode === 'grid' ? (
+              <EcommerceProductViewGridItem product={product} />
             ) : (
-              <EcommerceProductViewGridItemSkeleton key={index} />
-            )
-          )}
-        </Box>
-      ) : (
-        <Stack spacing={4}>
-          {(loading ? [...Array(16)] : filteredProducts).map((product, index) =>
-            product ? (
-              <EcommerceProductViewListItem key={product.id} product={product} />
-            ) : (
-              <EcommerceProductViewListItemSkeleton key={index} />
-            )
-          )}
+              <EcommerceProductViewListItem product={product} />
+            )}
+          </Box>
+        ))}
+      </Box>
+
+      {meta && meta.total > (viewMode === 'list' ? 12 : 20) && (
+        <Stack alignItems="center" sx={{ mt: 8 }}>
+          <Pagination
+            count={Math.ceil(meta.total / (viewMode === 'list' ? 12 : 20))}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            sx={{
+              '& .MuiPagination-ul': {
+                justifyContent: 'center',
+              },
+            }}
+          />
+          <Typography variant="caption" sx={{ mt: 1, color: 'text.secondary' }}>
+            {t('showing')} {(page - 1) * (viewMode === 'list' ? 12 : 20) + 1}-
+            {Math.min(page * (viewMode === 'list' ? 12 : 20), meta.total)} {t('of')} {meta.total} {t('items')}
+          </Typography>
         </Stack>
       )}
-
-      <Pagination
-        count={Math.ceil(filteredProducts.length / 16)}
-        color="primary"
-        size="large"
-        sx={{
-          mt: 10,
-          mb: 5,
-          '& .MuiPagination-ul': {
-            justifyContent: 'center',
-          },
-        }}
-      />
     </>
   );
 }
+
+// Add this helper function to find a category by ID
+const findCategoryById = (categories: Category[], id: number): Category | null => {
+  for (const category of categories) {
+    if (category.id === id) {
+      return category;
+    }
+    if (category.children) {
+      const found = findCategoryById(category.children, id);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return null;
+};
+

@@ -6,6 +6,7 @@
     "shopNow": "Shop Now"
   },
   "categories": {
+    "products": "products",
     "title": "Categories",
     "subtitle": "Browse by Category",
     "viewAll": "View All"

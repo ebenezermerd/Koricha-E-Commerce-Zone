@@ -7,16 +7,16 @@ import { bgGradient } from 'src/utils/cssStyles';
 import { useCarousel, Carousel } from 'src/components/carousel';
 import { EcommerceProductItemHero } from '../product/item';
 import { CarouselArrowBasicButtons } from 'src/components/carousel/components/carousel-arrow-buttons';
-
+import { IProductItemProps } from 'src/types/product';
 
 export default function EcommerceLandingHero() {
   const theme = useTheme();
   const { products, productsLoading } = useGetProducts();
 
   const heroProducts = products
-    ?.filter(product => product.rating >= 4 || product.inStock > 0)
+    ?.filter((product: IProductItemProps) => product.rating >= 4 || product.inStock > 0)
     .slice(0, 4)
-    .map((product, index) => ({
+    .map((product: IProductItemProps, index: number) => ({
       id: product.id,
       title: `${product.subDescription} - ${product.name}`,
       caption: product.caption || product.subDescription || product.description.slice(0, 120),
@@ -60,7 +60,7 @@ export default function EcommerceLandingHero() {
         }}
       >
         <Carousel carousel={carousel}>
-          {heroProducts.map((product) => (
+          {heroProducts.map((product: any) => (
             <EcommerceProductItemHero key={product.id} product={product} />
           ))}
         </Carousel>

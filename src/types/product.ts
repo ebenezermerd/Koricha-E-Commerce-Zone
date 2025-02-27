@@ -1,5 +1,5 @@
 import { IProductReviewProps } from "./review";
-
+import { Category } from "src/hooks/useProductFilter";
 // ----------------------------------------------------------------------
 
 export type IProductItemHeroProps = {
@@ -13,12 +13,13 @@ export type IProductItemHeroProps = {
 export type IDateValue = string | number | null;
 
 export type IProductItemProps = {
+  coverImg: any;
   id: string;
   name: string;
   label: string;
   caption: string;
   description: string;
-  coverImg: string;
+  coverUrl: string;
   category: string;
   sold: number;
   price: number;
@@ -73,15 +74,15 @@ export type IProductItemProps = {
 };
 
 export type IProductFiltersProps = {
-  filterTag: string[];
-  filterStock: boolean;
-  filterBrand: string[];
-  filterShipping: string[];
-  filterCategories: string;
-  filterRating: string | null;
-  filterGender: string;
-  filterColor: string[];
-  filterPrice: {
+  filterTag?: string[];
+  filterStock?: boolean;
+  filterBrand: { id: string; name: string; }[];
+  filterShipping?: string[];
+  filterCategories: Category | null;
+  filterRating?: string | null;
+  filterGender?: string;
+  filterColor?: string[];
+  filterPrice?: {
     start: number;
     end: number;
   };

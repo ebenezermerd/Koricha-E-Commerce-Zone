@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Stack, Button, Rating, Typography, TextField, Divider, StackProps, Grid } from '@mui/material';
+import { Stack, Button, Rating, Typography, TextField, Divider, StackProps, Grid, Box } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 // routes
@@ -14,23 +14,8 @@ import { ProductColorPicker, ProductOptionPicker, ProductPrice } from '../../com
 import { IncrementerButton } from 'src/sections/_e-commerce/components/incrementer-button';
 import { useCart } from 'src/contexts/cart-context';
 import { useWishlist } from 'src/contexts/wishlist-context';
-
-
-// ----------------------------------------------------------------------
-
-const COLOR_OPTIONS = [
-  { label: '#FA541C', value: 'red' },
-  { label: '#754FFE', value: 'violet' },
-  { label: '#00B8D9', value: 'cyan' },
-  { label: '#36B37E', value: 'green' },
-];
-
-const MEMORY_OPTIONS = [
-  { label: '128GB', value: '128gb' },
-  { label: '256GB', value: '256gb' },
-  { label: '512GB', value: '512gb' },
-  { label: '1TB', value: '1tb' },
-];
+import { toast } from 'src/components/snackbar';
+import axios from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +40,13 @@ interface Props extends StackProps {
   };
 }
 
+interface ProductAvailability {
+  available: number;
+  inventoryType: 'in_stock' | 'low_stock' | 'out_of_stock';
+  status: string;
+  maxPurchaseQuantity: number;
+}
+
 export default function EcommerceProductDetailsInfo({
   id,
   name,
@@ -72,18 +64,75 @@ export default function EcommerceProductDetailsInfo({
   ...other
 }: Props) {
   const isMdUp = useResponsive('up', 'md');
-  const { dispatch: cartDispatch } = useCart();
+  const { state: cartState, dispatch: cartDispatch } = useCart();
   const { state: wishlistState, dispatch: wishlistDispatch } = useWishlist();
 
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [availability, setAvailability] = useState<ProductAvailability | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Check if product is in wishlist
   const isInWishlist = wishlistState.items.some(item => item.product.id === id);
 
-  const handleAddCart = () => {
+  // Calculate how many of this item are already in cart
+  const itemInCart = cartState.items.find(item => item.product.id === id);
+  const quantityInCart = itemInCart?.quantity || 0;
+
+  const checkProductAvailability = async (productId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`/api/products/${productId}/availability`);
+      setAvailability(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to check product availability:', error);
+      toast.error('Failed to check product availability');
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddCart = async () => {
     if (!selectedColor || !selectedSize) {
+      toast.error('Please select a color and size');
+      return;
+    }
+
+    const productAvailability = await checkProductAvailability(id);
+    
+    if (!productAvailability) {
+      return;
+    }
+
+    if (productAvailability.inventoryType === 'out_of_stock') {
+      toast.error('Product is out of stock');
+      return;
+    }
+
+    // Consider both backend availability and local state
+    const effectiveAvailable = Math.min(productAvailability.available, available || 0);
+    const remainingAvailable = effectiveAvailable - quantityInCart;
+
+    if (remainingAvailable <= 0) {
+      toast.error('You have already added all available items to cart');
+      return;
+    }
+
+    if (quantity > remainingAvailable) {
+      toast.error(`Only ${remainingAvailable} more items available to add`);
+      return;
+    }
+
+    const maxAllowedQuantity = Math.min(
+      productAvailability.maxPurchaseQuantity - quantityInCart,
+      remainingAvailable
+    );
+
+    if (quantity > maxAllowedQuantity) {
+      toast.error(`You can only add ${maxAllowedQuantity} more items`);
       return;
     }
 
@@ -96,13 +145,15 @@ export default function EcommerceProductDetailsInfo({
           price,
           coverImg,
           subtotal: price * quantity,
-          available: available || 0,
+          available: effectiveAvailable,
         },
         quantity,
         colors: [selectedColor],
         size: selectedSize,
       },
     });
+
+    toast.success('Product added to cart successfully');
   };
 
   const handleToggleWishlist = () => {
@@ -111,8 +162,10 @@ export default function EcommerceProductDetailsInfo({
         type: 'REMOVE_FROM_WISHLIST',
         payload: { productId: id },
       });
+      toast.success('Product removed from wishlist');
     } else {
       if (!selectedColor || !selectedSize) {
+        toast.error('Please select a color and size');
         return;
       }
 
@@ -132,6 +185,7 @@ export default function EcommerceProductDetailsInfo({
           size: selectedSize,
         },
       });
+      toast.success('Product added to wishlist');
     }
   };
 
@@ -153,12 +207,14 @@ export default function EcommerceProductDetailsInfo({
         onClick={handleToggleWishlist}
         disabled={!isInWishlist && (!selectedColor || !selectedSize)}
       >
-        {isInWishlist 
-          ? 'Added to Wishlist' 
-          : (!selectedColor || !selectedSize)
-            ? 'Select Options'
-            : 'Add to Wishlist'
-        }
+        <Box sx={{ lineHeight: 1.2 }}>
+          {isInWishlist 
+            ? 'Added to Wishlist' 
+            : (!selectedColor || !selectedSize)
+              ? 'Select Options'
+              : 'Add to Wishlist'
+          }
+        </Box>
       </Button>
     </Stack>
   );
@@ -202,10 +258,22 @@ export default function EcommerceProductDetailsInfo({
         <IncrementerButton
           quantity={quantity}
           onDecrease={() => setQuantity(Math.max(1, quantity - 1))}
-          onIncrease={() => setQuantity(Math.min(available || 0, quantity + 1))}
+          onIncrease={() => {
+            const remainingAvailable = (available || 0) - quantityInCart;
+            setQuantity(Math.min(remainingAvailable, quantity + 1));
+          }}
           disabledDecrease={quantity <= 1}
-          disabledIncrease={quantity >= (available || 0)}
+          disabledIncrease={
+            quantity >= ((available || 0) - quantityInCart) ||
+            isLoading ||
+            Boolean(availability?.maxPurchaseQuantity && quantity >= availability.maxPurchaseQuantity - quantityInCart)
+          }
         />
+        {quantityInCart > 0 && (
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            ({quantityInCart} in cart)
+          </Typography>
+        )}
       </Stack>
     </Stack>
   );
@@ -267,11 +335,15 @@ export default function EcommerceProductDetailsInfo({
             color="primary"
             variant="contained"
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-          onClick={handleAddCart}
-          disabled={!selectedColor || !selectedSize || !quantity}
-        >
-          Add to Cart
-        </Button>
+            onClick={handleAddCart}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Box sx={{ lineHeight: 1 }}>Checking Availability...</Box>
+            ) : (
+              'Add to Cart'
+            )}
+          </Button>
         </Grid>
         <Grid item xs={12} md={5}>
         {renderShare}

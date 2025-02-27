@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -38,8 +39,11 @@ const VIEW_OPTIONS = [
 
 const SORT_OPTIONS = [
   { value: 'latest', label: 'Latest' },
-  { value: 'oldest', label: 'Oldest' },
   { value: 'popular', label: 'Popular' },
+  { value: 'top_rated', label: 'Top Rated' },
+  { value: 'price_low', label: 'Price: Low-High' },
+  { value: 'price_high', label: 'Price: High-Low' },
+  { value: 'oldest', label: 'Oldest' },
 ];
 
 // ----------------------------------------------------------------------
@@ -48,9 +52,13 @@ export default function EcommerceProductsView() {
   const { t } = useTranslate('product');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+  const [sort, setSort] = useState('latest');
+  const [searchParams] = useSearchParams();
+  const initialCategory = searchParams.get('category') || '';
+  
   const [filters, setFilters] = useState<IProductFiltersProps>({
     filterBrand: [],
-    filterCategories: '',
+    filterCategories: null,
     filterColor: [],
     filterPrice: {
       start: 0,
@@ -64,8 +72,6 @@ export default function EcommerceProductsView() {
   });
 
   const { products, productsLoading, productsEmpty } = useGetProducts();
-
-  const [sort, setSort] = useState('latest');
 
   const [loading, setLoading] = useState(true);
 
@@ -104,71 +110,46 @@ export default function EcommerceProductsView() {
     }
   };
 
+  const handleFiltersChange = (newFilters: IProductFiltersProps) => {
+    setFilters(newFilters);
+  };
+
   if (productsLoading) {
     return <SplashScreen />;
   }
 
   if (productsEmpty) {
-    return <EmptyContent title="No product found" sx={{ py: 30 }}  />;
+    return <EmptyContent title={t('no_products_found')} sx={{ py: 30 }}  />;
   }
 
   return (
     <>
       <EcommerceHeader />
 
-      <Container>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{
-            py: 5,
-          }}
-        >
-          <Typography variant="h3">{t('catalog')}</Typography>
+      <Container
+        maxWidth="lg"
+        sx={{
+          mt: 3,
+          mb: 15,
+          display: 'flex',
+          minHeight: '80vh',
+        }}
+      >
+        <Stack direction="row" spacing={3}>
+          <EcommerceFilters
+            mobileOpen={mobileOpen}
+            onMobileClose={handleMobileClose}
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
+          />
 
-          <Button
-            color="inherit"
-            variant="contained"
-            startIcon={<Iconify icon="carbon:filter" width={18} />}
-            onClick={handleMobileOpen}
-            sx={{
-              display: { md: 'none' },
-            }}
-          >
-            {t('filters.filters')}
-          </Button>
-        </Stack>
-
-        <Stack
-          direction={{
-            xs: 'column-reverse',
-            md: 'row',
-          }}
-          sx={{ mb: { xs: 8, md: 10 } }}
-        >
-          <Stack spacing={5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-            <EcommerceFilters 
-              mobileOpen={mobileOpen} 
-              onMobileClose={handleMobileClose}
-              filters={filters}
-              onFiltersChange={setFilters}
-            />
-            <EcommerceProductListBestSellers products={products.slice(0, 3)} />
-          </Stack>
-
-          <Box
-            sx={{
-              flexGrow: 1,
-              pl: { md: 8 },
-              width: { md: `calc(100% - ${NAV.W_DRAWER}px)` },
-            }}
-          >
+          <Box sx={{ flexGrow: 1 }}>
             <Stack
-              direction="row"
-              alignItems="center"
+              spacing={2}
+              direction={{ xs: 'column', sm: 'row' }}
+              alignItems={{ sm: 'center' }}
               justifyContent="space-between"
-              sx={{ mb: 5 }}
+              sx={{ mb: 3 }}
             >
               <ToggleButtonGroup
                 exclusive
@@ -202,13 +183,12 @@ export default function EcommerceProductsView() {
                 </Select>
               </FormControl>
             </Stack>
-
-            <EcommerceProductList
-              loading={productsLoading}
-              viewMode={viewMode}
-              products={products}
-              filters={filters}
-            />
+              <EcommerceProductList
+                viewMode={viewMode}
+                filters={filters}
+                sort={sort}
+                onFiltersChange={handleFiltersChange}
+              />
           </Box>
         </Stack>
       </Container>

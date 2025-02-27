@@ -68,7 +68,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
         </Fab>
 
         <Image
-          src={product.coverImg}
+          src={product.coverUrl}
           sx={{
             flexShrink: 0,
             width: 180,
@@ -80,7 +80,6 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
           }}  
         />
       </Box>
-
       <Stack spacing={0.5}>
         <TextMaxLine variant="caption" line={1} sx={{ color: 'text.disabled' }}>
           {product.category}
@@ -94,7 +93,7 @@ export default function EcommerceProductViewGridItem({ product, sx, ...other }: 
 
         <ProductPrice price={product.price} priceSale={product.priceSale} />
 
-        <ProductRating rating={product.rating} label={`${product.sold} sold`} />
+        <ProductRating rating={product.rating} label={`${product.totalSold} sold`} />
       </Stack>
     </Stack>
   );

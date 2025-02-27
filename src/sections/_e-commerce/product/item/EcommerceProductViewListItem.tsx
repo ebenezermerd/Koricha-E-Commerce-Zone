@@ -91,7 +91,7 @@ export default function EcommerceProductViewListItem({ product, ...other }: Prop
           </Link>
         </Stack>
 
-        <ProductRating rating={product.rating} label={`${product.sold} sold`} />
+        <ProductRating rating={product.rating} label={`${product.totalSold} sold`} />
 
         <TextMaxLine variant="body2" line={1} sx={{ color: 'text.secondary' }}>
           {product.caption}
