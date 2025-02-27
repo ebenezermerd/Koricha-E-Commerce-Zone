@@ -16,6 +16,7 @@ export type SignInParams = {
 export type SignUpParams = {
   role: string;
   firstName: string;
+  middleName?: string;
   lastName: string;
   email: string;
   phone: string;

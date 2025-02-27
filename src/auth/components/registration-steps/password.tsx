@@ -17,6 +17,8 @@ export function PasswordStep() {
         placeholder="6+ characters"
         type={password.value ? 'text' : 'password'}
         InputLabelProps={{ shrink: true }}
+        size="medium"
+        variant="outlined"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -34,6 +36,8 @@ export function PasswordStep() {
         placeholder="6+ characters"
         type={confirmPassword.value ? 'text' : 'password'}
         InputLabelProps={{ shrink: true }}
+        size="medium"
+        variant="outlined"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
