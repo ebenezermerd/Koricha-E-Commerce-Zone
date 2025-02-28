@@ -4,6 +4,7 @@ import { IAddressItem } from 'src/types/address';
 import { CartItem }  from 'src/contexts/cart-context';
 import axios from 'src/utils/axios';
 import { toast } from 'src/components/snackbar'
+import { useAuthContext } from 'auth/hooks';
 // ----------------------------------------------------------------------
 
 export type ICheckoutDeliveryOption = {
@@ -70,6 +71,7 @@ type CheckoutProviderProps = {
 
 export function CheckoutProvider({ children }: CheckoutProviderProps) {
   const { state: cart, dispatch: cartDispatch } = useCart();
+  const { user } = useAuthContext();
   const [isAddressComplete, setIsAddressComplete] = useState(true);
 
 
@@ -134,7 +136,7 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
 
   const verifyAddressBeforeCheckout = async () => {
     try {
-      const response = await axios.get('/api/user/address/verify');
+      const response = await axios.get(`/api/user/${user?.id}/address/verify`);
       setIsAddressComplete(response.data.isComplete);
       return response.data.isComplete;
     } catch (error) {
