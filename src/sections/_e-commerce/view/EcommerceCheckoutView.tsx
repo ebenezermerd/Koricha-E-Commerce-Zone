@@ -25,6 +25,7 @@ export default function EcommerceCheckoutView() {
   const navigate = useNavigate();
   const { authenticated } = useAuthContext();
   const { state: cart } = useCart();
+  const { verifyAddressBeforeCheckout } = useCheckout();
 
   const empty = !cart.items.length;
 
@@ -38,7 +39,16 @@ export default function EcommerceCheckoutView() {
     // If cart is empty, redirect to products page
     if (empty) {
       navigate(paths.eCommerce.products);
+      return;
     }
+
+    // If address is not complete, redirect to address page
+    verifyAddressBeforeCheckout().then((isComplete) => {
+      if (!isComplete) {
+        navigate(paths.eCommerce.account.address);
+      }
+    }
+    );
   }, [authenticated, empty, navigate]);
 
   // Show nothing while checking authentication or if cart is empty

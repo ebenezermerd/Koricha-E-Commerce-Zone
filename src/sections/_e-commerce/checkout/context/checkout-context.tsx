@@ -2,7 +2,8 @@ import { createContext, useContext, useCallback, useMemo, useState } from 'react
 import { useCart } from 'src/contexts/cart-context';
 import { IAddressItem } from 'src/types/address';
 import { CartItem }  from 'src/contexts/cart-context';
-
+import axios from 'src/utils/axios';
+import { toast } from 'src/components/snackbar'
 // ----------------------------------------------------------------------
 
 export type ICheckoutDeliveryOption = {
@@ -29,10 +30,13 @@ export type ICheckoutState = {
 
 export type CheckoutContextProps = ICheckoutState & {
   completed: boolean;
+  isAddressComplete: boolean;
+  verifyAddressBeforeCheckout: () => Promise<boolean>;
   //
   onReset: () => void;
   //
   activeStep: number;
+  
   onBackStep: () => void;
   onNextStep: () => void;
   onGotoStep: (step: number) => void;
@@ -62,8 +66,12 @@ type CheckoutProviderProps = {
   children: React.ReactNode;
 };
 
+
+
 export function CheckoutProvider({ children }: CheckoutProviderProps) {
   const { state: cart, dispatch: cartDispatch } = useCart();
+  const [isAddressComplete, setIsAddressComplete] = useState(true);
+
 
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -123,13 +131,31 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
       billing: address,
     }));
   }, []);
+
+  const verifyAddressBeforeCheckout = async () => {
+    try {
+      const response = await axios.get('/api/user/address/verify');
+      setIsAddressComplete(response.data.isComplete);
+      return response.data.isComplete;
+    } catch (error) {
+      setIsAddressComplete(false);
+      // Show toast notification
+      toast.error(
+        "Please complete your address information in account settings before checkout",
+      );
+      return false;
+    }
+  };
+
+  
   const value = useMemo(
     () => ({
       ...state,
       completed,
       activeStep,
       onReset,
-      
+      isAddressComplete,
+      verifyAddressBeforeCheckout,
       onNextStep,
       onBackStep,
       onGotoStep,
@@ -146,6 +172,8 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
       onNextStep,
       onBackStep,
       onGotoStep,
+      isAddressComplete,
+      verifyAddressBeforeCheckout,
       onApplyShipping,
       onApplyDiscount,
       onCreateBilling,
