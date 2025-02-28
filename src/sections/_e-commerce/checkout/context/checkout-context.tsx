@@ -4,7 +4,7 @@ import { IAddressItem } from 'src/types/address';
 import { CartItem }  from 'src/contexts/cart-context';
 import axios from 'src/utils/axios';
 import { toast } from 'src/components/snackbar'
-import { useAuthContext } from 'auth/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 export type ICheckoutDeliveryOption = {
