@@ -11,6 +11,7 @@ export const adaptMinimalToZoneProduct = (minimalProduct: MinimalProduct): ZoneP
   caption: minimalProduct.subDescription || '',
   description: minimalProduct.description,
   coverImg: minimalProduct.coverUrl,
+  coverUrl: minimalProduct.coverUrl,
   category: PRODUCT_CATEGORY_GROUP_OPTIONS.some(group => 
     group.classify.includes(minimalProduct.category)
   ) ? minimalProduct.category : PRODUCT_CATEGORY_GROUP_OPTIONS[0].classify[0],
