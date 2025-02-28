@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 export type SignInParams = {
-  email: string;
+  identifier: string;
   password: string;
 };
 
 export type SignUpParams = {
   role: string;
   firstName: string;
+  middleName?: string;
   lastName: string;
   email: string;
   phone: string;
@@ -61,7 +62,7 @@ interface ResetPasswordToken {
  * Sign in
  *************************************** */
 export const signInWithPassword = async ({ 
-  email, 
+  identifier, 
   password 
 }: SignInParams): Promise<{ 
   data?: { 
@@ -72,11 +73,10 @@ export const signInWithPassword = async ({
   error?: Error 
 }> => {
   try {
-    const params = { email, password };
+    const params = { identifier, password };
     const res = await axios.post(endpoints.auth.signIn, params);
     const { data } = res;
 
-    // If email verification is required
     if (data.status === 'verification_required') {
       return {
         data: {
@@ -86,7 +86,6 @@ export const signInWithPassword = async ({
       };
     }
 
-    // Normal sign in flow
     if (!data.accessToken) {
       return {
         error: new Error('Access token not found in response')
@@ -106,7 +105,7 @@ export const signInWithPassword = async ({
       error: new Error(
         error.response?.data?.message || 
         error.message || 
-        'Invalid email or password'
+        'Authentication failed'
       )
     };
   }

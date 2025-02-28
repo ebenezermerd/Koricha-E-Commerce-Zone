@@ -64,7 +64,7 @@ export function Content({ sx, children, layoutQuery, ...other }: MainProps) {
         p: theme.spacing(3, 2, 10, 2),
         [theme.breakpoints.up(layoutQuery)]: {
           justifyContent: 'center',
-          p: theme.spacing(10, 2, 10, 2),
+          p: theme.spacing(10, 2, 1, 2),
         },
         ...sx,
       }}

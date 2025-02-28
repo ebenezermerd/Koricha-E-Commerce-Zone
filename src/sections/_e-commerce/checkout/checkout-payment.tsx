@@ -143,7 +143,7 @@ export default function CheckoutPayment() {
       toast.success('Order placed successfully!');
     } catch (error) {
       console.error(error);
-      toast.error(error.message || 'Something went wrong');
+      toast.error(error.response.data.message || error.response.data.error || error.message || 'Something went wrong');
     }
   });
 

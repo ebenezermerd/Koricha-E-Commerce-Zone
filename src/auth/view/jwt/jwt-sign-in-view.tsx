@@ -2,6 +2,8 @@ import { z as zod } from 'zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
+import { m, domAnimation, LazyMotion } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -17,22 +19,66 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import  Iconify  from 'src/components/iconify';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
-
+import FormProvider, { RHFPhoneInput, RHFTextField } from 'src/components/hook-form';
 
 import { useAuthContext } from '../../hooks';
 import { FormHead } from '../../components/form-head';
 import { signInWithPassword } from '../../context/jwt';
 
+import { alpha, styled } from '@mui/material/styles';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
+import {schemaHelper} from 'src/components/hook-form/schema-helper';
+
+// ----------------------------------------------------------------------
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.primary.main, 0.08),
+  border: `1px solid ${alpha(theme.palette.primary.main, 0.24)}`,
+  borderRadius: theme.shape.borderRadius,
+  marginBottom: theme.spacing(2),
+  '& .MuiToggleButton-root': {
+    color: theme.palette.text.secondary,
+    '&.Mui-selected': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+    },
+  },
+}));
+
 // ----------------------------------------------------------------------
 
 export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 
-export const SignInSchema = zod.object({
-  email: zod
+const SignInSchema = zod.object({
+  identifier: zod.string().min(1, { message: 'Email or phone number is required!' }).refine((value) => {
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    const isPhone = /^\+[1-9]\d{1,14}$/.test(value);
+    return isEmail || isPhone;
+  }, { message: 'Please enter a valid email or phone number' }),
+  password: zod.string().min(1, { message: 'Password is required!' }).min(6, { message: 'Password must be at least 6 characters!' }),
+});
+
+const EmailSignInSchema = zod.object({
+  identifier: zod
     .string()
     .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .email({ message: 'Please enter a valid email address' }),
+  password: zod
+    .string()
+    .min(1, { message: 'Password is required!' })
+    .min(6, { message: 'Password must be at least 6 characters!' }),
+});
+
+const PhoneSignInSchema = zod.object({
+  identifier: schemaHelper.phoneNumber({
+    isValidPhoneNumber,
+    message: {
+      required_error: 'Phone number is required!',
+      invalid_type_error: 'Phone number must be in E.164 format (e.g., +251 911 123 ***)'
+    }
+  }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
@@ -50,19 +96,31 @@ export function JwtSignInView() {
 
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [inputMethod, setInputMethod] = useState<'email' | 'phone'>('email');
 
   const password = useBoolean();
   const methods = useForm<SignInSchemaType>({
-    resolver: zodResolver(SignInSchema),
+    resolver: zodResolver(inputMethod === 'email' ? EmailSignInSchema : PhoneSignInSchema),
     defaultValues: {
-      email: '',
+      identifier: '',
       password: '',
     },
   });
 
   const {
     handleSubmit,
+    reset,
   } = methods;
+
+  const handleInputMethodChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    newMethod: 'email' | 'phone' | null,
+  ) => {
+    if (newMethod !== null) {
+      setInputMethod(newMethod);
+      reset({ identifier: '', password: '' });
+    }
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -70,27 +128,23 @@ export function JwtSignInView() {
       setErrorMsg('');
 
       const response = await signInWithPassword({ 
-        email: data.email, 
+        identifier: data.identifier, 
         password: data.password 
       });
 
       if (response.error) {
-        setErrorMsg(response.error.message || 'Invalid email or password');
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        window.location.reload();
+        setErrorMsg(response.error.message || 'Invalid credentials');
         return;
       }
 
-      // Check if email needs verification
       if (response.data?.status === 'verification_required') {
-        sessionStorage.setItem('verification_email', data.email);
+        sessionStorage.setItem('verification_email', data.identifier);
         router.push(paths.auth.jwt.verify);
         return;
       }
 
       await checkUserSession?.();
 
-      // Redirect to the original page if returnTo is set
       if (returnTo) {
         router.push(returnTo);
       } else {
@@ -101,50 +155,101 @@ export function JwtSignInView() {
       setErrorMsg(
         error.response?.data?.message || 
         error.message || 
-        'Invalid email or password'
+        'Authentication failed'
       );
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      window.location.reload();
     } finally {
       setIsSubmitting(false);
     }
   });
 
+  const renderToggle = (
+    <StyledToggleButtonGroup
+      value={inputMethod}
+      exclusive
+      onChange={handleInputMethodChange}
+      aria-label="sign in method"
+      fullWidth
+    >
+      <ToggleButton value="email" aria-label="email sign in">
+        <Iconify icon="eva:email-outline" sx={{ mr: 1 }} />
+        Email
+      </ToggleButton>
+      <ToggleButton value="phone" aria-label="phone sign in">
+        <Iconify icon="eva:phone-outline" sx={{ mr: 1 }} />
+        Phone
+      </ToggleButton>
+    </StyledToggleButtonGroup>
+  );
+
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
-      <RHFTextField
-        name="email"
-        placeholder="Enter email address"
-        label="Email address" InputLabelProps={{ shrink: true }} />
+      {renderToggle}
 
-      <Box gap={1.5} display="flex" flexDirection="column">
-
-        <RHFTextField
-          name="password"
-          label="Password"
-          placeholder="6+ characters"
-          type={password.value ? 'text' : 'password'}
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={password.onToggle} edge="end">
-                  <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Link
-          component={RouterLink}
-          href={paths.auth.jwt.resetPassword}
-          variant="body2"
-          color="inherit"
-          sx={{ alignSelf: 'flex-end' }}
-        >
-          Forgot password?
-        </Link>
+      <Box sx={{ display: inputMethod === 'email' ? 'block' : 'none' }}>
+        <LazyMotion features={domAnimation}>
+          <m.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <RHFTextField
+              name="identifier"
+              label="Email address"
+              placeholder="example@email.com"
+              size="medium"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+            />
+          </m.div>
+        </LazyMotion>
       </Box>
+
+      <Box sx={{ display: inputMethod === 'phone' ? 'block' : 'none' }}>
+        <LazyMotion features={domAnimation}>
+          <m.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <RHFPhoneInput
+              name="identifier"
+              label="Phone Number"
+              placeholder="911 123 ***"
+            />
+          </m.div>
+        </LazyMotion>
+      </Box>
+
+      <RHFTextField
+        name="password"
+        label="Password"
+        type={password.value ? 'text' : 'password'}
+        placeholder="Enter your password"
+        size="medium"
+        variant="outlined"
+        InputLabelProps={{ shrink: true }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={password.onToggle} edge="end">
+                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      <Link
+        component={RouterLink}
+        href={paths.auth.jwt.resetPassword}
+        variant="body2"
+        color="primary"
+        sx={{ alignSelf: 'flex-end' }}
+      >
+        Forgot password?
+      </Link>
 
       <LoadingButton
         fullWidth

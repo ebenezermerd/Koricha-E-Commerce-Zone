@@ -1,15 +1,22 @@
 import { z, ZodObject, ZodString, ZodBoolean, ZodEnum, ZodTypeAny, ZodEffects } from 'zod';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
+
+import { schemaHelper } from 'src/components/hook-form/schema-helper';
 
 // Basic Information Schema
 export const BasicInfoSchema: ZodObject<any> = z.object({
   role: z.string().min(1, { message: 'User type is required!' }),
   firstName: z.string().min(1, { message: 'First name is required!' }),
+  middleName: z.string().optional(),
   lastName: z.string().min(1, { message: 'Last name is required!' }),
   email: z
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Invalid email format!' }),
-  phone: z.string().min(1, { message: 'Phone number is required!' }),
+    .transform(val => val === "" ? undefined : val)
+    .optional()
+    .refine(val => val === undefined || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: 'Invalid email format!',
+    }),
+  phone: schemaHelper.phoneNumber({ isValidPhoneNumber }),
   sex: z.string().min(1, { message: 'Sex is required!' }),
   address: z.string().min(1, { message: 'Address is required!' }),
 });
@@ -22,7 +29,7 @@ export const CompanyInfoSchema: ZodObject<any> = z.object({
     .string()
     .min(1, { message: 'Company email is required!' })
     .email({ message: 'Invalid email format!' }),
-  companyPhone: z.string().min(1, { message: 'Company phone is required!' }),
+  companyPhone: schemaHelper.phoneNumber({ isValidPhoneNumber }),
   country: z.string().min(1, { message: 'Country is required!' }),
   city: z.string().min(1, { message: 'City is required!' }),
   companyAddress: z.string().min(1, { message: 'Company address is required!' }),
