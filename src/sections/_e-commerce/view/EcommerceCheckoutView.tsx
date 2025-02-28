@@ -43,12 +43,12 @@ export default function EcommerceCheckoutView() {
     }
 
     // If address is not complete, redirect to address page
-    verifyAddressBeforeCheckout().then((isComplete) => {
-      if (!isComplete) {
-        navigate(paths.eCommerce.account.address);
-      }
-    }
-    );
+    // verifyAddressBeforeCheckout().then((isComplete) => {
+    //   if (!isComplete) {
+    //     navigate(paths.eCommerce.account.address);
+    //   }
+    // }
+    // );
   }, [authenticated, empty, navigate]);
 
   // Show nothing while checking authentication or if cart is empty
