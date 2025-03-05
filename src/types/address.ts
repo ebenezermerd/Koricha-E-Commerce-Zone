@@ -8,9 +8,7 @@ export type IAddressItem = {
     state?: string;
     country?: string;
     zipCode?: string;
-    company?: string;
     primary?: boolean;
     fullAddress: string;
-    phoneNumber?: string;
     addressType?: string;
   };
