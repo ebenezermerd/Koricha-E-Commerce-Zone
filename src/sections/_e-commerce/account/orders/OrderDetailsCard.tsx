@@ -1,33 +1,87 @@
-import { Card, Stack, Typography, Divider, Grid, Avatar, Box } from '@mui/material';
+import { useState } from 'react';
+import { Card, Stack, Typography, Divider, Grid, Avatar, Box, Button, CircularProgress } from '@mui/material';
 import { fDate } from 'src/utils/formatTime';
 import { fCurrency } from 'src/utils/formatNumber';
 import { IOrder } from 'src/types/order';
 import Iconify from 'src/components/iconify';
-import Label  from 'src/components/label';
-
-
+import Label from 'src/components/label';
+import { toast } from 'src/components/snackbar';
 
 type Props = {
   order: IOrder;
+  onResumePayment?: (tx_ref: string) => Promise<any>;
+  isResumingPayment?: boolean;
 };
 
-export default function OrderDetailsCard({ order }: Props) {
+export default function OrderDetailsCard({ order, onResumePayment, isResumingPayment = false }: Props) {
+  const [isResuming, setIsResuming] = useState(false);
+  
   if (!order) return null;
+
+  // Check if this is a pending Chapa payment that can be resumed
+  const canResumePayment = 
+    order.status === 'pending' && 
+    order.payment?.status === 'initiated' && 
+    order.payment?.method === 'chapa' &&
+    (order.payment?.txRef || order.payment?.tx_ref) &&
+    onResumePayment;
+
+  const handleResumePayment = async () => {
+    if (!canResumePayment) return;
+    
+    const txRef = order.payment?.txRef || order.payment?.tx_ref;
+    
+    try {
+      setIsResuming(true);
+      const result = await onResumePayment(txRef || '');
+      
+      // Redirect to Chapa checkout URL
+      if (result.checkout_url) {
+        window.location.href = result.checkout_url;
+      }
+    } catch (error) {
+      console.error('Error resuming payment:', error);
+      toast.error('Failed to resume payment. Please try again.');
+    } finally {
+      setIsResuming(false);
+    }
+  };
 
   return (
     <Card sx={{ mt: 3, p: 3 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h6">Order Details</Typography>
-        <Label
-          color={
-            (order.status === 'completed' && 'success') ||
-            (order.status === 'pending' && 'warning') ||
-            (order.status === 'cancelled' && 'error') ||
-            'default'
-          }
-        >
-          {order.status}
-        </Label>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Label
+            color={
+              (order.status === 'completed' && 'success') ||
+              (order.status === 'pending' && 'warning') ||
+              (order.status === 'cancelled' && 'error') ||
+              'default'
+            }
+          >
+            {order.status}
+          </Label>
+          
+          {canResumePayment && (
+            <Button
+              size="small"
+              color="primary"
+              variant="contained"
+              onClick={handleResumePayment}
+              disabled={isResuming || isResumingPayment}
+              startIcon={
+                isResuming ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <Iconify icon="eva:credit-card-fill" />
+                )
+              }
+            >
+              {isResuming ? 'Resuming...' : 'Resume Payment'}
+            </Button>
+          )}
+        </Stack>
       </Stack>
 
       <Divider sx={{ my: 2 }} />
@@ -118,7 +172,7 @@ export default function OrderDetailsCard({ order }: Props) {
               <Typography variant="body2" color="text.secondary">
                 Payment Method:
               </Typography>
-              <Typography variant="body2">{order.payment?.cardType || 'N/A'}</Typography>
+              <Typography variant="body2">{order.payment?.cardType || order.payment?.method || 'N/A'}</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body2" color="text.secondary">

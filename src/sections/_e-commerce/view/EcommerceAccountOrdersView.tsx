@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useOrders } from 'src/services/useOrders';
+import { usePendingPayments } from 'src/services/usePendingPayments';
 // components
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -37,6 +38,7 @@ import {
 } from '../account/orders';
 import { IOrder, OrderStatus } from 'src/types/order';
 import OrderDetailsCard from '../account/orders/OrderDetailsCard';
+import CheckoutPendingPayments from '../checkout/checkout-pending-payments';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +77,13 @@ export default function EcommerceAccountOrdersPage() {
     error: ordersError, 
     mutate: mutateOrders 
   } = useOrders();
+  
+  const { 
+    pendingPayments, 
+    isLoading: pendingPaymentsLoading, 
+    resumePendingPayment, 
+    isResuming 
+  } = usePendingPayments();
 
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
@@ -84,12 +93,9 @@ export default function EcommerceAccountOrdersPage() {
       : orders.filter((order: IOrder) => order.status === status);
   }, [orders, tab]);
 
-  console.log('Orders data:', {
-    rawOrders: orders,
-    pagination,
-    loading: isLoading,
-    error: ordersError
-  });
+  if(pendingPayments.length > 0) {
+    console.log('Pending payments data:', pendingPayments);
+  }
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -162,9 +168,22 @@ export default function EcommerceAccountOrdersPage() {
   return (
     <EcommerceAccountLayout>
       <Card sx={{ p: 2 }} >
-      <Typography variant="h5" sx={{ mb: 1 }}>
-        Orders
-      </Typography>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          Orders
+        </Typography>
+        
+        {/* Display pending payments at the top if there are any */}
+        {pendingPayments.length > 0 && (
+          <Box sx={{ mb: 3 }}>
+            <CheckoutPendingPayments 
+              pendingPayments={pendingPayments}
+              isLoading={pendingPaymentsLoading}
+              onResume={resumePendingPayment}
+              isResuming={isResuming}
+            />
+          </Box>
+        )}
+        
         <Tabs
           value={tab}
           onChange={handleChangeTab}
@@ -202,7 +221,7 @@ export default function EcommerceAccountOrdersPage() {
           <EmptyContent
             title={`No ${tab}`}
             description={`You don't have any ${tab.toLowerCase()} yet`}
-            imgUrl="/assets/icons/empty/ic_order.svg"
+            imgUrl="/assets/icons/empty/ic_empty_order.svg"
             sx={{ py: 10 }}
           />
         ) : (
@@ -279,7 +298,9 @@ export default function EcommerceAccountOrdersPage() {
 
             {selected.length === 1 && (
               <OrderDetailsCard 
-                order={orders.find((order) => order.id === selected[0]) as IOrder} 
+                order={orders.find((order) => order.id === selected[0]) as IOrder}
+                onResumePayment={resumePendingPayment}
+                isResumingPayment={isResuming}
               />
             )}
           </>

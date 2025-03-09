@@ -9,6 +9,10 @@ export const API_ENDPOINTS = {
   categories: '/categories',
   cart: '/cart',
   orders: '/orders',
+  checkout: {
+    pendingPayments: '/api/orders/pending-chapa-payments',
+    resumePayment: '/api/chapa/resume-payment',
+  },
   // Add other endpoints as needed
 } as const;
 

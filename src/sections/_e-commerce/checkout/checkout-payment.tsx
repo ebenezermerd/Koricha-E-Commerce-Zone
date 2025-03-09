@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Box from '@mui/material/Box';
 // components
 import Iconify from 'src/components/iconify';
 import Form from 'src/components/hook-form';
@@ -18,6 +19,8 @@ import { useCart } from 'src/contexts/cart-context';
 import { toast } from 'src/components/snackbar';
 import { PaymentMethod } from 'src/types/checkout';
 import { paths } from 'src/routes/paths';
+import { usePendingPayments } from 'src/services/usePendingPayments';
+import CheckoutPendingPayments from './checkout-pending-payments';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +45,7 @@ export default function CheckoutPayment() {
   const checkout = useCheckoutContext();
   const checkoutService = useCheckoutService();
   const { dispatch: cartDispatch } = useCart();
+  const { pendingPayments, isLoading: pendingPaymentsLoading, resumePendingPayment, isResuming } = usePendingPayments();
 
   const defaultValues: PaymentFormValues = {
     delivery: 0,
@@ -151,6 +155,17 @@ export default function CheckoutPayment() {
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
+          {pendingPayments.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <CheckoutPendingPayments 
+                pendingPayments={pendingPayments}
+                isLoading={pendingPaymentsLoading}
+                onResume={resumePendingPayment}
+                isResuming={isResuming}
+              />
+            </Box>
+          )}
+
           <CheckoutDelivery
             options={DELIVERY_OPTIONS}
           />
