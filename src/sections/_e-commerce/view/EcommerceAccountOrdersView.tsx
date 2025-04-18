@@ -254,6 +254,8 @@ export default function EcommerceAccountOrdersPage() {
                           row={row}
                           selected={selected.includes(row.id)}
                           onSelectRow={() => handleSelectRow(row.id)}
+                          onResumePayment={resumePendingPayment}
+                          isResumingPayment={isResuming}
                         />
                       ))}
 
@@ -295,14 +297,6 @@ export default function EcommerceAccountOrdersPage() {
                 }}
               />
             </Box>
-
-            {selected.length === 1 && (
-              <OrderDetailsCard 
-                order={orders.find((order) => order.id === selected[0]) as IOrder}
-                onResumePayment={resumePendingPayment}
-                isResumingPayment={isResuming}
-              />
-            )}
           </>
         )}
       </Card>

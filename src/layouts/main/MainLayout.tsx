@@ -21,13 +21,25 @@ export default function MainLayout() {
   const actionPage = (arr: string[]) => arr.some((path) => pathname === path);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: 1 }}>
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minHeight: '100vh',
+        width: '100%',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      }}
+    >
       <Header />
 
       <Box
         component="main"
         sx={{
           flexGrow: 1,
+          width: '100%',
+          position: 'relative',
+          overflow: 'auto',
         }}
       >
         {!actionPage(spacingLayout) && <Spacing />}

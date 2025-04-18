@@ -34,8 +34,8 @@ export default function EcommerceLandingHero() {
 
   if (productsLoading) {
     return (
-      <Container sx={{ pt: { xs: 5, md: 8 } }}>
-        <Skeleton variant="rectangular" height={400} />
+      <Container maxWidth="xl" disableGutters sx={{ pt: { xs: 5, md: 8 } }}>
+        <Skeleton variant="rectangular" height="calc(100vh - 200px)" sx={{ minHeight: 500 }} />
       </Container>
     );
   }
@@ -46,7 +46,15 @@ export default function EcommerceLandingHero() {
   
 
   return (
-    <Container sx={{ pt: { xs: 5, md: 8 }, minHeight: 500 }}>
+    <Container 
+      maxWidth="xl" 
+      disableGutters
+      sx={{ 
+        pt: { xs: 2, md: 4 },
+        minHeight: { xs: 500, md: 'calc(100vh - 100px)' },
+        width: '100%',
+      }}
+    >
       <Box
         sx={{
           ...bgGradient({
@@ -55,8 +63,10 @@ export default function EcommerceLandingHero() {
           }),
           borderRadius: 3,
           overflow: 'hidden',
+          border: `1px solid ${theme.palette.primary.lighter}`,
           position: 'relative',
-          height: '100%',
+          height: { xs: 500, md: 'calc(100vh - 200px)' },
+          maxWidth: '100%',
         }}
       >
         <Carousel carousel={carousel}>

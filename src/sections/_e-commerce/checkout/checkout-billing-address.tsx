@@ -88,7 +88,7 @@ console.log(addresses);
                         color="inherit"
                         onClick={() => checkout.onCreateBilling(address)}
                       >
-                        {checkout.billing?.id === address.id ? 'Selected' : 'Select'}
+                        {checkout.billing?.id === address.id ? 'Address Selected for delivery' : 'Select this address'}
                       </Button>
                     </Stack>
                   }

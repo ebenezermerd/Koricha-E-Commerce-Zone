@@ -6,6 +6,8 @@ import { IOrder } from 'src/types/order';
 import Iconify from 'src/components/iconify';
 import Label from 'src/components/label';
 import { toast } from 'src/components/snackbar';
+import { useDelivery } from 'src/services/useDelivery';
+import OrderDeliveryConfirmation from './OrderDeliveryConfirmation';
 
 type Props = {
   order: IOrder;
@@ -136,6 +138,26 @@ export default function OrderDetailsCard({ order, onResumePayment, isResumingPay
               </Typography>
               <Typography variant="body2">{order.delivery?.trackingNumber || 'N/A'}</Typography>
             </Stack>
+            {order.delivery?.estimatedDeliveryDate && (
+              <Stack direction="row" justifyContent="space-between">
+                <Typography variant="body2" color="text.secondary">
+                  Estimated Delivery:
+                </Typography>
+                <Typography variant="body2">
+                  {new Date(order.delivery.estimatedDeliveryDate).toLocaleDateString()}
+                </Typography>
+              </Stack>
+            )}
+            {order.delivery?.actualDeliveryDate && (
+              <Stack direction="row" justifyContent="space-between">
+                <Typography variant="body2" color="text.secondary">
+                  Delivered On:
+                </Typography>
+                <Typography variant="body2">
+                  {new Date(order.delivery.actualDeliveryDate).toLocaleDateString()}
+                </Typography>
+              </Stack>
+            )}
           </Stack>
         </Grid>
 
@@ -225,6 +247,8 @@ export default function OrderDetailsCard({ order, onResumePayment, isResumingPay
           </Stack>
         </Grid>
       </Grid>
+
+      <OrderDeliveryConfirmation order={order} />
     </Card>
   );
 } 
