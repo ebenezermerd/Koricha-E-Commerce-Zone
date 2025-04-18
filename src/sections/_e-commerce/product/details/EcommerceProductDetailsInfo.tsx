@@ -319,11 +319,11 @@ export default function EcommerceProductDetailsInfo({
         <Stack spacing={1}>
           <Typography variant="subtitle2">Vendor</Typography>
           <Typography variant="body2">{vendor.name}</Typography>
-          {vendor.phone && (
+          {/* {vendor.phone && (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Phone: {vendor.phone}
             </Typography>
-          )}
+          )} */}
         </Stack>
       )}
 
