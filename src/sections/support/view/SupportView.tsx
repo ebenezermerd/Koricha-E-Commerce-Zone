@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Container, Stack, Typography, IconButton } from '@mui/material';
+import { Container, Stack, Typography, IconButton, Divider } from '@mui/material';
 // components
 import Iconify from 'src/components/iconify';
 //
-import { SupportHero, SupportNav, SupportContent } from '../components';
+import { SupportHero, SupportNav, SupportContent, SupportContactForm } from '../components';
 import { FAQ_CATEGORIES } from 'src/_mock/arrays/_faqsSupport';
 
 // ----------------------------------------------------------------------
@@ -52,7 +52,7 @@ export default function SupportView() {
         <Stack 
           direction="row" 
           sx={{ 
-            pb: hasPagination ? 0 : { xs: 10, md: 15 }
+            pb: hasPagination ? 0 : { xs: 5, md: 5 }
           }}
         >
           <SupportNav
@@ -65,6 +65,10 @@ export default function SupportView() {
 
           <SupportContent contents={currentFaqs} />
         </Stack>
+        
+        <Divider sx={{ my: 5 }} />
+        
+        <SupportContactForm />
       </Container>
     </>
   );

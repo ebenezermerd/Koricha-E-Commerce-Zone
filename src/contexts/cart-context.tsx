@@ -8,6 +8,10 @@ export type ICheckoutItem = {
     price: number;
     available: number;
     subtotal?: number;
+    quantity_threshold: number | null;
+    additional_cost_type: 'percentage' | 'fixed' | null;
+    additional_cost_percentage: number | null;
+    additional_cost_fixed: number | null;
   };
   
  export type CartItem = {

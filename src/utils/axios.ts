@@ -145,5 +145,10 @@ export const endpoints = {
     update: (id: string) => `/api/addresses/${id}`,
     delete: (id: string) => `/api/addresses/${id}`,
   },
+  support: {
+    inquiries: {
+      create: '/api/support/inquiries',
+    },
+  },
 };  
 

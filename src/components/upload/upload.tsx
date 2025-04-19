@@ -3,8 +3,7 @@ import { FileRejection, useDropzone } from 'react-dropzone';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
-
-import { varAlpha } from 'src/theme/styles';
+import { alpha } from '@mui/material/styles';
 
 import Iconify from '../iconify';
 import { uploadClasses } from './classes';
@@ -87,8 +86,8 @@ export function Upload({
           cursor: 'pointer',
           overflow: 'hidden',
           position: 'relative',
-          bgcolor: (theme) => varAlpha(theme.palette.grey['500'], 0.08),
-          border: (theme) => `1px dashed ${varAlpha(theme.palette.grey['500'], 0.2)}`,
+          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+          border: (theme) => `1px dashed ${alpha(theme.palette.grey[500], 0.2)}`,
           transition: (theme) => theme.transitions.create(['opacity', 'padding']),
           '&:hover': { opacity: 0.72 },
           ...(isDragActive && { opacity: 0.72 }),
@@ -96,7 +95,7 @@ export function Upload({
           ...(hasError && {
             color: 'error.main',
             borderColor: 'error.main',
-            bgcolor: (theme) => varAlpha(theme.palette.error.main, 0.08),
+            bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
           }),
           ...(hasFile && { padding: '28% 0' }),
         }}

@@ -37,6 +37,10 @@ export type IProductItemProps = {
   colors: string[];
   publish: 'published' | 'draft';
   quantity: number;
+  quantity_threshold: number | null;
+  additional_cost_type: 'percentage' | 'fixed' | null;
+  additional_cost_percentage: number | null;
+  additional_cost_fixed: number | null;
   available: number;
   totalSold: number;
   totalRatings: number;

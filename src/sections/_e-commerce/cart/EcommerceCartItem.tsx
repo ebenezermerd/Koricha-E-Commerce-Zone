@@ -1,5 +1,6 @@
 // @mui
-import { Stack, IconButton, Typography, Box } from '@mui/material';
+import { Stack, IconButton, Typography, Box, Divider, Tooltip } from '@mui/material';
+import { Link } from 'react-router-dom';
 // utils
 import { fCurrency } from 'src/utils/formatNumber';
 // types
@@ -13,6 +14,7 @@ import { IncrementerButton } from 'src/sections/_e-commerce/components/increment
 import axios from 'src/utils/axios';
 import { toast } from 'src/components/snackbar';
 import { useState, useEffect } from 'react';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +41,19 @@ export default function EcommerceCartItem({ item, wishlist }: Props) {
   const { product, quantity, colors, size } = item;
   const [availability, setAvailability] = useState<ProductAvailability | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Check if additional costs apply
+  const hasAdditionalCost = product.quantity_threshold && quantity > product.quantity_threshold;
+  
+  // Calculate additional cost if applicable
+  const calculateAdditionalCost = () => {
+    if (!hasAdditionalCost) return 0;
+    if (product.additional_cost_type === 'percentage') {
+      return product.price * ((product.additional_cost_percentage ?? 0) / 100) * quantity;
+    }
+    return product.additional_cost_fixed || 0;
+  };
+  const additionalCost = calculateAdditionalCost();
 
   useEffect(() => {
     checkProductAvailability(product.id);
@@ -131,41 +146,74 @@ export default function EcommerceCartItem({ item, wishlist }: Props) {
     });
   };
 
+  const hasColors = colors && colors.length > 0;
+  const hasSize = size && size.length > 0;
+
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      sx={{
-        py: 3,
-        minWidth: 720,
-        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-      }}
-    >
-      <Stack direction="row" alignItems="center" flexGrow={1}>
+    <Stack direction="row" alignItems="center" spacing={3}>
+      <Box sx={{ position: 'relative', flexShrink: 0 }}>
         <Image
           src={product.coverImg}
-          sx={{
-            width: 80,
-            height: 80,
-            flexShrink: 0,
-            borderRadius: 1.5,
-            bgcolor: 'background.neutral',
-          }}
+          alt={product.name}
+          sx={{ width: 80, height: 80, borderRadius: 1.5 }}
         />
+      </Box>
 
-        <Stack spacing={0.5} sx={{ p: 2 }}>
-          <Typography variant="subtitle2">{product.name}</Typography>
-          {colors && (
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Colors: <Box component="span" sx={{ color: colors, backgroundColor: colors, width: 30, height: 14, borderRadius: '10%', border: '1px solid', display: 'inline-block', verticalAlign: 'middle', mr: 0.5 }} />
+      <Stack spacing={0.5} sx={{ flexGrow: 1 }}>
+        <Typography variant="subtitle2" noWrap>
+          {product.name}
+        </Typography>
+
+        {hasColors && (
+          <Stack direction="row" alignItems="center">
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Color:
             </Typography>
-          )}
-          {size && (
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Size: {size}
-            </Typography>
-          )}
-        </Stack>
+            <Box
+              sx={{
+                ml: 0.75,
+                width: 16,
+                height: 16,
+                borderRadius: 0.5,
+                bgcolor: colors[0],
+                ...(colors[0] === '#FFFFFF' && {
+                  border: (theme) => `solid 1px ${theme.palette.divider}`,
+                }),
+              }}
+            />
+          </Stack>
+        )}
+
+        {hasSize && (
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Size: {size}
+          </Typography>
+        )}
+        
+        {hasAdditionalCost && (
+          <Typography variant="caption" sx={{ color: 'warning.main', fontWeight: 'bold', mt: 0.5 }}>
+            Additional cost: {fCurrency(additionalCost)}
+            <Tooltip title={
+              product.additional_cost_type === 'percentage' 
+                ? `${product.additional_cost_percentage}% additional cost for orders above ${product.quantity_threshold} items` 
+                : `Fixed additional cost of ${fCurrency(product.additional_cost_fixed)} for orders above ${product.quantity_threshold} items`
+            }>
+              <Box component="span" sx={{ display: 'inline-flex', ml: 0.5 }}>
+                <Iconify icon="eva:info-outline" width={16} height={16} />
+              </Box>
+            </Tooltip>
+          </Typography>
+        )}
+
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: 'text.primary',
+            mt: 0.5,
+          }}
+        >
+          {fCurrency(product.price)}
+        </Typography>
       </Stack>
 
       <Stack sx={{ width: 120 }}>
@@ -191,7 +239,7 @@ export default function EcommerceCartItem({ item, wishlist }: Props) {
 
       {!wishlist && (
         <Stack sx={{ width: 120, typography: 'subtitle2' }}>
-          {fCurrency(product.price * quantity)}
+          {fCurrency(product.price * quantity + additionalCost)}
         </Stack>
       )}
 
