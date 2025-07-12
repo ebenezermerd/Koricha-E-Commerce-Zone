@@ -35,10 +35,11 @@ export default function EcommerceProductItemHero({ product }: Props) {
       sx={{
         alignItems: 'center',
         py: 5,
+        mx: { xs: 0, md: 20 },
         px: { xs: 3, md: 10 },
       }}
     >
-      <Grid xs={12} md={6}>
+      <Grid xs={12} md={6} >
         <Box
           sx={{
             maxWidth: { md: 440 },
@@ -70,14 +71,14 @@ export default function EcommerceProductItemHero({ product }: Props) {
         </Box>
       </Grid>
 
-      <Grid xs={12} md={6}>
+      <Grid xs={12} md={6} >
         <Image
           src={coverImg}
           sx={{
             ...filterStyles(
               `drop-shadow(20px 20px 24px ${alpha(theme.palette.common.black, 0.16)})`
             ),
-            maxWidth: 400,
+            maxWidth: 600,
             height: 500,
             ml: 'auto',
             mr: { xs: 'auto', md: 'unset' },

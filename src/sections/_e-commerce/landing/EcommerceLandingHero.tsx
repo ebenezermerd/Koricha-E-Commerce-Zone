@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { alpha, useTheme } from '@mui/material/styles';
-import { Box, Container, Skeleton } from '@mui/material';
+import { Box, Skeleton } from '@mui/material';
 // hooks
 import { useGetProducts } from 'src/services/useProducts';
 import { bgGradient } from 'src/utils/cssStyles';
@@ -8,10 +8,29 @@ import { useCarousel, Carousel } from 'src/components/carousel';
 import { EcommerceProductItemHero } from '../product/item';
 import { CarouselArrowBasicButtons } from 'src/components/carousel/components/carousel-arrow-buttons';
 import { IProductItemProps } from 'src/types/product';
+// config
+import { HEADER } from 'src/config-global';
 
 export default function EcommerceLandingHero() {
   const theme = useTheme();
   const { products, productsLoading } = useGetProducts();
+  const [heroHeight, setHeroHeight] = useState('calc(100vh - 88px)');
+
+  // Update hero height based on screen size
+  useEffect(() => {
+    const updateHeroHeight = () => {
+      const isMobile = window.innerWidth < theme.breakpoints.values.md;
+      const headerHeight = isMobile ? HEADER.H_MOBILE : HEADER.H_MAIN_DESKTOP;
+      setHeroHeight(`calc(100vh - ${headerHeight}px)`);
+    };
+
+    updateHeroHeight();
+    window.addEventListener('resize', updateHeroHeight);
+    
+    return () => {
+      window.removeEventListener('resize', updateHeroHeight);
+    };
+  }, [theme.breakpoints.values.md]);
 
   const heroProducts = products
     ?.filter((product: IProductItemProps) => product.rating >= 4 || product.inStock > 0)
@@ -34,9 +53,9 @@ export default function EcommerceLandingHero() {
 
   if (productsLoading) {
     return (
-      <Container sx={{ pt: { xs: 5, md: 8 } }}>
-        <Skeleton variant="rectangular" height={400} />
-      </Container>
+      <Box sx={{ height: heroHeight, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Skeleton variant="rectangular" height="100%" width="100%" />
+      </Box>
     );
   }
 
@@ -46,17 +65,19 @@ export default function EcommerceLandingHero() {
   
 
   return (
-    <Container sx={{ pt: { xs: 5, md: 8 }, minHeight: 500 }}>
+    <Box sx={{ height: '100vh', width: '100%', border: '1px solid red', display: 'flex', alignItems: 'center' }}>
       <Box
         sx={{
           ...bgGradient({
             color: alpha(theme.palette.background.default, 0.9),
             imgUrl: '/assets/background/overlay_1.jpg',
           }),
-          borderRadius: 3,
           overflow: 'hidden',
           position: 'relative',
           height: '100%',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <Carousel carousel={carousel}>
@@ -92,6 +113,6 @@ export default function EcommerceLandingHero() {
           }}
         />
       </Box>
-    </Container>
+    </Box>
   );
 }
