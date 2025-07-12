@@ -33,6 +33,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
         md: 0,
       }}
       sx={{
+        height: '100%',
         alignItems: 'center',
         py: 5,
         mx: { xs: 0, md: 20 },
@@ -42,7 +43,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
       <Grid xs={12} md={6} >
         <Box
           sx={{
-            maxWidth: { md: 440 },
+            maxWidth: { md: 480 },
             textAlign: { xs: 'center', md: 'unset' },
           }}
         >
@@ -50,11 +51,18 @@ export default function EcommerceProductItemHero({ product }: Props) {
             {label}
           </Label>
 
-          <TextMaxLine variant="h3" sx={{ mb: 2 }}>
+          <TextMaxLine variant="h2" sx={{ mb: 2 }}>
             {title}
           </TextMaxLine>
 
-          <TextMaxLine variant="body2" sx={{ mb: 5, color: 'text.secondary' }}>
+          <TextMaxLine 
+            variant="body1" 
+            sx={{ 
+              mb: { xs: 3, md: 5 }, 
+              color: 'text.secondary',
+              fontSize: { xs: '1rem', md: '1.15rem' } 
+            }}
+          >
             {caption}
           </TextMaxLine>
 
@@ -62,9 +70,19 @@ export default function EcommerceProductItemHero({ product }: Props) {
             component={RouterLink}
             to={productPath}
             size="large"
-            color="inherit"
+            color="primary"
             variant="contained"
             endIcon={<Iconify icon="carbon:chevron-right" />}
+            sx={{
+              px: 3,
+              py: 1.5,
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              boxShadow: theme.customShadows.z8,
+              '&:hover': {
+                bgcolor: 'primary.dark',
+              },
+            }}
           >
             Shop Now
           </Button>
@@ -82,6 +100,10 @@ export default function EcommerceProductItemHero({ product }: Props) {
             height: 500,
             ml: 'auto',
             mr: { xs: 'auto', md: 'unset' },
+            transition: 'transform 0.3s ease-in-out',
+            '&:hover': {
+              transform: 'scale(1.05)',
+            },
           }}
         />
       </Grid>

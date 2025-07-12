@@ -1,4 +1,6 @@
-export type OrderStatus = 'pending' | 'completed' | 'cancelled' | 'refunded';
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered_pending_confirmation' | 'delivered_confirmed' | 'completed' | 'cancelled' | 'refunded';
+
+export type DeliveryStatus = 'pending' | 'processing' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed' | 'completed' | 'cancelled' | 'refunded';
 
 export interface IOrderCustomer {
   id: string;
@@ -36,10 +38,19 @@ export interface IOrderPayment {
 
 export interface IOrderDelivery {
   trackingNumber: string;
-  status: string;
+  status: DeliveryStatus;
   deliveredAt?: Date;
+  confirmedAt?: Date;
+  confirmedBy?: {
+    user?: string;
+    admin?: string;
+  };
   shipBy?: string;
   speedy?: string;
+  notes?: string;
+  deliveryAttempts?: number;
+  estimatedDeliveryDate?: Date;
+  actualDeliveryDate?: Date;
 }
 
 export interface IOrderHistory {

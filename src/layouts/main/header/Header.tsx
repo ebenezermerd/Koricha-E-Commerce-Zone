@@ -132,12 +132,13 @@ export default function Header() {
         bgcolor: theme.palette.background.neutral,
         borderRadius: "5px",
         boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
+        width: '100%',
       }}
     >
       <Toolbar
         disableGutters
         sx={{
-          mx: { xs: 2, md: 10 },
+          px: { xs: 2, md: 3 },
           height: {
             xs: HEADER.H_MOBILE,
             md: HEADER.H_MAIN_DESKTOP,
@@ -155,7 +156,7 @@ export default function Header() {
           }),
         }}
       >
-        <Container sx={{ height: 1, display: "flex", alignItems: "center" }}>
+        <Container maxWidth="xl" sx={{ height: 1, display: "flex", alignItems: "center" }}>
           <Box sx={{ lineHeight: 0, position: "relative", mr: 6 }}>
             <Logo />
           </Box>

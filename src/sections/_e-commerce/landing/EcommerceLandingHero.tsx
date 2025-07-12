@@ -73,6 +73,7 @@ export default function EcommerceLandingHero() {
             imgUrl: '/assets/background/overlay_1.jpg',
           }),
           overflow: 'hidden',
+          border: `1px solid ${theme.palette.primary.lighter}`,
           position: 'relative',
           height: '100%',
           width: '100%',

@@ -74,8 +74,6 @@ export default function Footer() {
 
   const { pathname } = useLocation();
 
-  const isHome = pathname === '/';
-
   const simpleFooter = (
     <Container sx={{ py: 8, textAlign: 'center' }}>
       <Logo single />
@@ -160,7 +158,7 @@ export default function Footer() {
     </>
   );
 
-  return <footer>{isHome ? simpleFooter : mainFooter}</footer>;
+  return <footer>{mainFooter}</footer>;
 }
 
 // ----------------------------------------------------------------------

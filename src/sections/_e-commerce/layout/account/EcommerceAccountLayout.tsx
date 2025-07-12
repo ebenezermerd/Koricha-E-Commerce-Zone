@@ -35,12 +35,18 @@ export default function EcommerceAccountLayout({ children }: Props) {
       <EcommerceHeader />
 
       {isMdUp ? (
-        <Container sx={{ my: 5 }}>
+        <Container 
+          maxWidth="xl"
+          sx={{ 
+            my: 3,
+            px: { xs: 2, md: 4 }
+          }}
+        >
           <Typography variant="h3">Account</Typography>
         </Container>
       ) : (
-        <Box sx={{ py: 2, mb: 5, borderBottom: (theme) => `solid 1px ${theme.palette.divider}` }}>
-          <Container>
+        <Box sx={{ py: 2, mb: 3, borderBottom: (theme) => `solid 1px ${theme.palette.divider}` }}>
+          <Container maxWidth="xl">
             <Button
               size="small"
               color="inherit"
@@ -53,7 +59,12 @@ export default function EcommerceAccountLayout({ children }: Props) {
         </Box>
       )}
 
-      <Container>
+      <Container 
+        maxWidth="xl"
+        sx={{
+          px: { xs: 2, md: 4 }
+        }}
+      >
         <Stack
           direction={{
             md: 'row',
@@ -61,10 +72,11 @@ export default function EcommerceAccountLayout({ children }: Props) {
           alignItems={{
             md: 'flex-start',
           }}
+          spacing={3}
           sx={{
             mb: {
-              xs: 8,
-              md: 10,
+              xs: 5,
+              md: 8,
             },
           }}
         >
@@ -73,8 +85,9 @@ export default function EcommerceAccountLayout({ children }: Props) {
           <Box
             sx={{
               flexGrow: 1,
-              pl: { md: 8 },
+              pl: { md: 4 },
               width: { md: `calc(100% - ${NAV.W_DRAWER}px)` },
+              overflow: 'auto',
             }}
           >
             {children}

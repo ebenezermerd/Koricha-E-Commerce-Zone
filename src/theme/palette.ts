@@ -24,66 +24,66 @@ const GREY = {
   0: '#FFFFFF',
   100: '#F9FAFB',
   200: '#F4F6F8',
-  300: '#DFE3E8',
-  400: '#C4CDD5',
-  500: '#919EAB',
-  600: '#637381',
-  700: '#454F5B',
-  800: '#212B36',
-  900: '#161C24',
+  300: '#E2D9D1',
+  400: '#C4B8B0',
+  500: '#9E8E82',
+  600: '#776B61',
+  700: '#564E47',
+  800: '#362F2D',
+  900: '#1E1917',
 };
 
 const PRIMARY = {
-  lighter: '#FEE9D1',
-  light: '#FDAB76',
-  main: '#FA541C',
-  dark: '#B3200E',
-  darker: '#770508',
+  lighter: '#EFE6DD',
+  light: '#D4B8A5',
+  main: '#8B593E', // Rich coffee brown
+  dark: '#5E3A28',
+  darker: '#3C2419',
   contrastText: '#FFFFFF',
 };
 
 const SECONDARY = {
-  lighter: '#E6DBFE',
-  light: '#B195FE',
-  main: '#754FFE',
-  dark: '#4027B6',
-  darker: '#1C0F79',
+  lighter: '#F5E6D3',
+  light: '#DBC1A7',
+  main: '#A67B5B', // Latte brown
+  dark: '#715241',
+  darker: '#46332A',
   contrastText: '#FFFFFF',
 };
 
 const INFO = {
-  lighter: '#CAFDF5',
-  light: '#61F3F3',
-  main: '#00B8D9',
-  dark: '#006C9C',
-  darker: '#003768',
+  lighter: '#E8F4F8',
+  light: '#B1D5E4',
+  main: '#6A95A8', // Muted blue-grey
+  dark: '#456878',
+  darker: '#2A414D',
   contrastText: '#FFFFFF',
 };
 
 const SUCCESS = {
-  lighter: '#D8FBDE',
-  light: '#86E8AB',
-  main: '#36B37E',
-  dark: '#1B806A',
-  darker: '#0A5554',
+  lighter: '#E3EBE3',
+  light: '#B8CEB8',
+  main: '#739073', // Forest sage
+  dark: '#4D624D',
+  darker: '#2E3C2E',
   contrastText: '#FFFFFF',
 };
 
 const WARNING = {
-  lighter: '#FFF5CC',
-  light: '#FFD666',
-  main: '#FFAB00',
-  dark: '#B76E00',
-  darker: '#7A4100',
+  lighter: '#FFF1E0',
+  light: '#FFD4A8',
+  main: '#D4925E', // Caramel
+  dark: '#A66939',
+  darker: '#744626',
   contrastText: GREY[800],
 };
 
 const ERROR = {
-  lighter: '#FFE9D5',
-  light: '#FFAC82',
-  main: '#FF5630',
-  dark: '#B71D18',
-  darker: '#7A0916',
+  lighter: '#FBDED3',
+  light: '#E5A79A',
+  main: '#C25F4E', // Rustic red
+  dark: '#933F31',
+  darker: '#662B21',
   contrastText: '#FFFFFF',
 };
 
@@ -117,7 +117,7 @@ export default function palette(themeMode: 'light' | 'dark') {
       secondary: GREY[600],
       disabled: GREY[500],
     },
-    background: { paper: '#FFFFFF', default: '#FFFFFF', neutral: GREY[100] },
+    background: { paper: '#FFFFFF', default: '#FDFBF9', neutral: GREY[100] },
     action: {
       ...COMMON.action,
       active: GREY[600],
