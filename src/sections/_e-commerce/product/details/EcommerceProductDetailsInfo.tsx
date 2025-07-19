@@ -1,7 +1,20 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Stack, Button, Rating, Typography, TextField, Divider, StackProps, Grid, Box } from '@mui/material';
+import { 
+  Stack, 
+  Button, 
+  Rating, 
+  Typography, 
+  Divider, 
+  StackProps, 
+  Grid, 
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  alpha
+} from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 // routes
@@ -189,166 +202,171 @@ export default function EcommerceProductDetailsInfo({
     }
   };
 
-  const renderPrice = (
-    <ProductPrice
-      price={price}
-      priceSale={priceSale}
-      sx={{ typography: 'h4', marginBottom: 2 }}
-    />
-  );
-
-  const renderShare = (
-    <Stack direction="row" spacing={3} justifyContent="center">
-      <Button
-        size="large"
-        variant={isInWishlist ? "contained" : "outlined"}
-        startIcon={<Iconify icon="carbon:favorite" />}
-        sx={{ flexGrow: 1 }}
-        onClick={handleToggleWishlist}
-        disabled={!isInWishlist && (!selectedColor || !selectedSize)}
-      >
-        <Box sx={{ lineHeight: 1.2 }}>
-          {isInWishlist 
-            ? 'Added to Wishlist' 
-            : (!selectedColor || !selectedSize)
-              ? 'Select Options'
-              : 'Add to Wishlist'
-          }
-        </Box>
-      </Button>
-    </Stack>
-  );
-
-  const renderColorOptions = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2">Colors</Typography>
-      <ProductColorPicker
-        selected={selectedColor}
-        onSelectColor={(color) => setSelectedColor(color)}
-        options={colors.map(color => ({
-          label: color,
-          value: color,
-        }))}
-      />
-    </Stack>
-  );
-
-  const renderSizeOptions = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2">Sizes</Typography>
-      <Stack direction="row" spacing={1}>
-        {sizes.map((size) => (
-          <Button
-            key={size}
-            size="small"
-            variant={selectedSize === size ? 'contained' : 'outlined'}
-            onClick={() => setSelectedSize(size)}
-          >
-            {size}
-          </Button>
-        ))}
-      </Stack>
-    </Stack>
-  );
-
-  const renderQuantity = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2">Quantity</Typography>
-      <Stack direction="row" spacing={1}>
-        <IncrementerButton
-          quantity={quantity}
-          onDecrease={() => setQuantity(Math.max(1, quantity - 1))}
-          onIncrease={() => {
-            const remainingAvailable = (available || 0) - quantityInCart;
-            setQuantity(Math.min(remainingAvailable, quantity + 1));
-          }}
-          disabledDecrease={quantity <= 1}
-          disabledIncrease={
-            quantity >= ((available || 0) - quantityInCart) ||
-            isLoading ||
-            Boolean(availability?.maxPurchaseQuantity && quantity >= availability.maxPurchaseQuantity - quantityInCart)
-          }
-        />
-        {quantityInCart > 0 && (
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            ({quantityInCart} in cart)
-          </Typography>
-        )}
-      </Stack>
-    </Stack>
-  );
-
   return (
     <Stack spacing={3} {...other}>
-      <Stack spacing={2}>
-        <Typography variant="h4">{name}</Typography>
+      {/* Product Header */}
+      <Box>
+        <Typography variant="h4" gutterBottom>{name}</Typography>
 
         {caption && (
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
             {caption}
           </Typography>
         )}
 
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <Rating value={rating} precision={0.1} readOnly />
-          {review && (
+          {review > 0 && (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               ({review} reviews)
             </Typography>
           )}
         </Stack>
 
-        {renderPrice}
-      </Stack>
+        <ProductPrice
+          price={price}
+          priceSale={priceSale}
+          sx={{ typography: 'h4' }}
+        />
+      </Box>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {colors.length > 0 && renderColorOptions}
+      {/* Product Options */}
+      <Box sx={{ py: 1 }}>
+        {/* Color Selection */}
+        {colors.length > 0 && (
+          <Stack spacing={1} sx={{ mb: 3 }}>
+            <Typography variant="subtitle1">Colors</Typography>
+            <ProductColorPicker
+              selected={selectedColor}
+              onSelectColor={(color) => setSelectedColor(color)}
+              options={colors.map(color => ({
+                label: color,
+                value: color,
+              }))}
+            />
+          </Stack>
+        )}
 
-      {sizes.length > 0 && renderSizeOptions}
+        {/* Size Selection */}
+        {sizes.length > 0 && (
+          <Stack spacing={1} sx={{ mb: 3 }}>
+            <Typography variant="subtitle1">Sizes</Typography>
+            <Stack direction="row" flexWrap="wrap" spacing={1}>
+              {sizes.map((size) => (
+                <Button
+                  key={size}
+                  size="small"
+                  color="primary"
+                  variant={selectedSize === size ? 'contained' : 'outlined'}
+                  onClick={() => setSelectedSize(size)}
+                  sx={{ 
+                    minWidth: 48, 
+                    height: 40,
+                    borderRadius: 1
+                  }}
+                >
+                  {size}
+                </Button>
+              ))}
+            </Stack>
+          </Stack>
+        )}
 
-      {renderQuantity}
-
-      {available && (
-        <Typography variant="subtitle2" sx={{ color: 'success.main' }}>
-          {available} items available
-        </Typography>
-      )}
-
-      {vendor?.name && (
-        <Stack spacing={1}>
-          <Typography variant="subtitle2">Vendor</Typography>
-          <Typography variant="body2">{vendor.name}</Typography>
-          {/* {vendor.phone && (
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Phone: {vendor.phone}
-            </Typography>
-          )} */}
-        </Stack>
-      )}
-
-      <Grid container sx={{ flexGrow: 1, gap: 2 }}>
-        <Grid item xs={12} md={5}>
-          <Button
-            fullWidth
-            size="large"
-            color="primary"
-            variant="contained"
-            startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-            onClick={handleAddCart}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Box sx={{ lineHeight: 1 }}>Checking Availability...</Box>
-            ) : (
-              'Add to Cart'
+        {/* Quantity Selection */}
+        <Stack spacing={1} sx={{ mb: 3 }}>
+          <Typography variant="subtitle1">Quantity</Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <IncrementerButton
+              quantity={quantity}
+              onDecrease={() => setQuantity(Math.max(1, quantity - 1))}
+              onIncrease={() => {
+                const remainingAvailable = (available || 0) - quantityInCart;
+                setQuantity(Math.min(remainingAvailable, quantity + 1));
+              }}
+              disabledDecrease={quantity <= 1}
+              disabledIncrease={
+                quantity >= ((available || 0) - quantityInCart) ||
+                isLoading ||
+                Boolean(availability?.maxPurchaseQuantity && quantity >= availability.maxPurchaseQuantity - quantityInCart)
+              }
+              sx={{ height: 40 }}
+            />
+            {quantityInCart > 0 && (
+              <Chip 
+                size="small" 
+                color="info" 
+                label={`${quantityInCart} in cart`} 
+                variant="outlined"
+              />
             )}
-          </Button>
-        </Grid>
-        <Grid item xs={12} md={5}>
-        {renderShare}
-        </Grid>
-      </Grid>
+          </Stack>
+        </Stack>
+      </Box>
+
+      {/* Availability Info */}
+      <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
+        {available && available > 0 ? (
+          <Chip
+            icon={<Iconify icon="eva:checkmark-circle-fill" />}
+            label={`${available} items available`}
+            color="success"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            icon={<Iconify icon="eva:alert-triangle-fill" />}
+            label="Out of stock"
+            color="error"
+            variant="outlined"
+          />
+        )}
+
+        {vendor?.name && (
+          <Chip
+            icon={<Iconify icon="eva:shopping-bag-outline" />}
+            label={`Sold by: ${vendor.name}`}
+            variant="outlined"
+          />
+        )}
+      </Stack>
+
+      {/* Action Buttons */}
+      <Stack 
+        direction={{ xs: 'column', sm: 'row' }} 
+        spacing={2} 
+        sx={{ mt: 3 }}
+      >
+        <Button
+          fullWidth
+          size="large"
+          color="primary"
+          variant="contained"
+          startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+          onClick={handleAddCart}
+          disabled={isLoading || !selectedColor || !selectedSize}
+          sx={{ 
+            height: 48,
+            boxShadow: (theme) => theme.customShadows.z8
+          }}
+        >
+          {isLoading ? 'Checking Availability...' : 'Add to Cart'}
+        </Button>
+        
+        <Button
+          fullWidth
+          size="large"
+          variant={isInWishlist ? "contained" : "outlined"}
+          color={isInWishlist ? "error" : "primary"}
+          startIcon={<Iconify icon={isInWishlist ? "carbon:favorite-filled" : "carbon:favorite"} />}
+          onClick={handleToggleWishlist}
+          disabled={!isInWishlist && (!selectedColor || !selectedSize)}
+          sx={{ height: 48 }}
+        >
+          {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+        </Button>
+      </Stack>
     </Stack>
   );
 }

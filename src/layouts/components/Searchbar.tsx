@@ -184,11 +184,11 @@ export default function Searchbar({ sx }: SearchbarProps) {
                         </Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Typography variant="body2" color="primary">
-                            ${product.priceSale || product.price}
+                            {product.price} ETB
                           </Typography>
                           {product.priceSale && (
                             <Typography variant="caption" color="text.disabled" sx={{ textDecoration: 'line-through' }}>
-                              ${product.price}
+                              {product.priceSale} ETB
                             </Typography>
                           )}
                         </Stack>
